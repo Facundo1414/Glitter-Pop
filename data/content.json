@@ -1,0 +1,225 @@
+{
+  "business": {
+    "name": "Glitter Pop",
+    "tagline": "Brillo y Magia para tus Eventos",
+    "description": "Somos Martina y Luz, dos amigas apasionadas por animar fiestas y eventos con maquillaje artístico profesional y brillos que deslumbran. Con 2 años de experiencia, ofrecemos servicios personalizados que combinan calidad profesional y precios accesibles.",
+    "email": "hola@glitterpop.com",
+    "phone": "+54 351 787 8045",
+    "whatsapp": "5493517878045",
+    "instagram": "@GlitterPop_eventos",
+    "facebook": "glitterpopoficial",
+    "location": "Córdoba, Argentina",
+    "about": "Somos Martina y Luz, dos maquilladoras profesionales que decidimos crear Glitter Pop para llevar alegría, color y brillo a cada evento. Con 2 años de experiencia, nos especializamos en crear experiencias mágicas para nuestros clientes.",
+    "team": [
+      {
+        "name": "Martina",
+        "role": "Maquilladora & Co-fundadora",
+        "description": "Especialista en diseños creativos y maquillaje artístico"
+      },
+      {
+        "name": "Luz",
+        "role": "Maquilladora & Co-fundadora",
+        "description": "Experta en glitter y diseños festivaleros"
+      }
+    ],
+    "workingHours": "Todos los días",
+    "advanceBooking": "Reservá con 3-7 días de anticipación",
+    "delivery": "Traslado incluido en Córdoba y zona"
+  },
+  "services": [
+    {
+      "id": "1",
+      "title": "Maquillaje con Glitter",
+      "description": "Diseños personalizados con glitter de alta calidad y glitters biodegradables. Perfecto para fiestas y eventos nocturnos.",
+      "image": "/images/service-glitter.jpg",
+      "duration": "30-45 min por persona",
+      "icon": "✨"
+    },
+    {
+      "id": "2",
+      "title": "Face & Body Painting",
+      "description": "Arte corporal y facial profesional. Desde diseños simples hasta obras de arte completas.",
+      "image": "/images/service-facepainting.jpg",
+      "duration": "20-60 min según diseño",
+      "icon": "🎨"
+    },
+    {
+      "id": "3",
+      "title": "Eventos Corporativos",
+      "description": "Estación de maquillaje para eventos empresariales, lanzamientos de productos y activaciones de marca.",
+      "image": "/images/service-corporate.jpg",
+      "duration": "Paquetes desde 2 horas",
+      "icon": "💼"
+    },
+    {
+      "id": "4",
+      "title": "Fiestas Infantiles",
+      "description": "Pintacaritas y glitter para cumpleaños infantiles. Diseños divertidos y seguros para niños.",
+      "image": "/images/service-kids.jpg",
+      "duration": "10-15 min por niño",
+      "icon": "🎈"
+    },
+    {
+      "id": "5",
+      "title": "Bodas y Eventos Especiales",
+      "description": "Maquillaje artístico para novias, quinceañeras y eventos especiales. Dale un toque mágico a tu día.",
+      "image": "/images/service-wedding.jpg",
+      "duration": "Personalizado",
+      "icon": "💍"
+    },
+    {
+      "id": "6",
+      "title": "Festivales y Recitales",
+      "description": "Looks festivaleros únicos con mucho brillo y color. Resistente y de larga duración.",
+      "image": "/images/service-festival.jpg",
+      "duration": "20-40 min",
+      "icon": "🎶"
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "1",
+      "title": "Festival de Verano",
+      "image": "/images/image 1.png",
+      "category": "festival"
+    },
+    {
+      "id": "2",
+      "title": "Cumpleaños Ana",
+      "image": "/images/image 2.png",
+      "category": "kids"
+    },
+    {
+      "id": "3",
+      "title": "Evento Corporativo Tech",
+      "image": "/images/image 3.png",
+      "category": "corporate"
+    },
+    {
+      "id": "4",
+      "title": "Boda Mágica",
+      "image": "/images/image 4.png",
+      "category": "wedding"
+    },
+    {
+      "id": "5",
+      "title": "Fiesta Neon",
+      "image": "/images/image 5.png",
+      "category": "party"
+    },
+    {
+      "id": "6",
+      "title": "Quinceañera Sofi",
+      "image": "/images/image 6.png",
+      "category": "special"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "1",
+      "name": "María González",
+      "text": "¡Increíble experiencia! El maquillaje con glitter fue el hit de mi fiesta de cumpleaños. Todos quedaron fascinados.",
+      "rating": 5,
+      "event": "Cumpleaños 30"
+    },
+    {
+      "id": "2",
+      "name": "Juan Pérez",
+      "text": "Contratamos Glitter Pop para nuestro evento corporativo y fue un éxito total. Profesionales y creativos.",
+      "rating": 5,
+      "event": "Evento Corporativo"
+    },
+    {
+      "id": "3",
+      "name": "Laura Martínez",
+      "text": "Mi hija y sus amigas quedaron encantadas con el face painting. ¡Muy recomendable para fiestas infantiles!",
+      "rating": 5,
+      "event": "Cumpleaños Infantil"
+    },
+    {
+      "id": "4",
+      "name": "Carlos Rodríguez",
+      "text": "El equipo de Glitter Pop hizo que nuestro festival fuera inolvidable. Los looks eran espectaculares y duraron toda la noche.",
+      "rating": 5,
+      "event": "Festival de Música"
+    }
+  ],
+  "faqs": [
+    {
+      "id": "1",
+      "question": "¿Cuánto tiempo dura el maquillaje con glitter?",
+      "answer": "Nuestro maquillaje con glitter puede durar entre 6 a 12 horas dependiendo del tipo de evento y cuidados. Usamos productos de larga duración y fijadores profesionales."
+    },
+    {
+      "id": "2",
+      "question": "¿Los productos son seguros para la piel?",
+      "answer": "Sí, utilizamos únicamente productos cosméticos de alta calidad, aptos para piel sensible y glitters biodegradables. Todos nuestros productos están testeados dermatológicamente."
+    },
+    {
+      "id": "3",
+      "question": "¿Cuántas personas pueden atender por hora?",
+      "answer": "Dependiendo del servicio, podemos atender entre 4 a 8 personas por hora. Para eventos grandes, llevamos equipo adicional para garantizar que todos reciban el servicio."
+    },
+    {
+      "id": "4",
+      "question": "¿Trabajan en eventos al aire libre?",
+      "answer": "Sí, trabajamos en todo tipo de eventos, tanto en interiores como exteriores. Llevamos todo el equipo necesario incluyendo iluminación profesional."
+    },
+    {
+      "id": "5",
+      "question": "¿Con cuánta anticipación debo reservar?",
+      "answer": "Recomendamos reservar con 3 a 7 días de anticipación. Trabajamos todos los días, por lo que tenemos buena disponibilidad durante la semana y fines de semana."
+    },
+    {
+      "id": "6",
+      "question": "¿Cómo se retira el maquillaje?",
+      "answer": "El maquillaje se retira fácilmente con agua tibia y jabón neutro o desmaquillante. Proporcionamos instrucciones detalladas de remoción a todos nuestros clientes."
+    }
+  ],
+  "packages": [
+    {
+      "id": "1",
+      "name": "Por Hora",
+      "price": "100000",
+      "duration": "1 hora",
+      "features": [
+        "Martina o Luz en tu evento",
+        "Maquillaje artístico profesional",
+        "Glitter de alta calidad",
+        "Productos seguros y testeados",
+        "Traslado incluido en Córdoba"
+      ],
+      "ideal": "Eventos cortos o cantidad limitada de personas"
+    },
+    {
+      "id": "2",
+      "name": "Paquete Básico",
+      "price": "100000",
+      "duration": "A convenir",
+      "features": [
+        "Servicio de maquillaje con glitter",
+        "Diseños personalizados",
+        "Productos profesionales",
+        "Traslado incluido en Córdoba",
+        "Atención profesional garantizada"
+      ],
+      "ideal": "Fiestas y eventos pequeños",
+      "popular": true
+    },
+    {
+      "id": "3",
+      "name": "Paquete Completo",
+      "price": "150000",
+      "duration": "A convenir",
+      "features": [
+        "Martina y Luz en tu evento",
+        "Mayor cobertura de personas",
+        "Diseños elaborados y creativos",
+        "Variedad de estilos",
+        "Traslado incluido en Córdoba",
+        "Setup profesional completo"
+      ],
+      "ideal": "Eventos grandes, fiestas y celebraciones especiales"
+    }
+  ]
+}

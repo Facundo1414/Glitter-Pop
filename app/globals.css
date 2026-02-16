@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Playfair Display', serif;
+  
+  --color-primary-50: #fef5ff;
+  --color-primary-100: #fce7ff;
+  --color-primary-200: #f9d5ff;
+  --color-primary-300: #f5b8ff;
+  --color-primary-400: #ee8fff;
+  --color-primary-500: #E0BBE4;
+  --color-primary-600: #D4A5D8;
+  --color-primary-700: #C68FCC;
+  --color-primary-800: #B879C0;
+  --color-primary-900: #A563B4;
+  
+  --color-glitter-gold: #FFD700;
+  --color-glitter-pink: #FFB3D9;
+  --color-glitter-purple: #D4A5D8;
+  --color-glitter-blue: #B4D7E7;
+}
+
+body {
+  background-color: #FFF0F5;
+  color: rgb(17 24 39);
+}
+
+.btn-primary {
+  background-image: linear-gradient(to right, #E0BBE4, #FFB3D9);
+  color: white;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:hover {
+  background-image: linear-gradient(to right, #D4A5D8, #FFA0CC);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  transform: translateY(-0.25rem);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #D4A5D8;
+  border: 2px solid #E0BBE4;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #fce7ff;
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 3rem;
+  }
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: rgb(75 85 99);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.glitter-text {
+  background-image: linear-gradient(to right, #FFF5BA, #FFB3D9, #E0BBE4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Animaciones personalizadas */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #E0BBE4, #D4A5D8);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #D4A5D8, #C68FCC);
+}
+
+/* Animación para el menú móvil */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+/* Animaciones adicionales para Hero */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
