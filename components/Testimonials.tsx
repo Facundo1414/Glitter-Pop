@@ -39,7 +39,7 @@ export default function Testimonials() {
               
               <div className="border-t pt-4">
                 <div className="font-semibold text-gray-800">{testimonial.name}</div>
-                <div className="text-sm text-pastel-lavender">{testimonial.event}</div>
+                <div className="text-sm text-purple-600">{testimonial.event}</div>
               </div>
             </div>
           ))}

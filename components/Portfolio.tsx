@@ -41,7 +41,7 @@ export default function Portfolio() {
               onClick={() => setFilter(category)}
               className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
                 filter === category
-                  ? 'bg-gradient-to-r from-pastel-lavender to-pastel-pink text-white shadow-xl scale-105 ring-2 ring-pastel-lavender/50'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl scale-105 ring-2 ring-purple-600/50'
                   : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md border border-gray-200'
               }`}
             >

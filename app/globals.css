@@ -20,9 +20,40 @@
   --color-glitter-blue: #B4D7E7;
 }
 
+/* Estilos base optimizados para móvil */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background-color: #FFF0F5;
   color: rgb(17 24 39);
+  /* Prevenir bounce scroll en iOS */
+  overscroll-behavior-y: none;
+  /* Mejorar el rendimiento de scroll */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe area para dispositivos con notch (iPhone X+) */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Optimización de touch para dispositivos móviles */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+button, a, input, textarea, select {
+  touch-action: manipulation;
 }
 
 .btn-primary {
@@ -36,12 +67,20 @@ body {
   font-weight: 600;
   transition: all 0.3s;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  /* Optimizaciones móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px; /* iOS minimum touch target */
 }
 
 .btn-primary:hover {
   background-image: linear-gradient(to right, #D4A5D8, #FFA0CC);
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
   transform: translateY(-0.25rem);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-secondary {
@@ -55,10 +94,18 @@ body {
   border-radius: 9999px;
   font-weight: 600;
   transition: all 0.3s;
+  /* Optimizaciones móviles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px; /* iOS minimum touch target */
 }
 
 .btn-secondary:hover {
   background-color: #fce7ff;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
 }
 
 .section-title {
@@ -76,13 +123,24 @@ body {
 }
 
 .section-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.125rem; /* Reducido de 1.25rem para mejor legibilidad en móvil */
   color: rgb(75 85 99);
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem; /* Reducido de 3rem para mejor espaciado móvil */
   max-width: 42rem;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .card {
@@ -91,10 +149,17 @@ body {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   transition: all 0.3s;
   overflow: hidden;
+  /* Optimizaciones móviles */
+  min-height: 44px;
 }
 
 .card:hover {
   box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  transform: translateY(-2px);
+}
+
+.card:active {
+  transform: translateY(0);
 }
 
 .glitter-text {

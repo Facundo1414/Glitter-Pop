@@ -18,6 +18,18 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Bloquear scroll cuando el menú móvil está abierto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
+
   const isActive = (path: string) => pathname === path
 
   return (
@@ -121,16 +133,20 @@ export default function Header() {
 
           {/* Mobile menu button mejorado */}
           <button
-            className={`md:hidden p-2 rounded-lg transition-all duration-300 ${
-              isScrolled 
-                ? 'bg-primary-50 hover:bg-primary-100 text-primary-600' 
-                : 'bg-white/70 hover:bg-white text-gray-700 backdrop-blur-sm shadow-md'
+            className={`md:hidden p-3 rounded-xl transition-all duration-300 relative z-50 ${
+              isMobileMenuOpen
+                ? 'bg-white text-primary-600 shadow-xl'
+                : isScrolled 
+                  ? 'bg-primary-50 hover:bg-primary-100 text-primary-600' 
+                  : 'bg-white/70 hover:bg-white text-gray-700 backdrop-blur-sm shadow-md'
             }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
             <svg
-              className="w-6 h-6 transition-transform duration-300"
+              className={`w-6 h-6 transition-transform duration-300 ${
+                isMobileMenuOpen ? 'rotate-90' : 'rotate-0'
+              }`}
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -146,74 +162,106 @@ export default function Header() {
             </svg>
           </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation mejorado */}
-        {isMobileMenuOpen && (
-          <nav className="md:hidden mt-6 pb-4 space-y-2 animate-fade-in">
+      {/* Mobile Menu Overlay - Se renderiza siempre pero se muestra condicionalmente */}
+      <div
+        className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${
+          isMobileMenuOpen 
+            ? 'opacity-100 pointer-events-auto' 
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {/* Backdrop oscuro */}
+        <div 
+          className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+        
+        {/* Menu panel */}
+        <nav 
+          className={`absolute top-20 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl mx-4 rounded-3xl p-6 transform transition-all duration-300 ${
+            isMobileMenuOpen 
+              ? 'translate-y-0 opacity-100' 
+              : '-translate-y-4 opacity-0'
+          }`}
+        >
+          <div className="space-y-2">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block w-full text-left py-3 px-4 rounded-lg ${
+              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
                 isActive('/') 
-                  ? 'bg-primary-100 text-primary-600' 
-                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100 hover:text-primary-600'
-              } transition-all duration-300 font-semibold`}
+                  ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
+              } transition-all duration-200 font-semibold text-lg`}
             >
-              ✨ Inicio
+              <span className="text-2xl">✨</span>
+              <span>Inicio</span>
             </Link>
             <Link
               href="/servicios"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block w-full text-left py-3 px-4 rounded-lg ${
+              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
                 isActive('/servicios') 
-                  ? 'bg-primary-100 text-primary-600' 
-                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100 hover:text-primary-600'
-              } transition-all duration-300 font-semibold`}
+                  ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
+              } transition-all duration-200 font-semibold text-lg`}
             >
-              💼 Servicios
+              <span className="text-2xl">💼</span>
+              <span>Servicios</span>
             </Link>
             <Link
               href="/nosotras"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block w-full text-left py-3 px-4 rounded-lg ${
+              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
                 isActive('/nosotras') 
-                  ? 'bg-primary-100 text-primary-600' 
-                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100 hover:text-primary-600'
-              } transition-all duration-300 font-semibold`}
+                  ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
+              } transition-all duration-200 font-semibold text-lg`}
             >
-              👥 Nosotras
+              <span className="text-2xl">👥</span>
+              <span>Nosotras</span>
             </Link>
             <Link
               href="/portfolio"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block w-full text-left py-3 px-4 rounded-lg ${
+              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
                 isActive('/portfolio') 
-                  ? 'bg-primary-100 text-primary-600' 
-                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100 hover:text-primary-600'
-              } transition-all duration-300 font-semibold`}
+                  ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
+              } transition-all duration-200 font-semibold text-lg`}
             >
-              🎨 Portfolio
+              <span className="text-2xl">🎨</span>
+              <span>Portfolio</span>
             </Link>
             <Link
               href="/paquetes"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`block w-full text-left py-3 px-4 rounded-lg ${
+              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
                 isActive('/paquetes') 
-                  ? 'bg-primary-100 text-primary-600' 
-                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100 hover:text-primary-600'
-              } transition-all duration-300 font-semibold`}
+                  ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
+                  : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
+              } transition-all duration-200 font-semibold text-lg`}
             >
-              📦 Paquetes
+              <span className="text-2xl">📦</span>
+              <span>Paquetes</span>
             </Link>
+            
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-3"></div>
+            
             <Link
               href="/contacto"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="btn-primary w-full mt-4 text-center hover:scale-105 block"
+              className="flex items-center justify-center gap-2 w-full py-4 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200"
             >
-              💌 Contacto
+              <span className="text-2xl">💌</span>
+              <span>Contacto</span>
             </Link>
-          </nav>
-        )}
+          </div>
+        </nav>
       </div>
     </header>
   )

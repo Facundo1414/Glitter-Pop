@@ -7,8 +7,8 @@ export default function Services() {
   const { services } = contentData
 
   return (
-    <section id="servicios" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section id="servicios" className="py-16 md:py-20 bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6">
         <h2 className="section-title">
           Nuestros <span className="glitter-text">Servicios</span>
         </h2>
@@ -16,26 +16,26 @@ export default function Services() {
           Dale brillo a tu evento con nuestros servicios profesionales de maquillaje artístico
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {services.map((service) => (
-            <div key={service.id} className="card group hover:shadow-xl transition-shadow">
-              <div className="h-32 bg-gradient-to-br from-pastel-lavender/30 to-pastel-pink/30 relative overflow-hidden">
+            <div key={service.id} className="card group hover:shadow-xl transition-shadow cursor-pointer active:scale-98">
+              <div className="h-28 sm:h-32 bg-gradient-to-br from-pastel-lavender/30 to-pastel-pink/30 relative overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-300">
                     {service.icon}
                   </span>
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-xl font-display font-bold mb-2 text-gray-800">
+              <div className="p-5 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-display font-bold mb-2 sm:mb-3 text-gray-800">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 mb-3 text-sm leading-relaxed">
+                <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">
                   {service.description}
                 </p>
-                <div className="flex items-center text-pastel-lavender text-xs font-semibold">
+                <div className="flex items-center text-purple-600 text-xs sm:text-sm font-semibold">
                   <svg
-                    className="w-4 h-4 mr-1.5"
+                    className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -52,7 +52,7 @@ export default function Services() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-10 md:mt-12 px-4">
           <Link
             href="/contacto"
             className="btn-primary inline-block"
