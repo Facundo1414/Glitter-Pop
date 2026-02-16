@@ -32,28 +32,28 @@ export default function About() {
   }, [])
 
   return (
-    <section id="nosotras" className="py-20 bg-gradient-to-b from-white to-pastel-pink/10">
+    <section id="nosotras" className="py-16 md:py-20 bg-gradient-to-b from-white to-pastel-pink/10">
       <div className="container mx-auto px-4">
-        <div className={`text-center mb-16 transition-all duration-1000 ${
+        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
             Conocé a las Creadoras
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             {content.business.about}
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+          <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm md:text-base text-gray-600">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">📍</span>
+              <span className="text-xl md:text-2xl">📍</span>
               <span>{content.business.location}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⏰</span>
+              <span className="text-xl md:text-2xl">⏰</span>
               <span>{content.business.workingHours}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">📅</span>
+              <span className="text-xl md:text-2xl">📅</span>
               <span>{content.business.advanceBooking}</span>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function About() {
           {content.business.team?.map((member, index) => (
             <div
               key={index}
-              className={`bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 ${
+              className={`bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 active:scale-100 touch-manipulation ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
               style={{ transitionDelay: `${index * 200}ms` }}
@@ -79,8 +79,8 @@ export default function About() {
                   />
                 </div>
               </div>
-              <div className="p-6 text-center">
-                <h3 className="text-2xl font-display font-bold text-gray-900 mb-2">
+              <div className="p-5 sm:p-6 text-center">
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 mb-2">
                   {member.name}
                 </h3>
                 <p className="text-pastel-purple font-semibold mb-3">

@@ -172,92 +172,92 @@ export default function Header() {
             : 'opacity-0 pointer-events-none'
         }`}
       >
-        {/* Backdrop oscuro */}
+        {/* Backdrop oscuro con blur fuerte */}
         <div 
-          className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-gray-900/75 backdrop-blur-xl"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
         
         {/* Menu panel */}
         <nav 
-          className={`absolute top-20 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl mx-4 rounded-3xl p-6 transform transition-all duration-300 ${
+          className={`absolute top-20 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl mx-4 rounded-3xl p-4 transform transition-all duration-300 ${
             isMobileMenuOpen 
               ? 'translate-y-0 opacity-100' 
               : '-translate-y-4 opacity-0'
           }`}
         >
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
+              className={`flex items-center gap-2.5 w-full text-left py-2.5 px-4 rounded-xl ${
                 isActive('/') 
                   ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
-              } transition-all duration-200 font-semibold text-lg`}
+              } transition-all duration-200 font-semibold text-base`}
             >
-              <span className="text-2xl">✨</span>
+              <span className="text-xl">✨</span>
               <span>Inicio</span>
             </Link>
             <Link
               href="/servicios"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
+              className={`flex items-center gap-2.5 w-full text-left py-2.5 px-4 rounded-xl ${
                 isActive('/servicios') 
                   ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
-              } transition-all duration-200 font-semibold text-lg`}
+              } transition-all duration-200 font-semibold text-base`}
             >
-              <span className="text-2xl">💼</span>
+              <span className="text-xl">💼</span>
               <span>Servicios</span>
             </Link>
             <Link
               href="/nosotras"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
+              className={`flex items-center gap-2.5 w-full text-left py-2.5 px-4 rounded-xl ${
                 isActive('/nosotras') 
                   ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
-              } transition-all duration-200 font-semibold text-lg`}
+              } transition-all duration-200 font-semibold text-base`}
             >
-              <span className="text-2xl">👥</span>
+              <span className="text-xl">👥</span>
               <span>Nosotras</span>
             </Link>
             <Link
               href="/portfolio"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
+              className={`flex items-center gap-2.5 w-full text-left py-2.5 px-4 rounded-xl ${
                 isActive('/portfolio') 
                   ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
-              } transition-all duration-200 font-semibold text-lg`}
+              } transition-all duration-200 font-semibold text-base`}
             >
-              <span className="text-2xl">🎨</span>
+              <span className="text-xl">🎨</span>
               <span>Portfolio</span>
             </Link>
             <Link
               href="/paquetes"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 w-full text-left py-4 px-5 rounded-xl ${
+              className={`flex items-center gap-2.5 w-full text-left py-2.5 px-4 rounded-xl ${
                 isActive('/paquetes') 
                   ? 'bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 shadow-sm' 
                   : 'bg-gray-50 text-gray-700 hover:bg-primary-50 hover:text-primary-600 active:scale-95'
-              } transition-all duration-200 font-semibold text-lg`}
+              } transition-all duration-200 font-semibold text-base`}
             >
-              <span className="text-2xl">📦</span>
+              <span className="text-xl">📦</span>
               <span>Paquetes</span>
             </Link>
             
             {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-3"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2"></div>
             
             <Link
               href="/contacto"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-4 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-base shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200"
             >
-              <span className="text-2xl">💌</span>
+              <span className="text-xl">💌</span>
               <span>Contacto</span>
             </Link>
           </div>

@@ -58,9 +58,9 @@ export default function Process() {
   }, [])
 
   return (
-    <section id="proceso" className="py-20 bg-white">
+    <section id="proceso" className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className={`text-center mb-16 transition-all duration-1000 ${
+        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
@@ -72,7 +72,7 @@ export default function Process() {
         </div>
 
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -90,10 +90,10 @@ export default function Process() {
                       <span className="text-sm font-bold text-pastel-purple">{step.number}</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-display font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl font-display font-bold text-gray-900 mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -107,12 +107,12 @@ export default function Process() {
           </div>
         </div>
 
-        <div className={`mt-16 text-center transition-all duration-1000 ${
+        <div className={`mt-12 md:mt-16 text-center transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
         style={{ transitionDelay: '600ms' }}>
-          <div className="inline-block bg-gradient-to-r from-pastel-pink/20 via-pastel-lavender/20 to-pastel-blue/20 rounded-2xl p-8">
-            <p className="text-lg text-gray-700 mb-4">
+          <div className="inline-block bg-gradient-to-r from-pastel-pink/20 via-pastel-lavender/20 to-pastel-blue/20 rounded-xl md:rounded-2xl p-6 sm:p-8">
+            <p className="text-base sm:text-lg text-gray-700 mb-4">
               <span className="font-bold text-gray-900">¿Tenés dudas?</span> ¡No hay problema!
             </p>
             <p className="text-gray-600 mb-6">

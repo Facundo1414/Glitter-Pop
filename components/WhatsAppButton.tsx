@@ -17,16 +17,16 @@ export default function WhatsAppButton() {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 group"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 group"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         aria-label="Contactar por WhatsApp"
       >
         <div className="relative">
           {/* Botón principal */}
-          <div className="relative bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-2xl transition-all duration-300 transform hover:scale-110 hover:shadow-green-500/50">
+          <div className="relative bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-full p-3 md:p-4 shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 touch-manipulation">
             <svg
-              className="w-8 h-8"
+              className="w-6 h-6 md:w-8 md:h-8"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +36,9 @@ export default function WhatsAppButton() {
           </div>
         </div>
 
-        {/* Tooltip */}
+        {/* Tooltip - Solo desktop */}
         <div
-          className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900 text-white px-4 py-2 rounded-lg shadow-xl transition-all duration-300 ${
+          className={`hidden md:block absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900 text-white px-4 py-2 rounded-lg shadow-xl transition-all duration-300 ${
             isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none'
           }`}
         >
