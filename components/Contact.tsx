@@ -37,13 +37,32 @@ export default function Contact() {
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simular envío (aquí irías a una API o servicio de email)
+    // Construir mensaje de WhatsApp con los datos del formulario
+    const whatsappMessage = `¡Hola! Quiero consultar sobre un evento 🎉
+
+📋 *Datos del Evento:*
+• *Nombre:* ${formData.name}
+• *Email:* ${formData.email}
+• *Teléfono:* ${formData.phone}
+• *Tipo de Evento:* ${formData.eventType}
+• *Fecha:* ${formData.eventDate}
+${formData.guests ? `• *Cantidad de Invitados:* ${formData.guests}` : ''}
+
+${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
+
+    // Abrir WhatsApp con el mensaje
+    const encodedMessage = encodeURIComponent(whatsappMessage)
+    const whatsappUrl = `https://wa.me/${business.whatsapp}?text=${encodedMessage}`
+    
+    window.open(whatsappUrl, '_blank')
+    
+    // Mostrar mensaje de confirmación y resetear formulario
     setTimeout(() => {
-      setSubmitMessage('¡Gracias! Nos contactaremos pronto contigo. ✨')
+      setSubmitMessage('¡Perfecto! Te estamos redirigiendo a WhatsApp ✨')
       setIsSubmitting(false)
       setFormData({
         name: '',
@@ -54,7 +73,10 @@ export default function Contact() {
         guests: '',
         message: '',
       })
-    }, 1000)
+      
+      // Limpiar mensaje después de 3 segundos
+      setTimeout(() => setSubmitMessage(''), 3000)
+    }, 500)
   }
 
   return (
@@ -81,7 +103,7 @@ export default function Contact() {
           Hablemos de tu Evento
         </h2>
         <p className="text-lg sm:text-xl text-gray-700 text-center mb-10 md:mb-12 max-w-2xl mx-auto px-4">
-          Completá el formulario y nos contactaremos para crear la experiencia perfecta
+          Completá los datos y te contactaremos por WhatsApp
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
@@ -212,7 +234,7 @@ export default function Contact() {
                 disabled={isSubmitting}
                 className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg py-4 active:scale-98"
               >
-                {isSubmitting ? 'Enviando...' : 'Enviar Consulta ✨'}
+                {isSubmitting ? 'Abriendo WhatsApp...' : 'Continuar por WhatsApp 💬'}
               </button>
 
               {submitMessage && (
