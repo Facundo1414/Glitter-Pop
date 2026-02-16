@@ -34,7 +34,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 ${
         isScrolled 
           ? 'bg-white/95 backdrop-blur-md shadow-xl py-3' 
           : 'bg-white/80 backdrop-blur-sm shadow-md py-6'
@@ -57,7 +57,7 @@ export default function Header() {
                 : 'group-hover:ring-pastel-lavender/60 group-hover:shadow-xl group-hover:shadow-pastel-lavender/40'
             }`}>
               <Image
-                src="/images/logoGlitterPop.jpg"
+                src="/images/logoGlitterPop.webp"
                 alt="Glitter Pop Logo"
                 width={200}
                 height={70}
@@ -133,7 +133,7 @@ export default function Header() {
 
           {/* Mobile menu button mejorado */}
           <button
-            className={`md:hidden p-3 rounded-xl transition-all duration-300 relative z-50 ${
+            className={`md:hidden p-3 rounded-xl transition-all duration-300 relative ${
               isMobileMenuOpen
                 ? 'bg-white text-primary-600 shadow-xl'
                 : isScrolled 
@@ -166,22 +166,22 @@ export default function Header() {
 
       {/* Mobile Menu Overlay - Se renderiza siempre pero se muestra condicionalmente */}
       <div
-        className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${
+        className={`md:hidden fixed inset-0 z-[999] transition-all duration-300 ${
           isMobileMenuOpen 
             ? 'opacity-100 pointer-events-auto' 
             : 'opacity-0 pointer-events-none'
         }`}
       >
-        {/* Backdrop oscuro con blur fuerte */}
+        {/* Backdrop oscuro */}
         <div 
-          className="absolute inset-0 bg-gray-900/75 backdrop-blur-xl"
+          className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-hidden="true"
         />
         
         {/* Menu panel */}
         <nav 
-          className={`absolute top-20 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl mx-4 rounded-3xl p-4 transform transition-all duration-300 ${
+          className={`absolute top-20 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl p-6 transform transition-all duration-300 ${
             isMobileMenuOpen 
               ? 'translate-y-0 opacity-100' 
               : '-translate-y-4 opacity-0'
