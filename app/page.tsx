@@ -13,8 +13,11 @@ export default function Home() {
       <Header />
       <Hero />
       <Services />
-      <About />
-      <Process />
+      {/* Secciones Nosotras - Solo visible en Mobile */}
+      <div className="md:hidden">
+        <About />
+        <Process />
+      </div>
       <Testimonials />
       <Footer />
       <WhatsAppButton />
