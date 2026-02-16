@@ -279,3 +279,14 @@ button, a, input, textarea, select {
 .animate-scroll {
   animation: scroll 2s ease-in-out infinite;
 }
+/* Bottom Tab Bar - Safe Area Support */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Asegurar que el contenido no quede oculto debajo del tab bar en mobile */
+@media (max-width: 768px) {
+  main {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}

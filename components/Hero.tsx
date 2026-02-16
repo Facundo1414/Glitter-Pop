@@ -27,7 +27,7 @@ export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-[#FFF0F5] md:bg-gradient-to-br md:from-pastel-lavender md:via-pastel-pink md:to-pastel-peach pt-20 md:pt-24"
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-[#FFF0F5] md:bg-gradient-to-br md:from-pastel-lavender md:via-pastel-pink md:to-pastel-peach pt-16 md:pt-24"
     >
       {/* Animated background elements - Minimalistas en móvil */}
       <div className="absolute inset-0 overflow-hidden">
@@ -70,35 +70,36 @@ export default function Hero() {
           
           {/* Left Column - Content - diseño vertical minimalista en móvil */}
           <div className="text-center lg:text-left space-y-6 sm:space-y-5 md:space-y-4">
-            {/* Logo with enhanced animation - héroe en móvil */}
-            <div className="flex justify-center lg:justify-start animate-fade-in pt-4 sm:pt-0">
-              <div className="relative group">
-                <div className="absolute -inset-8 sm:-inset-8 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full opacity-50 sm:opacity-30 blur-3xl group-hover:opacity-60 transition-all duration-700 animate-pulse-slow"></div>
-                <div className="relative">
-                  <Image
-                    src="/images/logoGlitterPop.webp"
-                    alt="Glitter Pop Logo"
-                    width={400}
-                    height={150}
-                    className="h-28 sm:h-24 md:h-32 lg:h-36 w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
             
-            {/* Tagline con estilo mejorado - más simple en móvil */}
-            <div className="space-y-2 md:space-y-2 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-gray-900 font-bold font-display leading-snug">
-                {business.tagline}
-              </h1>
-              <div className="flex justify-center lg:justify-start pt-1">
-                <div className="h-1 w-24 md:w-28 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full"></div>
+            {/* Logo y Tagline optimizados para mobile */}
+            <div className="animate-fade-in pt-4 sm:pt-0 space-y-4" style={{ animationDelay: '0.2s' }}>
+              
+              {/* Logo recortado - solo mobile */}
+              <div className="sm:hidden w-full h-24 overflow-hidden rounded-2xl shadow-lg">
+                <Image
+                  src="/images/logoGlitterPop.webp"
+                  alt="Glitter Pop Logo"
+                  width={800}
+                  height={200}
+                  className="w-full h-full object-cover object-center"
+                  priority
+                />
               </div>
-              {/* Subtítulo breve solo en móvil */}
-              <p className="sm:hidden text-sm text-gray-700 pt-1 font-medium">
-                Maquillaje artístico para tu evento especial
-              </p>
+            
+              {/* Título */}
+              <div className="space-y-2 md:space-y-2 px-4 sm:px-0">
+                <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl text-gray-900 font-bold font-display leading-tight">
+                  {business.tagline}
+                </h1>
+                
+                <div className="flex justify-center lg:justify-start pt-1">
+                  <div className="h-1 w-24 md:w-28 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full"></div>
+                </div>
+                {/* Subtítulo breve solo en móvil */}
+                <p className="sm:hidden text-sm text-gray-700 pt-2 font-medium leading-relaxed">
+                  Maquillaje artístico para tu evento especial
+                </p>
+              </div>
             </div>
             
             {/* Description - Oculta en móvil */}
