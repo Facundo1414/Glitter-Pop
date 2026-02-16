@@ -27,14 +27,19 @@ export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-[#FFF0F5] md:bg-gradient-to-br md:from-pastel-lavender md:via-pastel-pink md:to-pastel-peach pt-16 md:pt-24"
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-[#FFF0F5] md:bg-white pt-16 md:pt-24"
     >
-      {/* Animated background elements - Minimalistas en móvil */}
+      {/* Fondo decorativo mejorado para desktop */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="hidden sm:block absolute top-10 -left-20 w-96 h-96 bg-pastel-yellow rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-float"></div>
-        <div className="hidden md:block absolute top-20 right-0 w-48 sm:w-80 h-48 sm:h-80 bg-pastel-pink rounded-full mix-blend-multiply filter blur-2xl opacity-20 sm:opacity-35 animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="hidden sm:block absolute bottom-20 left-1/3 w-96 h-96 bg-pastel-blue rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="hidden md:block absolute bottom-0 left-0 w-48 sm:w-80 h-48 sm:h-80 bg-pastel-peach rounded-full mix-blend-multiply filter blur-2xl opacity-20 sm:opacity-35 animate-float" style={{ animationDelay: '1.5s' }}></div>
+        {/* Gradiente suave de fondo solo en desktop */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 opacity-60"></div>
+        
+        {/* Elementos animados con mejor contraste */}
+        <div className="hidden sm:block absolute top-10 -left-20 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        <div className="hidden md:block absolute top-20 right-0 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="hidden sm:block absolute bottom-20 left-1/3 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="hidden md:block absolute bottom-0 left-0 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '1.5s' }}></div>
+        <div className="hidden lg:block absolute top-1/2 right-1/3 w-72 h-72 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '3s' }}></div>
       </div>
 
       {/* Geometric decorative elements - simplificados en móvil */}
@@ -167,8 +172,8 @@ export default function Hero() {
               <div className="grid grid-cols-2 gap-3 px-4">
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg ring-2 ring-white/50">
                   <Image
-                    src="/images/image 1.png"
-                    alt="Festival"
+                    src="/images/image-1.webp"
+                    alt="Festivales"
                     fill
                     className="object-cover"
                   />
@@ -176,9 +181,9 @@ export default function Hero() {
                     <span className="text-white text-xs font-semibold p-2">Festivales</span>
                   </div>
                 </div>
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-lg ring-2 ring-white/50">
+                <div className="relative aspect-square overflow-hidden rounded-lg group">
                   <Image
-                    src="/images/image 4.png"
+                    src="/images/image-4.webp"
                     alt="Bodas"
                     fill
                     className="object-cover"
@@ -225,7 +230,7 @@ export default function Hero() {
                   <div className="grid grid-cols-2 gap-2 md:gap-2.5">
                     <div className="relative aspect-square rounded-lg lg:rounded-xl overflow-hidden group">
                       <Image
-                        src="/images/image 1.png"
+                        src="/images/image-1.webp"
                         alt="Festival de Verano"
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -239,7 +244,7 @@ export default function Hero() {
                     
                     <div className="relative aspect-square rounded-lg lg:rounded-xl overflow-hidden group">
                       <Image
-                        src="/images/image 4.png"
+                        src="/images/image-4.webp"
                         alt="Boda Mágica"
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -254,7 +259,7 @@ export default function Hero() {
                     {/* Mostrar solo en tablet y desktop */}
                     <div className="hidden sm:block relative aspect-square rounded-lg lg:rounded-xl overflow-hidden group">
                       <Image
-                        src="/images/image 5.png"
+                        src="/images/image-5.webp"
                         alt="Fiesta Neon"
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -268,7 +273,7 @@ export default function Hero() {
                     
                     <div className="hidden sm:block relative aspect-square rounded-lg lg:rounded-xl overflow-hidden group">
                       <Image
-                        src="/images/image 2.png"
+                        src="/images/image-2.webp"
                         alt="Cumpleaños Ana"
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-500"

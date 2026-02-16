@@ -80,37 +80,37 @@
     {
       "id": "1",
       "title": "Festival de Verano",
-      "image": "/images/image 1.png",
+      "image": "/images/image-1.webp",
       "category": "festival"
     },
     {
       "id": "2",
       "title": "Cumpleaños Ana",
-      "image": "/images/image 2.png",
+      "image": "/images/image-2.webp",
       "category": "kids"
     },
     {
       "id": "3",
       "title": "Evento Corporativo Tech",
-      "image": "/images/image 3.png",
+      "image": "/images/image-3.webp",
       "category": "corporate"
     },
     {
       "id": "4",
       "title": "Boda Mágica",
-      "image": "/images/image 4.png",
+      "image": "/images/image-4.webp",
       "category": "wedding"
     },
     {
       "id": "5",
       "title": "Fiesta Neon",
-      "image": "/images/image 5.png",
+      "image": "/images/image-5.webp",
       "category": "party"
     },
     {
       "id": "6",
       "title": "Quinceañera Sofi",
-      "image": "/images/image 6.png",
+      "image": "/images/image-6.webp",
       "category": "special"
     }
   ],
