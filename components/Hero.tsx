@@ -75,7 +75,7 @@ export default function Hero() {
             <div className="animate-fade-in pt-4 sm:pt-0 space-y-4" style={{ animationDelay: '0.2s' }}>
               
               {/* Logo recortado - solo mobile */}
-              <div className="sm:hidden w-full h-24 overflow-hidden rounded-2xl shadow-lg">
+              <div className="sm:hidden w-full h-36 overflow-hidden rounded-2xl shadow-lg">
                 <Image
                   src="/images/logoGlitterPop.webp"
                   alt="Glitter Pop Logo"
@@ -303,10 +303,10 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator - animado */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
+      {/* Scroll indicator - animado - solo desktop */}
+      <div className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
         <div className="flex flex-col items-center gap-2">
-          <span className="text-xs text-purple-600 font-semibold hidden sm:block">Deslizá para ver más</span>
+          <span className="text-xs text-purple-600 font-semibold">Deslizá para ver más</span>
           <div className="w-6 h-10 border-2 border-purple-400 rounded-full flex justify-center">
             <div className="w-1.5 h-2 bg-purple-500 rounded-full mt-2 animate-scroll"></div>
           </div>
