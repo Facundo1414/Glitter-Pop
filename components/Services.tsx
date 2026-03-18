@@ -1,16 +1,34 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import contentData from '@/data/content.json'
 
 export default function Services() {
-  const { services } = contentData
+  const [services, setServices] = useState(contentData.services)
+
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const response = await fetch('/api/services', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        if (Array.isArray(data.services) && data.services.length > 0) {
+          setServices(data.services)
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadServices()
+  }, [])
 
   return (
     <section id="servicios" className="py-16 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6">
         <h2 className="section-title">
-          Nuestros <span className="glitter-text">Servicios</span>
+          Nuestros Servicios
         </h2>
         <p className="section-subtitle">
           Dale brillo a tu evento con nuestros servicios profesionales de maquillaje artístico

@@ -5,8 +5,25 @@ import { useEffect, useState } from 'react'
 import contentData from '@/data/content.json'
 
 export default function Packages() {
-  const { packages } = contentData
+  const [packages, setPackages] = useState(contentData.packages)
   const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const loadPackages = async () => {
+      try {
+        const response = await fetch('/api/packages', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        if (Array.isArray(data.packages) && data.packages.length > 0) {
+          setPackages(data.packages)
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadPackages()
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -41,20 +58,20 @@ export default function Packages() {
   }
 
   return (
-    <section id="paquetes" className="py-16 md:py-20 bg-gradient-to-br from-pastel-lavender/20 via-white to-pastel-pink/20">
+    <section id="paquetes" className="py-12 md:py-14 bg-gradient-to-br from-pastel-lavender/20 via-white to-pastel-pink/20">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
+        <div className={`text-center mb-8 md:mb-10 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-3 md:mb-4 px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-gray-900 mb-2 md:mb-3 px-4">
             Nuestros Paquetes
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Elegí el paquete perfecto para tu evento ✨
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 max-w-7xl mx-auto">
           {packages.map((pkg, index) => (
             <div
               key={pkg.id}
@@ -63,20 +80,20 @@ export default function Packages() {
               }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <div className={`relative h-full bg-white rounded-2xl md:rounded-3xl overflow-hidden transition-all duration-500 ${
+              <div className={`relative h-full bg-white rounded-2xl overflow-hidden transition-all duration-500 ${
                 pkg.popular 
-                  ? 'shadow-2xl border-2 border-primary-200 scale-105 md:scale-110 z-10' 
+                  ? 'shadow-2xl border-2 border-primary-200 scale-105 md:scale-[1.07] z-10' 
                   : 'shadow-lg hover:shadow-xl border border-gray-100 active:scale-98'
               }`}>
                 {pkg.popular && (
                   <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700"></div>
                 )}
 
-                <div className="p-8">
+                <div className="p-6 md:p-6">
                   {/* Badge */}
                   {pkg.popular && (
-                    <div className="flex justify-center mb-4">
-                      <span className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-md">
+                    <div className="flex justify-center mb-3">
+                      <span className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                         <span>⭐</span>
                         <span>Más Popular</span>
                       </span>
@@ -84,30 +101,30 @@ export default function Packages() {
                   )}
 
                   {/* Header */}
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-3">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl md:text-2xl font-display font-bold text-gray-900 mb-2">
                       {pkg.name}
                     </h3>
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="text-4xl font-bold text-gray-900">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <span className="text-3xl font-bold text-gray-900">
                         {formatPrice(pkg.price)}
                       </span>
                     </div>
-                    <p className="text-gray-500 text-sm font-medium">
+                    <p className="text-gray-500 text-xs font-medium">
                       {pkg.duration}
                     </p>
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-6"></div>
+                  <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-4"></div>
 
                   {/* Features */}
-                  <div className="space-y-4 mb-8">
+                  <div className="space-y-3 mb-5">
                     {pkg.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-2 sm:gap-3">
-                        <div className="shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-primary-400 to-pastel-pink flex items-center justify-center mt-0.5">
+                      <div key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
+                        <div className="shrink-0 w-4 h-4 rounded-full bg-gradient-to-br from-primary-400 to-pastel-pink flex items-center justify-center mt-0.5">
                           <svg
-                            className="w-3 h-3 text-white"
+                            className="w-2.5 h-2.5 text-white"
                             fill="none"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -118,7 +135,7 @@ export default function Packages() {
                             <path d="M5 13l4 4L19 7"></path>
                           </svg>
                         </div>
-                        <span className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                        <span className="text-gray-700">
                           {feature}
                         </span>
                       </div>
@@ -126,15 +143,15 @@ export default function Packages() {
                   </div>
 
                   {/* Ideal para */}
-                  <div className="mb-5 md:mb-6">
-                    <div className="bg-gradient-to-br from-pastel-lavender/30 to-pastel-pink/30 rounded-xl md:rounded-2xl p-4 border border-primary-100">
+                  <div className="mb-4">
+                    <div className="bg-gradient-to-br from-pastel-lavender/30 to-pastel-pink/30 rounded-lg md:rounded-xl p-3 border border-primary-100">
                       <div className="flex items-start gap-2">
-                        <span className="text-base sm:text-lg shrink-0">💡</span>
+                        <span className="text-sm shrink-0">💡</span>
                         <div>
-                          <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-1">
+                          <p className="text-[10px] font-semibold text-primary-600 uppercase tracking-wide mb-0.5">
                             Ideal para
                           </p>
-                          <p className="text-gray-900 text-sm sm:text-base font-medium leading-snug">
+                          <p className="text-gray-900 text-xs sm:text-sm leading-snug">
                             {pkg.ideal}
                           </p>
                         </div>
@@ -145,7 +162,7 @@ export default function Packages() {
                   {/* CTA Button */}
                   <Link
                     href="/contacto"
-                    className={`block w-full text-center py-4 px-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg transition-all duration-300 transform active:scale-95 hover:scale-105 hover:shadow-lg touch-manipulation ${
+                    className={`block w-full text-center py-3 px-5 rounded-lg md:rounded-xl font-bold text-sm md:text-base transition-all duration-300 transform active:scale-95 hover:scale-105 hover:shadow-lg touch-manipulation ${
                       pkg.popular
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                         : 'bg-white border-2 border-primary-300 text-primary-600 hover:bg-primary-50'
@@ -160,21 +177,21 @@ export default function Packages() {
         </div>
 
         {/* Info adicional */}
-        <div className={`mt-12 md:mt-16 text-center transition-all duration-1000 px-4 ${
+        <div className={`mt-8 md:mt-10 text-center transition-all duration-1000 px-4 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
         style={{ transitionDelay: '600ms' }}>
-          <p className="text-gray-600 mb-4 text-sm sm:text-base">
+          <p className="text-gray-600 mb-3 text-xs sm:text-sm">
             💬 ¿Necesitás algo personalizado? Consultanos sin compromiso
           </p>
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500">
+          <div className="flex flex-wrap justify-center gap-2 text-[10px] sm:text-xs text-gray-500">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-primary-400 rounded-full"></span>
               Precios en pesos argentinos
             </span>
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-primary-400 rounded-full"></span>
-              Traslado incluido en Córdoba
+              Traslado incluido
             </span>
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-primary-400 rounded-full"></span>

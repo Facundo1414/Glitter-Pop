@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import contentData from '@/data/content.json'
+import { useEffect } from 'react'
 
 export default function Portfolio() {
-  const { portfolio } = contentData
+  const [portfolio, setPortfolio] = useState(contentData.portfolio)
+  const [portfolioMode, setPortfolioMode] = useState<'visible' | 'hidden' | 'comingsoon'>('visible')
   const [filter, setFilter] = useState('all')
 
   const categories = ['all', 'festival', 'kids', 'corporate', 'wedding', 'party', 'special']
@@ -23,11 +25,60 @@ export default function Portfolio() {
     ? portfolio 
     : portfolio.filter(item => item.category === filter)
 
+  useEffect(() => {
+    const loadPortfolio = async () => {
+      try {
+        const [portfolioResponse, settingsResponse] = await Promise.all([
+          fetch('/api/portfolio', { cache: 'no-store' }),
+          fetch('/api/settings', { cache: 'no-store' }),
+        ])
+
+        if (portfolioResponse.ok) {
+          const portfolioData = await portfolioResponse.json()
+          if (Array.isArray(portfolioData.portfolio)) {
+            setPortfolio(portfolioData.portfolio)
+          }
+        }
+
+        if (settingsResponse.ok) {
+          const settingsData = await settingsResponse.json()
+          const mode = settingsData?.settings?.portfolio_mode
+          if (mode === 'hidden' || mode === 'comingsoon' || mode === 'visible') {
+            setPortfolioMode(mode)
+          }
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadPortfolio()
+  }, [])
+
+  if (portfolioMode === 'hidden') {
+    return null
+  }
+
+  if (portfolioMode === 'comingsoon') {
+    return (
+      <section id="portfolio" className="py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <h2 className="section-title">Nuestro Portfolio</h2>
+          <p className="section-subtitle">Estamos preparando esta sección.</p>
+          <div className="max-w-3xl mx-auto bg-gradient-to-r from-pastel-lavender/20 to-pastel-pink/20 rounded-2xl p-10 border border-primary-100">
+            <p className="text-2xl font-display font-bold text-gray-900">Próximamente ✨</p>
+            <p className="text-gray-600 mt-3">Muy pronto vas a ver aquí nuestros mejores trabajos.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section id="portfolio" className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
         <h2 className="section-title">
-          Nuestro <span className="glitter-text">Portfolio</span>
+          Nuestro Portfolio
         </h2>
         <p className="section-subtitle">
           Algunos de nuestros trabajos más brillantes

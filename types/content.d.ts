@@ -6,6 +6,7 @@ declare module "@/data/content.json" {
     email: string;
     phone: string;
     whatsapp?: string;
+    whatsapp_luz?: string;
     instagram: string;
     facebook: string;
     location: string;

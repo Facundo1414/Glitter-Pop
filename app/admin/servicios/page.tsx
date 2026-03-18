@@ -1,0 +1,228 @@
+"use client"
+
+import { useEffect, useMemo, useState } from 'react'
+
+type Service = {
+  id: string
+  title: string
+  description: string
+  image: string
+  duration: string
+  icon: string
+  displayOrder: number
+}
+
+export default function AdminServiciosPage() {
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    image: '/images/service-glitter.jpg',
+    duration: '',
+    icon: '✨',
+  })
+
+  const isEditing = useMemo(() => Boolean(editingId), [editingId])
+
+  const loadServices = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const response = await fetch('/api/services', { cache: 'no-store' })
+      if (!response.ok) throw new Error('No se pudieron cargar servicios')
+      const data = await response.json()
+      setServices(data.services || [])
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : 'Error cargando servicios')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    void loadServices()
+  }, [])
+
+  const resetForm = () => {
+    setEditingId(null)
+    setForm({
+      title: '',
+      description: '',
+      image: '/images/service-glitter.jpg',
+      duration: '',
+      icon: '✨',
+    })
+  }
+
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    try {
+      setSaving(true)
+      setError('')
+      const payload = {
+        ...form,
+        displayOrder: editingId
+          ? services.find((item) => item.id === editingId)?.displayOrder ?? 0
+          : services.length,
+      }
+
+      const endpoint = editingId ? `/api/services/${editingId}` : '/api/services'
+      const method = editingId ? 'PUT' : 'POST'
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo guardar')
+      }
+
+      await loadServices()
+      resetForm()
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Error guardando servicio')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const onEdit = (service: Service) => {
+    setEditingId(service.id)
+    setForm({
+      title: service.title,
+      description: service.description,
+      image: service.image,
+      duration: service.duration,
+      icon: service.icon,
+    })
+  }
+
+  const onDelete = async (id: string) => {
+    try {
+      setError('')
+      const response = await fetch(`/api/services/${id}`, { method: 'DELETE' })
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo eliminar')
+      }
+      await loadServices()
+      if (editingId === id) resetForm()
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : 'Error eliminando servicio')
+    }
+  }
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-4xl font-bold text-gray-900 font-display mb-2">
+          Gestión de Servicios
+        </h1>
+        <p className="text-gray-600">
+          Crea, edita y elimina los servicios que ofrece Glitter Pop.
+        </p>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+      )}
+
+      <form onSubmit={onSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar servicio' : 'Nuevo servicio'}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            value={form.title}
+            onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+            placeholder="Título"
+            className="px-4 py-3 border border-gray-300 rounded-lg"
+            required
+          />
+          <input
+            value={form.duration}
+            onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
+            placeholder="Duración"
+            className="px-4 py-3 border border-gray-300 rounded-lg"
+            required
+          />
+          <input
+            value={form.image}
+            onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+            placeholder="URL de imagen"
+            className="px-4 py-3 border border-gray-300 rounded-lg"
+          />
+          <input
+            value={form.icon}
+            onChange={(e) => setForm((prev) => ({ ...prev, icon: e.target.value }))}
+            placeholder="Icono (emoji)"
+            className="px-4 py-3 border border-gray-300 rounded-lg"
+          />
+        </div>
+        <textarea
+          value={form.description}
+          onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+          placeholder="Descripción"
+          rows={4}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+          required
+        />
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-5 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+          >
+            {saving ? 'Guardando...' : isEditing ? 'Actualizar servicio' : 'Crear servicio'}
+          </button>
+          {isEditing && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold"
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
+      </form>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading && (
+          <div className="text-gray-600">Cargando servicios...</div>
+        )}
+        {!loading && services.map((service) => (
+          <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="h-32 bg-gradient-to-br from-pastel-lavender to-pastel-pink flex items-center justify-center">
+              <span className="text-5xl">{service.icon}</span>
+            </div>
+            <div className="p-4">
+              <h3 className="font-bold text-lg text-gray-900 mb-2">{service.title}</h3>
+              <p className="text-sm text-gray-600 mb-3">{service.description}</p>
+              <p className="text-xs text-purple-600 font-semibold mb-4">⏱️ {service.duration}</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onEdit(service)}
+                  className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm font-semibold"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => onDelete(service.id)}
+                  className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-semibold"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

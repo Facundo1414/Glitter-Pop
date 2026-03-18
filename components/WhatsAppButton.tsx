@@ -1,12 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import contentData from '@/data/content.json'
 
 export default function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState(contentData.business.whatsapp || '5493517878045')
   
-  // Número de WhatsApp (formato internacional sin + ni espacios)
-  const phoneNumber = '5493517878045'
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/settings', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        if (typeof data?.settings?.whatsapp_martina === 'string' && data.settings.whatsapp_martina.trim()) {
+          setPhoneNumber(data.settings.whatsapp_martina)
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadSettings()
+  }, [])
+
   const message = encodeURIComponent('Hola, quiero solicitar el servicio de Glitter Pop. ¿Podrían darme más información?')
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
 

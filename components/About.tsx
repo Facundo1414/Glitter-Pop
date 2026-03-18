@@ -4,8 +4,26 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import content from '@/data/content.json'
 
+type TeamMember = {
+  id: string
+  name: string
+  role: string
+  description: string
+  image: string
+}
+
 export default function About() {
   const [isVisible, setIsVisible] = useState(false)
+  const [aboutText, setAboutText] = useState(content.business.about || '')
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(
+    (content.business.team || []).map((member, index) => ({
+      id: String(index + 1),
+      name: member.name,
+      role: member.role,
+      description: member.description,
+      image: `/images/${index === 0 ? 'Marti' : 'Luz'}.webp`,
+    })),
+  )
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,6 +49,35 @@ export default function About() {
     }
   }, [])
 
+  useEffect(() => {
+    const loadAboutData = async () => {
+      try {
+        const [teamResponse, settingsResponse] = await Promise.all([
+          fetch('/api/team', { cache: 'no-store' }),
+          fetch('/api/settings', { cache: 'no-store' }),
+        ])
+
+        if (teamResponse.ok) {
+          const data = await teamResponse.json()
+          if (Array.isArray(data.team) && data.team.length > 0) {
+            setTeamMembers(data.team)
+          }
+        }
+
+        if (settingsResponse.ok) {
+          const data = await settingsResponse.json()
+          if (typeof data?.settings?.about_text === 'string' && data.settings.about_text.trim()) {
+            setAboutText(data.settings.about_text)
+          }
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadAboutData()
+  }, [])
+
   return (
     <section id="nosotras" className="py-16 md:py-20 bg-gradient-to-b from-white to-pastel-pink/10">
       <div className="container mx-auto px-4">
@@ -41,7 +88,7 @@ export default function About() {
             Conocé a las Creadoras
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            {content.business.about}
+            {aboutText}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm md:text-base text-gray-600">
             <div className="flex items-center gap-2">
@@ -60,9 +107,9 @@ export default function About() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto">
-          {content.business.team?.map((member, index) => (
+          {teamMembers.map((member, index) => (
             <div
-              key={index}
+              key={member.id}
               className={`bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 active:scale-100 touch-manipulation ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
@@ -71,7 +118,7 @@ export default function About() {
               <div className="bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue p-8">
                 <div className="w-32 h-32 mx-auto bg-white rounded-full overflow-hidden shadow-lg">
                   <Image
-                    src={`/images/${index === 0 ? 'Marti' : 'Luz'}.webp`}
+                    src={member.image}
                     alt={member.name}
                     width={128}
                     height={128}

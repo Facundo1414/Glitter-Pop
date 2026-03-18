@@ -9,7 +9,7 @@ export default function Testimonials() {
     <section className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
         <h2 className="section-title">
-          Clientes <span className="glitter-text">Felices</span>
+          Clientes Felices
         </h2>
         <p className="section-subtitle">
           Lo que dicen nuestros clientes sobre nosotros

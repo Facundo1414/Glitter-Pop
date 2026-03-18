@@ -7,7 +7,9 @@ Página web profesional para servicios de maquillaje artístico con glitter para
 - **Next.js 16** con App Router
 - **TypeScript** para type safety
 - **Tailwind CSS** para estilos modernos y responsive
-- **Sin base de datos** - Datos almacenados en JSON
+- **Postgres (Neon/Vercel)** para persistencia de contenido
+- **Panel de administración** para edición de contenido en vivo
+- **API Routes** para CRUD de servicios, paquetes, FAQs, portfolio y equipo
 - **Optimizado para Vercel** - Deploy con un click
 - **100% Responsive** - Se ve perfecto en todos los dispositivos
 - **Animaciones fluidas** - Experiencia de usuario premium
@@ -65,14 +67,19 @@ npm run dev
 
 ### Modificar Contenido
 
-Todos los textos, servicios, testimonios y configuración se encuentran en `data/content.json`. Simplemente edita este archivo para actualizar:
+La forma recomendada es usar el panel admin en `/admin/login`, que persiste en base de datos.
 
-- Información del negocio
+Tambien existe un fallback inicial en `data/content.json`, utilizado para seed cuando la base esta vacia.
+
+Desde admin puedes actualizar:
+
+- Configuración del hero
+- WhatsApps de contacto
 - Servicios ofrecidos
 - Portfolio de trabajos
-- Testimonios de clientes
 - Preguntas frecuentes
 - Paquetes y precios
+- Información de "Nosotras"
 
 ### Agregar Imágenes
 
@@ -119,6 +126,16 @@ NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
 # Agrega otras variables según necesites
 ```
 
+### Variables de Entorno (Recomendadas)
+
+```env
+ADMIN_USERNAME=tu_usuario_admin
+ADMIN_PASSWORD=tu_password_admin
+DATABASE_URL=postgresql://...
+# Opcional para uploads
+BLOB_READ_WRITE_TOKEN=...
+```
+
 ## 📱 Funcionalidades
 
 ### Secciones Principales
@@ -127,7 +144,7 @@ NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
 2. **Servicios** - Grid con todos los servicios ofrecidos
 3. **Portfolio** - Galería filtrable de trabajos
 4. **Paquetes** - Planes y precios destacando el más popular
-5. **Testimonios** - Reseñas de clientes satisfechos
+5. **Testimonios** - Seccion disponible para mostrar/ocultar segun estrategia
 6. **FAQ** - Preguntas frecuentes con acordeón
 7. **Contacto** - Formulario completo de cotización
 8. **Footer** - Links y redes sociales
@@ -141,6 +158,8 @@ NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
 - ✅ Filtros en portfolio
 - ✅ FAQ con acordeón
 - ✅ Optimización de imágenes
+- ✅ API de contenido con Postgres
+- ✅ Panel de administración protegido
 - ✅ SEO friendly
 - ✅ Accesibilidad
 

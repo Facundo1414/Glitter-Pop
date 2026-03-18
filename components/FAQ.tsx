@@ -1,12 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import contentData from '@/data/content.json'
 
 export default function FAQ() {
-  const { faqs } = contentData
+  const [faqs, setFaqs] = useState(contentData.faqs)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    const loadFaqs = async () => {
+      try {
+        const response = await fetch('/api/faqs', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        if (Array.isArray(data.faqs) && data.faqs.length > 0) {
+          setFaqs(data.faqs)
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadFaqs()
+  }, [])
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
@@ -16,7 +33,7 @@ export default function FAQ() {
     <section className="py-16 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <h2 className="section-title">
-          Preguntas <span className="glitter-text">Frecuentes</span>
+          Preguntas Frecuentes
         </h2>
         <p className="section-subtitle">
           Todo lo que necesitás saber sobre nuestros servicios

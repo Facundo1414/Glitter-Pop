@@ -7,6 +7,8 @@ import contentData from '@/data/content.json'
 
 export default function Hero() {
   const { business } = contentData
+  const [heroTitle, setHeroTitle] = useState(business.tagline)
+  const [heroSubtitle, setHeroSubtitle] = useState(business.description)
   const [sparkles, setSparkles] = useState<Array<{ left: number; top: number; delay: number; size: number }>>([])
   const [mounted, setMounted] = useState(false)
 
@@ -22,6 +24,26 @@ export default function Hero() {
         size: Math.random() * 1.5 + 0.5,
       }))
     )
+  }, [])
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/settings', { cache: 'no-store' })
+        if (!response.ok) return
+        const data = await response.json()
+        if (typeof data?.settings?.hero_title === 'string' && data.settings.hero_title.trim()) {
+          setHeroTitle(data.settings.hero_title)
+        }
+        if (typeof data?.settings?.hero_subtitle === 'string' && data.settings.hero_subtitle.trim()) {
+          setHeroSubtitle(data.settings.hero_subtitle)
+        }
+      } catch {
+        // Keep JSON fallback
+      }
+    }
+
+    void loadSettings()
   }, [])
 
   return (
@@ -51,7 +73,7 @@ export default function Hero() {
 
       {/* Enhanced Sparkle effects - Oculto en móvil */}
       {mounted && (
-        <div className="hidden sm:block absolute inset-0 pointer-events-none">
+        <div className="hidden sm:block absolute inset-0 pointer-events-none opacity-0">
           {sparkles.map((sparkle, i) => (
             <div
               key={i}
@@ -91,26 +113,40 @@ export default function Hero() {
                 />
               </div>
             
-              {/* Título */}
-              <div className="space-y-2 md:space-y-2 px-4 sm:px-0">
-                <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-4xl text-gray-900 font-bold font-display leading-tight">
-                  {business.tagline}
+              {/* Title and Description Card - Desktop only */}
+              <div className="hidden sm:block bg-[#FFF0F5] rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg">
+                {/* Título */}
+                <div className="space-y-2 md:space-y-3">
+                  <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-black font-bold font-display leading-tight">
+                    {heroTitle}
+                  </h1>
+                  
+                  <div className="flex justify-start pt-1">
+                    <div className="h-1 w-24 md:w-32 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full"></div>
+                  </div>
+                </div>
+                
+                {/* Description - dentro del card */}
+                <p className="text-sm md:text-base lg:text-base text-gray-800 leading-relaxed max-w-xl mt-4 md:mt-5 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                  {heroSubtitle}
+                </p>
+              </div>
+
+              {/* Mobile Title Section */}
+              <div className="sm:hidden space-y-2 px-4">
+                <h1 className="text-3xl text-gray-900 font-bold font-display leading-tight">
+                  {heroTitle}
                 </h1>
                 
-                <div className="flex justify-center lg:justify-start pt-1">
-                  <div className="h-1 w-24 md:w-28 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full"></div>
+                <div className="flex justify-center pt-1">
+                  <div className="h-1 w-24 bg-gradient-to-r from-pastel-lavender via-pastel-pink to-pastel-peach rounded-full"></div>
                 </div>
                 {/* Subtítulo breve solo en móvil */}
-                <p className="sm:hidden text-sm text-gray-700 pt-2 font-medium leading-relaxed">
+                <p className="text-sm text-gray-700 pt-2 font-medium leading-relaxed">
                   Maquillaje artístico para tu evento especial
                 </p>
               </div>
             </div>
-            
-            {/* Description - Oculta en móvil */}
-            <p className="hidden sm:block text-sm md:text-base lg:text-base text-gray-800 leading-relaxed max-w-xl mx-auto lg:mx-0 animate-fade-in px-4 md:px-0" style={{ animationDelay: '0.4s' }}>
-              {business.description}
-            </p>
             
             {/* CTA Buttons - un solo botón destacado en móvil */}
             <div className="flex flex-col sm:flex-row gap-3 md:gap-3 justify-center lg:justify-start animate-fade-in px-6 sm:px-4 md:px-0 pt-2" style={{ animationDelay: '0.4s' }}>
@@ -131,36 +167,36 @@ export default function Hero() {
               </Link>
             </div>
 
-            {/* Stats rediseñadas con iconos */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 pt-3 md:pt-4 animate-fade-in px-2 sm:px-0" style={{ animationDelay: '0.8s' }}>
-              <div className="text-center lg:text-left group hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center justify-center lg:justify-start gap-1 mb-0.5">
-                  <span className="text-lg sm:text-xl md:text-xl">🎉</span>
+            {/* Stats rediseñadas con iconos - Solo mobile */}
+            <div className="sm:hidden grid grid-cols-3 gap-2 pt-3 animate-fade-in px-2" style={{ animationDelay: '0.8s' }}>
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <span className="text-lg">🎉</span>
                 </div>
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700">
+                <div className="text-lg font-bold text-purple-700">
                   500+
                 </div>
-                <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-800 font-semibold leading-tight">Eventos Realizados</div>
+                <div className="text-[9px] text-gray-800 font-semibold leading-tight">Eventos Realizados</div>
               </div>
 
-              <div className="text-center lg:text-left group hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center justify-center lg:justify-start gap-1 mb-0.5">
-                  <span className="text-lg sm:text-xl md:text-xl">⭐</span>
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <span className="text-lg">⭐</span>
                 </div>
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700">
+                <div className="text-lg font-bold text-purple-700">
                   5.0
                 </div>
-                <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-800 font-semibold leading-tight">Calificación</div>
+                <div className="text-[9px] text-gray-800 font-semibold leading-tight">Calificación</div>
               </div>
 
-              <div className="text-center lg:text-left group hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center justify-center lg:justify-start gap-1 mb-0.5">
-                  <span className="text-lg sm:text-xl md:text-xl">💖</span>
+              <div className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <span className="text-lg">💖</span>
                 </div>
-                <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-700">
+                <div className="text-lg font-bold text-purple-700">
                   100%
                 </div>
-                <div className="text-[9px] sm:text-[10px] md:text-xs text-gray-800 font-semibold leading-tight">Clientes Felices</div>
+                <div className="text-[9px] text-gray-800 font-semibold leading-tight">Clientes Felices</div>
               </div>
             </div>
 

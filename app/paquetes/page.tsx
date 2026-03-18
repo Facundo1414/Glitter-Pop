@@ -11,7 +11,7 @@ export default function PaquetesPage() {
       <Header />
       <div className="pt-24">
         <Packages />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <FAQ />
       </div>
       <Footer />
