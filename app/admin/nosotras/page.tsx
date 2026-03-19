@@ -22,7 +22,7 @@ export default function AdminNosotrasPage() {
     name: '',
     role: '',
     description: '',
-    image: '/images/Marti.webp',
+    image: '',
   })
 
   const isEditing = useMemo(() => Boolean(editingId), [editingId])
@@ -52,7 +52,7 @@ export default function AdminNosotrasPage() {
       name: '',
       role: '',
       description: '',
-      image: '/images/Marti.webp',
+      image: '',
     })
   }
 
@@ -87,6 +87,35 @@ export default function AdminNosotrasPage() {
       resetForm()
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Error guardando integrante')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const onUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      setSaving(true)
+      setError('')
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo subir imagen')
+      }
+
+      const data = await response.json()
+      setForm((prev) => ({ ...prev, image: data.url }))
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo archivo')
     } finally {
       setSaving(false)
     }
@@ -145,13 +174,29 @@ export default function AdminNosotrasPage() {
             className="px-4 py-3 border border-gray-300 rounded-lg"
             required
           />
-          <input
-            value={form.image}
-            onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
-            placeholder="URL de imagen"
-            className="md:col-span-2 px-4 py-3 border border-gray-300 rounded-lg"
-          />
+          <div className="md:col-span-2 space-y-2">
+            <input
+              value={form.image}
+              onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+              placeholder="URL de imagen"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+              required
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onUpload}
+              className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
+              disabled={saving}
+            />
+          </div>
         </div>
+
+        {form.image && (
+          <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
+            <Image src={form.image} alt="Preview integrante" fill className="object-cover" />
+          </div>
+        )}
         <textarea
           value={form.description}
           onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
@@ -164,7 +209,7 @@ export default function AdminNosotrasPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+            className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
           >
             {saving ? 'Guardando...' : isEditing ? 'Actualizar integrante' : 'Crear integrante'}
           </button>
@@ -179,12 +224,18 @@ export default function AdminNosotrasPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {loading && <div className="text-gray-600">Cargando integrantes...</div>}
         {!loading && members.map((member) => (
-          <div key={member.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="relative h-48 bg-gray-100">
-              <Image src={member.image} alt={member.name} fill className="object-cover" />
+          <div key={member.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-linear-to-br from-pastel-pink via-pastel-lavender to-pastel-blue p-8">
+              <div className="w-32 h-32 mx-auto bg-white rounded-full overflow-hidden shadow-lg relative">
+                {member.image ? (
+                  <Image src={member.image} alt={member.name} fill className="object-cover" sizes="128px" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl">✨</div>
+                )}
+              </div>
             </div>
-            <div className="p-4 space-y-2">
-              <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+            <div className="p-5 sm:p-6 text-center space-y-2">
+              <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900">{member.name}</h3>
               <p className="text-sm text-purple-700 font-semibold">{member.role}</p>
               <p className="text-sm text-gray-600">{member.description}</p>
               <div className="flex gap-2 pt-2">

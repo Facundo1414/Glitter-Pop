@@ -78,6 +78,7 @@ export default function AdminDashboard() {
             </p>
           </div>
         </Link>
+
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">

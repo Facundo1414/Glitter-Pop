@@ -7,7 +7,12 @@ export default function Contact() {
   const { business } = contentData
   const [whatsappMartina, setWhatsappMartina] = useState(business.whatsapp || '')
   const [whatsappLuz, setWhatsappLuz] = useState(business.whatsapp_luz || business.whatsapp || '')
-  const [sparkles, setSparkles] = useState<Array<{ left: number; top: number; delay: number }>>([])
+  const [contactPhone, setContactPhone] = useState(business.phone || '')
+  const [contactInstagram, setContactInstagram] = useState(business.instagram || '')
+  const [contactLocation, setContactLocation] = useState(business.location || '')
+  const [contactDelivery, setContactDelivery] = useState(business.delivery || '')
+  const [contactWorkingHours, setContactWorkingHours] = useState(business.workingHours || '')
+  const [contactAdvanceBooking, setContactAdvanceBooking] = useState(business.advanceBooking || '')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,17 +27,6 @@ export default function Contact() {
   const [submitMessage, setSubmitMessage] = useState('')
 
   useEffect(() => {
-    // Generar posiciones aleatorias solo en el cliente para evitar errores de hidratación
-    setSparkles(
-      Array.from({ length: 15 }, () => ({
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        delay: Math.random() * 2,
-      }))
-    )
-  }, [])
-
-  useEffect(() => {
     const loadSettings = async () => {
       try {
         const response = await fetch('/api/settings', { cache: 'no-store' })
@@ -43,6 +37,24 @@ export default function Contact() {
         }
         if (typeof data?.settings?.whatsapp_luz === 'string' && data.settings.whatsapp_luz.trim()) {
           setWhatsappLuz(data.settings.whatsapp_luz)
+        }
+        if (typeof data?.settings?.contact_phone === 'string' && data.settings.contact_phone.trim()) {
+          setContactPhone(data.settings.contact_phone)
+        }
+        if (typeof data?.settings?.contact_instagram === 'string' && data.settings.contact_instagram.trim()) {
+          setContactInstagram(data.settings.contact_instagram)
+        }
+        if (typeof data?.settings?.contact_location === 'string' && data.settings.contact_location.trim()) {
+          setContactLocation(data.settings.contact_location)
+        }
+        if (typeof data?.settings?.contact_delivery === 'string' && data.settings.contact_delivery.trim()) {
+          setContactDelivery(data.settings.contact_delivery)
+        }
+        if (typeof data?.settings?.contact_working_hours === 'string' && data.settings.contact_working_hours.trim()) {
+          setContactWorkingHours(data.settings.contact_working_hours)
+        }
+        if (typeof data?.settings?.contact_advance_booking === 'string' && data.settings.contact_advance_booking.trim()) {
+          setContactAdvanceBooking(data.settings.contact_advance_booking)
         }
       } catch {
         // Keep JSON fallback
@@ -102,25 +114,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
   }
 
   return (
-    <section id="contacto" className="py-12 md:py-16 bg-gradient-to-br from-pastel-lavender via-pastel-pink to-pastel-peach relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-20">
-        {sparkles.map((sparkle, i) => (
-          <div
-            key={i}
-            className="absolute text-purple-600 text-4xl animate-sparkle"
-            style={{
-              left: `${sparkle.left}%`,
-              top: `${sparkle.top}%`,
-              animationDelay: `${sparkle.delay}s`,
-            }}
-          >
-            ✨
-          </div>
-        ))}
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+    <section id="contacto" className="py-12 md:py-16 bg-white">
+      <div className="container mx-auto px-4 sm:px-6">
         <h2 className="text-3xl sm:text-4xl md:text-4xl font-display font-bold text-center mb-2 md:mb-3 text-gray-800 drop-shadow-sm px-4">
           Hablemos de tu Evento
         </h2>
@@ -281,13 +276,13 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <div className="font-semibold mb-3 text-gray-800 text-sm sm:text-base">WhatsApp (Preferido)</div>
-                        <div className="space-y-2">
+                        <div className="font-semibold mb-2 text-gray-800 text-xs">WhatsApp (Preferido)</div>
+                        <div className="space-y-2 space-x-1.5">
                           <a 
                             href={`https://wa.me/${whatsappMartina}?text=Hola! Me gustaría consultar sobre sus servicios`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-full font-semibold inline-flex items-center gap-2 transition-all hover:scale-105 active:scale-95 touch-manipulation text-sm sm:text-base w-full justify-center"
+                            className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full font-semibold inline-flex items-center gap-1 transition-all hover:scale-[1.02] active:scale-95 touch-manipulation text-[11px] sm:text-xs w-auto max-w-45 justify-center"
                           >
                             💬 WhatsApp Martina
                           </a>
@@ -296,7 +291,7 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                               href={`https://wa.me/${whatsappLuz}?text=Hola! Me gustaría consultar sobre sus servicios`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-full font-semibold inline-flex items-center gap-2 transition-all hover:scale-105 active:scale-95 touch-manipulation text-sm sm:text-base w-full justify-center"
+                              className="bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full font-semibold inline-flex items-center gap-1 transition-all hover:scale-[1.02] active:scale-95 touch-manipulation text-[11px] sm:text-xs w-auto max-w-45 justify-center"
                             >
                               💬 WhatsApp Luz
                             </a>
@@ -314,11 +309,11 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   <div>
                     <div className="font-semibold mb-1 text-gray-800 text-sm sm:text-base">Instagram</div>
                     <a 
-                      href={`https://instagram.com/${business.instagram.replace('@', '')}`}
+                      href={`https://instagram.com/${contactInstagram.replace('@', '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:underline text-gray-700 text-sm sm:text-base break-all"
-                    >{business.instagram}</a>
+                    >{contactInstagram}</a>
                   </div>
                 </div>
 
@@ -330,7 +325,7 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   </div>
                   <div>
                     <div className="font-semibold mb-1 text-gray-800 text-sm sm:text-base">Teléfono</div>
-                    <a href={`tel:${business.phone}`} className="hover:underline text-gray-700 text-sm sm:text-base">{business.phone}</a>
+                    <a href={`tel:${contactPhone}`} className="hover:underline text-gray-700 text-sm sm:text-base">{contactPhone}</a>
                   </div>
                 </div>
 
@@ -343,8 +338,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   </div>
                   <div>
                     <div className="font-semibold mb-1 text-gray-800">Ubicación</div>
-                    <div className="text-gray-700">{business.location}</div>
-                    <div className="text-sm text-gray-600 mt-1">{business.delivery}</div>
+                    <div className="text-gray-700">{contactLocation}</div>
+                    <div className="text-sm text-gray-600 mt-1">{contactDelivery}</div>
                   </div>
                 </div>
               </div>
@@ -354,7 +349,7 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
               <h4 className="text-xl sm:text-2xl font-display font-bold mb-3 md:mb-4 text-gray-800">Seguínos en Redes</h4>
               <div className="flex space-x-4">
                 <a
-                  href={`https://instagram.com/${business.instagram.replace('@', '')}`}
+                  href={`https://instagram.com/${contactInstagram.replace('@', '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-white/70 rounded-full p-3 sm:p-4 backdrop-blur-sm shadow-md hover:bg-white active:bg-white/90 transition-all duration-300 hover:scale-110 active:scale-95 touch-manipulation"
@@ -381,11 +376,11 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
               <div className="space-y-2 text-gray-700 text-sm sm:text-base">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🕒</span>
-                  <span className="font-semibold">{business.workingHours}</span>
+                  <span className="font-semibold">{contactWorkingHours}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📅</span>
-                  <span>{business.advanceBooking}</span>
+                  <span>{contactAdvanceBooking}</span>
                 </div>
               </div>
             </div>

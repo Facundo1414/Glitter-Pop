@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const icon = sanitizeString(body.icon, "✨");
     const displayOrder = sanitizeOrder(body.displayOrder);
 
-    if (!title || !description || !duration) {
+    if (!title || !description || !duration || !image) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 },
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       display_order: number;
     }>`
       INSERT INTO services (title, description, image_url, duration, icon, display_order)
-      VALUES (${title}, ${description}, ${image || "/images/service-glitter.jpg"}, ${duration}, ${icon}, ${displayOrder})
+      VALUES (${title}, ${description}, ${image}, ${duration}, ${icon}, ${displayOrder})
       RETURNING id, title, description, image_url, duration, icon, display_order
     `;
 

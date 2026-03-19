@@ -109,7 +109,10 @@ async function seedIfEmpty() {
     const team = contentData.business.team || [];
     for (let i = 0; i < team.length; i += 1) {
       const member = team[i];
-      const defaultImage = i === 0 ? "/images/Marti.webp" : "/images/Luz.webp";
+      const defaultImage =
+        typeof (member as { image?: string }).image === "string"
+          ? ((member as { image?: string }).image ?? "")
+          : "";
       await sql`
         INSERT INTO team_members (name, role, description, image_url, display_order)
         VALUES (${member.name}, ${member.role}, ${member.description}, ${defaultImage}, ${i})
@@ -122,10 +125,29 @@ async function seedIfEmpty() {
     VALUES
       ('hero_title', ${contentData.business.tagline}),
       ('hero_subtitle', ${contentData.business.description}),
+      ('hero_desktop_variant', 'desktop_v1'),
+      ('hero_mobile_variant', 'mobile_v1'),
+      ('hero_image_desktop_v1', ''),
+      ('hero_image_desktop_v2', ''),
+      ('hero_image_desktop_v3', ''),
+      ('hero_image_mobile_v1', ''),
+      ('hero_image_mobile_v2', ''),
       ('portfolio_mode', 'visible'),
       ('about_text', ${contentData.business.about || ""}),
       ('whatsapp_martina', ${contentData.business.whatsapp || ""}),
-      ('whatsapp_luz', ${contentData.business.whatsapp_luz || contentData.business.whatsapp || ""})
+      ('whatsapp_luz', ${contentData.business.whatsapp_luz || contentData.business.whatsapp || ""}),
+      ('footer_description', ${contentData.business.description || ""}),
+      ('footer_email', ${contentData.business.email || ""}),
+      ('footer_phone', ${contentData.business.phone || ""}),
+      ('footer_location', ${contentData.business.location || ""}),
+      ('footer_instagram', ${contentData.business.instagram || ""}),
+      ('footer_facebook', ${contentData.business.facebook || ""}),
+      ('contact_phone', ${contentData.business.phone || ""}),
+      ('contact_instagram', ${contentData.business.instagram || ""}),
+      ('contact_location', ${contentData.business.location || ""}),
+      ('contact_delivery', ${contentData.business.delivery || ""}),
+      ('contact_working_hours', ${contentData.business.workingHours || ""}),
+      ('contact_advance_booking', ${contentData.business.advanceBooking || ""})
     ON CONFLICT (key) DO NOTHING
   `;
 }
@@ -195,6 +217,16 @@ export async function ensureDatabase() {
         description TEXT NOT NULL,
         image_url TEXT NOT NULL,
         display_order INTEGER NOT NULL DEFAULT 0
+      )
+    `;
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS media_assets (
+        id TEXT PRIMARY KEY,
+        filename TEXT NOT NULL,
+        mime_type TEXT NOT NULL,
+        content BYTEA NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `;
 

@@ -187,7 +187,12 @@ export default function AdminPortfolioPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg"
               required
             />
-            <input type="file" accept="image/*" onChange={onUpload} className="text-sm" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onUpload}
+              className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
+            />
           </div>
           {form.image && (
             <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
@@ -200,7 +205,7 @@ export default function AdminPortfolioPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold"
+            className="px-5 py-3 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold"
           >
             {saving ? 'Guardando...' : isEditing ? 'Actualizar item' : 'Crear item'}
           </button>

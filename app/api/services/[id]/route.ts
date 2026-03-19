@@ -33,7 +33,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const icon = sanitizeString(body.icon, "✨");
     const displayOrder = sanitizeOrder(body.displayOrder);
 
-    if (!title || !description || !duration) {
+    if (!title || !description || !duration || !image) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 },
@@ -45,7 +45,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       SET
         title = ${title},
         description = ${description},
-        image_url = ${image || "/images/service-glitter.jpg"},
+        image_url = ${image},
         duration = ${duration},
         icon = ${icon},
         display_order = ${displayOrder}

@@ -21,7 +21,7 @@ export default function About() {
       name: member.name,
       role: member.role,
       description: member.description,
-      image: `/images/${index === 0 ? 'Marti' : 'Luz'}.webp`,
+      image: '',
     })),
   )
 
@@ -117,13 +117,17 @@ export default function About() {
             >
               <div className="bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue p-8">
                 <div className="w-32 h-32 mx-auto bg-white rounded-full overflow-hidden shadow-lg">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    width={128}
-                    height={128}
-                    className="w-full h-full object-cover"
-                  />
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-4xl">✨</div>
+                  )}
                 </div>
               </div>
               <div className="p-5 sm:p-6 text-center">

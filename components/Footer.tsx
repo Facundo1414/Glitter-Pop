@@ -1,11 +1,54 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import contentData from '@/data/content.json'
 
+type FooterState = {
+  description: string
+  email: string
+  phone: string
+  location: string
+  instagram: string
+  facebook: string
+}
+
 export default function Footer() {
   const { business } = contentData
+  const [footer, setFooter] = useState<FooterState>({
+    description: business.description,
+    email: business.email,
+    phone: business.phone,
+    location: business.location,
+    instagram: business.instagram,
+    facebook: business.facebook,
+  })
   const currentYear = new Date().getFullYear()
+
+  useEffect(() => {
+    const loadFooterSettings = async () => {
+      try {
+        const response = await fetch('/api/settings', { cache: 'no-store' })
+        if (!response.ok) return
+
+        const data = await response.json()
+        const settings = data?.settings || {}
+
+        setFooter((prev) => ({
+          description: settings.footer_description || prev.description,
+          email: settings.footer_email || prev.email,
+          phone: settings.footer_phone || prev.phone,
+          location: settings.footer_location || prev.location,
+          instagram: settings.footer_instagram || prev.instagram,
+          facebook: settings.footer_facebook || prev.facebook,
+        }))
+      } catch {
+        // Keep fallback from content.json
+      }
+    }
+
+    void loadFooterSettings()
+  }, [])
 
   return (
     <footer className="bg-gray-900 text-white py-10 md:py-12 pb-24 md:pb-12">
@@ -18,11 +61,11 @@ export default function Footer() {
               <span className="text-xl md:text-2xl font-display font-bold">{business.name}</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md text-sm md:text-base leading-relaxed">
-              {business.description}
+              {footer.description}
             </p>
             <div className="flex space-x-3 md:space-x-4">
               <a
-                href={`https://instagram.com/${business.instagram.replace('@', '')}`}
+                href={`https://instagram.com/${footer.instagram.replace('@', '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gray-800 rounded-full p-2.5 md:p-3 hover:bg-pastel-lavender active:bg-pastel-lavender/80 transition-all touch-manipulation hover:scale-110 active:scale-95"
@@ -33,7 +76,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href={`https://facebook.com/${business.facebook}`}
+                href={`https://facebook.com/${footer.facebook}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gray-800 rounded-full p-2.5 md:p-3 hover:bg-pastel-lavender active:bg-pastel-lavender/80 transition-all touch-manipulation hover:scale-110 active:scale-95"
@@ -82,6 +125,14 @@ export default function Footer() {
                   Paquetes
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/admin/login"
+                  className="text-gray-400 hover:text-primary-400 transition-colors"
+                >
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -90,19 +141,19 @@ export default function Footer() {
             <h3 className="font-display font-bold text-base md:text-lg mb-3 md:mb-4">Contacto</h3>
             <ul className="space-y-2 text-gray-400 text-sm md:text-base">
               <li>
-                <a href={`mailto:${business.email}`} className="hover:text-primary-400 transition-colors">
-                  {business.email}
+                <a href={`mailto:${footer.email}`} className="hover:text-primary-400 transition-colors">
+                  {footer.email}
                 </a>
               </li>
               <li>
-                <a href={`tel:${business.phone}`} className="hover:text-primary-400 transition-colors">
-                  {business.phone}
+                <a href={`tel:${footer.phone}`} className="hover:text-primary-400 transition-colors">
+                  {footer.phone}
                 </a>
               </li>
-              <li>{business.location}</li>
+              <li>{footer.location}</li>
               <li className="pt-2">
-                <a href={`https://instagram.com/${business.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary-400 transition-colors">
-                  {business.instagram}
+                <a href={`https://instagram.com/${footer.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary-400 transition-colors">
+                  {footer.instagram}
                 </a>
               </li>
             </ul>
@@ -116,7 +167,15 @@ export default function Footer() {
               © {currentYear} {business.name}. Todos los derechos reservados.
             </p>
             <p className="text-gray-400 text-sm">
-              Hecho con ✨ y mucho glitter
+              Hecho por{' '}
+              <a
+                href="https://pantheon-dev.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-300 hover:text-primary-200 transition-colors"
+              >
+                Pantheon Dev
+              </a>
             </p>
           </div>
         </div>

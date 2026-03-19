@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import contentData from '@/data/content.json'
 
 export default function Services() {
   const [services, setServices] = useState(contentData.services)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const loadServices = async () => {
@@ -24,25 +26,67 @@ export default function Services() {
     void loadServices()
   }, [])
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 },
+    )
+
+    const section = document.getElementById('servicios')
+    if (section) {
+      observer.observe(section)
+    }
+
+    return () => {
+      if (section) {
+        observer.unobserve(section)
+      }
+    }
+  }, [])
+
   return (
     <section id="servicios" className="py-16 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="section-title">
+        <h2 className={`section-title transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           Nuestros Servicios
         </h2>
-        <p className="section-subtitle">
+        <p className={`section-subtitle transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           Dale brillo a tu evento con nuestros servicios profesionales de maquillaje artístico
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {services.map((service) => (
-            <div key={service.id} className="card group hover:shadow-xl transition-shadow cursor-pointer active:scale-98">
-              <div className="h-28 sm:h-32 bg-gradient-to-br from-pastel-lavender/30 to-pastel-pink/30 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
-                  </span>
-                </div>
+          {services.map((service, index) => (
+            <div
+              key={service.id}
+              className={`card group hover:shadow-xl transition-all duration-700 cursor-pointer active:scale-98 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              style={{ transitionDelay: `${index * 120}ms` }}
+            >
+              <div className="h-28 sm:h-32 bg-linear-to-br from-pastel-lavender/30 to-pastel-pink/30 relative overflow-hidden">
+                {typeof service.image === 'string' && service.image.trim() ? (
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-5xl sm:text-6xl group-hover:scale-110 transition-transform duration-300">
+                      {service.icon}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="p-5 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-display font-bold mb-2 sm:mb-3 text-gray-800">
@@ -70,7 +114,9 @@ export default function Services() {
           ))}
         </div>
 
-        <div className="text-center mt-10 md:mt-12 px-4">
+        <div className={`text-center mt-10 md:mt-12 px-4 transition-all duration-1000 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
           <Link
             href="/contacto"
             className="btn-primary inline-block"

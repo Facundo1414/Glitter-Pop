@@ -202,7 +202,7 @@ export default function AdminPaquetesPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+            className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
           >
             {saving ? 'Guardando...' : isEditing ? 'Actualizar paquete' : 'Crear paquete'}
           </button>
@@ -219,26 +219,48 @@ export default function AdminPaquetesPage() {
         {!loading && packages.map((pkg) => (
           <div
             key={pkg.id}
-            className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow ${
-              pkg.popular ? 'ring-2 ring-purple-600' : ''
+            className={`relative h-full bg-white rounded-2xl overflow-hidden transition-all duration-500 ${
+              pkg.popular
+                ? 'shadow-2xl border-2 border-primary-200 scale-[1.02] ring-1 ring-purple-400'
+                : 'shadow-lg hover:shadow-xl border border-gray-100'
             }`}
           >
             {pkg.popular && (
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 text-center text-sm font-bold">
-                ⭐ Más Popular
-              </div>
+              <div className="absolute top-0 inset-x-0 h-2 bg-linear-to-r from-purple-600 via-pink-600 to-purple-700" />
             )}
-            <div className="p-6">
-              <h3 className="font-bold text-2xl text-gray-900 mb-2">{pkg.name}</h3>
-              <p className="text-3xl font-bold text-purple-600 mb-4">
+
+            <div className="p-6 pt-7">
+              {pkg.popular && (
+                <div className="flex justify-center mb-3">
+                  <span className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                    <span>⭐</span>
+                    <span>Más Popular</span>
+                  </span>
+                </div>
+              )}
+
+              <h3 className="font-bold text-2xl text-gray-900 mb-2 text-center">{pkg.name}</h3>
+              <p className="text-3xl font-bold text-purple-600 mb-2 text-center">
                 ${parseInt(pkg.price).toLocaleString('es-AR')}
               </p>
-              <p className="text-sm text-gray-600 mb-4">Duración: {pkg.duration}</p>
+              <p className="text-sm text-gray-600 mb-4 text-center">{pkg.duration}</p>
 
-              <div className="space-y-2 mb-6">
-                {pkg.features.slice(0, 3).map((feature, i) => (
-                  <p key={i} className="text-sm text-gray-700">✓ {feature}</p>
+              <div className="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent mb-4" />
+
+              <div className="space-y-2 mb-4">
+                {pkg.features.slice(0, 4).map((feature, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                    <span className="text-purple-600 font-bold">✓</span>
+                    <span>{feature}</span>
+                  </div>
                 ))}
+              </div>
+
+              <div className="mb-4">
+                <div className="bg-linear-to-br from-pastel-lavender/30 to-pastel-pink/30 rounded-xl p-3 border border-primary-100">
+                  <p className="text-[10px] font-semibold text-primary-600 uppercase tracking-wide mb-1">Ideal para</p>
+                  <p className="text-gray-900 text-sm">{pkg.ideal}</p>
+                </div>
               </div>
 
               <div className="flex gap-2">

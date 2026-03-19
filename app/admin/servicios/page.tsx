@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
 
 type Service = {
   id: string
@@ -21,7 +22,7 @@ export default function AdminServiciosPage() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    image: '/images/service-glitter.jpg',
+    image: '',
     duration: '',
     icon: '✨',
   })
@@ -52,7 +53,7 @@ export default function AdminServiciosPage() {
     setForm({
       title: '',
       description: '',
-      image: '/images/service-glitter.jpg',
+      image: '',
       duration: '',
       icon: '✨',
     })
@@ -88,6 +89,35 @@ export default function AdminServiciosPage() {
       resetForm()
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Error guardando servicio')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const onUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      setSaving(true)
+      setError('')
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo subir imagen')
+      }
+
+      const data = await response.json()
+      setForm((prev) => ({ ...prev, image: data.url }))
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo archivo')
     } finally {
       setSaving(false)
     }
@@ -151,12 +181,22 @@ export default function AdminServiciosPage() {
             className="px-4 py-3 border border-gray-300 rounded-lg"
             required
           />
-          <input
-            value={form.image}
-            onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
-            placeholder="URL de imagen"
-            className="px-4 py-3 border border-gray-300 rounded-lg"
-          />
+          <div className="space-y-2">
+            <input
+              value={form.image}
+              onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+              placeholder="URL de imagen"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+              required
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onUpload}
+              className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
+              disabled={saving}
+            />
+          </div>
           <input
             value={form.icon}
             onChange={(e) => setForm((prev) => ({ ...prev, icon: e.target.value }))}
@@ -164,6 +204,12 @@ export default function AdminServiciosPage() {
             className="px-4 py-3 border border-gray-300 rounded-lg"
           />
         </div>
+
+        {form.image && (
+          <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
+            <Image src={form.image} alt="Preview servicio" fill className="object-cover" />
+          </div>
+        )}
         <textarea
           value={form.description}
           onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
@@ -176,7 +222,7 @@ export default function AdminServiciosPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-5 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+            className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
           >
             {saving ? 'Guardando...' : isEditing ? 'Actualizar servicio' : 'Crear servicio'}
           </button>
@@ -198,8 +244,20 @@ export default function AdminServiciosPage() {
         )}
         {!loading && services.map((service) => (
           <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="h-32 bg-gradient-to-br from-pastel-lavender to-pastel-pink flex items-center justify-center">
-              <span className="text-5xl">{service.icon}</span>
+            <div className="h-32 bg-linear-to-br from-pastel-lavender to-pastel-pink relative overflow-hidden">
+              {service.image ? (
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-5xl">{service.icon}</span>
+                </div>
+              )}
             </div>
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-900 mb-2">{service.title}</h3>

@@ -40,10 +40,10 @@ export async function POST(request: NextRequest) {
     const name = sanitizeString(body.name);
     const role = sanitizeString(body.role);
     const description = sanitizeString(body.description);
-    const image = sanitizeString(body.image, "/images/Marti.webp");
+    const image = sanitizeString(body.image);
     const displayOrder = sanitizeOrder(body.displayOrder);
 
-    if (!name || !role || !description) {
+    if (!name || !role || !description || !image) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 },
