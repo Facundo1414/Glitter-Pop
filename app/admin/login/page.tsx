@@ -29,6 +29,11 @@ export default function AdminLoginPage() {
         return
       }
 
+      // Guardar flag de sesión en sessionStorage
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('admin_logged_in', 'true')
+      }
+
       // Redirect to admin dashboard
       router.push('/admin')
     } catch (err) {
