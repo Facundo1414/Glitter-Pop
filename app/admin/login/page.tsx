@@ -18,14 +18,16 @@ export default function AdminLoginPage() {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
 
       const data = await response.json()
 
-      if (!response.ok) {
+      if (!response.ok || !data.success) {
         setError(data.message || 'Credenciales inválidas')
+        setLoading(false)
         return
       }
 
