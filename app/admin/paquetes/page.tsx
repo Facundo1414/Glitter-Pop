@@ -18,6 +18,16 @@ type SitePackage = {
   displayOrder: number
 }
 
+type PackagePayload = {
+  name: string
+  price: number
+  duration: string
+  features: string[]
+  ideal: string
+  popular: boolean
+  displayOrder: number
+}
+
 const defaultForm = {
   name: '',
   price: '100000',
@@ -42,7 +52,7 @@ export default function AdminPaquetesPage() {
     startEdit,
     submitForm,
     deleteItem,
-  } = useAdminCrud<SitePackage, typeof defaultForm>({
+  } = useAdminCrud<SitePackage, typeof defaultForm, PackagePayload>({
     endpoint: '/api/packages',
     defaultForm,
     getItems: (data) => ((data as { packages?: SitePackage[] })?.packages ?? []),
