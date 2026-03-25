@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const authCookie = request.cookies.get("admin_auth");
 
   if (authCookie?.value === "authenticated") {

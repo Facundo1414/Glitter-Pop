@@ -1,92 +1,129 @@
 import Link from 'next/link'
 
 export default function AdminDashboard() {
+  const quickLinks = [
+    {
+      href: '/admin/configuracion',
+      label: 'Configuracion',
+      description: 'Hero, contacto, portfolio, footer y datos globales.',
+      accent: 'from-purple-600 to-pink-600',
+      badge: 'Base del sitio',
+    },
+    {
+      href: '/admin/servicios',
+      label: 'Servicios',
+      description: 'Edita el catalogo principal y revisa la preview de cada tarjeta.',
+      accent: 'from-pink-600 to-orange-500',
+      badge: 'Oferta',
+    },
+    {
+      href: '/admin/paquetes',
+      label: 'Paquetes',
+      description: 'Organiza precios, beneficios y la propuesta destacada.',
+      accent: 'from-blue-600 to-cyan-500',
+      badge: 'Ventas',
+    },
+    {
+      href: '/admin/portfolio',
+      label: 'Portfolio',
+      description: 'Carga piezas visuales y comprueba su presentacion final.',
+      accent: 'from-amber-500 to-orange-500',
+      badge: 'Visual',
+    },
+    {
+      href: '/admin/faqs',
+      label: 'FAQs',
+      description: 'Aclara dudas frecuentes y revisa el acordeon antes de publicar.',
+      accent: 'from-indigo-600 to-violet-500',
+      badge: 'Ayuda',
+    },
+    {
+      href: '/admin/nosotras',
+      label: 'Nosotras',
+      description: 'Gestiona el equipo y la forma en que se presenta la marca.',
+      accent: 'from-teal-600 to-emerald-500',
+      badge: 'Marca',
+    },
+  ]
+
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-4xl font-bold text-gray-900 font-display mb-2">
-          Panel de Administración
-        </h1>
-        <p className="text-gray-600">
-          Bienvenido al panel de control de Glitter Pop. Desde aquí puedes gestionar todo el contenido del sitio.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Configuración */}
-        <Link href="/admin/configuracion">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-purple-600">
-            <div className="text-4xl mb-3">⚙️</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Configuración</h3>
-            <p className="text-gray-600 text-sm">
-              Edita textos principales, números de WhatsApp, visibilidad del portfolio y más.
+    <div className="space-y-8 pb-10">
+      <section className="overflow-hidden rounded-4xl border border-slate-200 bg-linear-to-br from-white via-rose-50 to-orange-50 shadow-sm">
+        <div className="grid grid-cols-1 gap-8 px-6 py-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:px-8 lg:py-10">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Centro de control</p>
+            <h1 className="mt-3 text-4xl font-bold text-gray-900 font-display">Panel de Administracion</h1>
+            <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+              Edita cada bloque del sitio con una ruta mas clara: primero eliges el modulo, luego cambias el contenido y ahora ves una preview antes de publicar.
             </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/admin/configuracion" className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800">
+                Empezar por configuracion
+              </Link>
+              <Link href="/admin/servicios" className="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-white">
+                Editar servicios
+              </Link>
+            </div>
           </div>
-        </Link>
 
-        {/* Servicios */}
-        <Link href="/admin/servicios">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-pink-600">
-            <div className="text-4xl mb-3">✨</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Servicios</h3>
-            <p className="text-gray-600 text-sm">
-              Crea, edita o elimina los servicios que ofreces. Incluye imágenes, descripciones y duración.
-            </p>
+          <div className="rounded-[1.75rem] border border-white/70 bg-white/80 p-5 shadow-lg backdrop-blur">
+            <p className="text-sm font-semibold text-slate-900">Flujo recomendado</p>
+            <div className="mt-4 space-y-3 text-sm text-slate-600">
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">1. Configura la base</p>
+                <p className="mt-1">Define hero, contacto y visibilidad general del sitio.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">2. Actualiza contenido</p>
+                <p className="mt-1">Servicios, paquetes y portfolio ya muestran previews en vivo.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <p className="font-semibold text-slate-900">3. Revisa antes de publicar</p>
+                <p className="mt-1">Usa los avisos de cambios pendientes y las confirmaciones de borrado.</p>
+              </div>
+            </div>
           </div>
-        </Link>
+        </div>
+      </section>
 
-        {/* Paquetes */}
-        <Link href="/admin/paquetes">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-blue-600">
-            <div className="text-4xl mb-3">📦</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Paquetes</h3>
-            <p className="text-gray-600 text-sm">
-              Gestiona los paquetes de precios. Especifica features, precios y planes ideales.
-            </p>
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {quickLinks.map((item) => (
+          <Link key={item.href} href={item.href} className="group block">
+            <article className="h-full rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
+              <div className={`inline-flex rounded-full bg-linear-to-r px-3 py-1 text-xs font-bold text-white ${item.accent}`}>
+                {item.badge}
+              </div>
+              <h3 className="mt-4 text-2xl font-bold text-slate-900">{item.label}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+              <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+                Abrir modulo
+                <span className="transition-transform group-hover:translate-x-1">→</span>
+              </div>
+            </article>
+          </Link>
+        ))}
+      </section>
+
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900">Novedades del panel</h2>
+          <div className="mt-4 space-y-3 text-sm text-slate-600">
+            <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-emerald-900">Login protegido y redireccion consistente.</div>
+            <div className="rounded-2xl bg-amber-50 px-4 py-3 text-amber-900">Aviso de cambios sin guardar en cada modulo principal.</div>
+            <div className="rounded-2xl bg-sky-50 px-4 py-3 text-sky-900">Preview en vivo para revisar como se vera el contenido.</div>
           </div>
-        </Link>
+        </div>
 
-        {/* Portfolio */}
-        <Link href="/admin/portfolio">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-yellow-600">
-            <div className="text-4xl mb-3">🖼️</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Portfolio</h3>
-            <p className="text-gray-600 text-sm">
-              Sube fotos de tus trabajos, categorízalas y controla su visibilidad.
-            </p>
+        <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900">Buenas practicas</h2>
+          <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
+            <p>Guarda configuracion global antes de modificar contenido puntual.</p>
+            <p>Usa la preview para validar longitud de textos e impacto visual.</p>
+            <p>Si necesitas limpiar un formulario, utiliza "Cancelar" o "Descartar cambios" antes de navegar.</p>
           </div>
-        </Link>
-
-        {/* FAQs */}
-        <Link href="/admin/faqs">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-indigo-600">
-            <div className="text-4xl mb-3">❓</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">FAQs</h3>
-            <p className="text-gray-600 text-sm">
-              Gestiona preguntas frecuentes, respuestas y orden de visualización.
-            </p>
-          </div>
-        </Link>
-
-        {/* Equipo */}
-        <Link href="/admin/nosotras">
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer border-l-4 border-teal-600">
-            <div className="text-4xl mb-3">👭</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Nosotras</h3>
-            <p className="text-gray-600 text-sm">
-              Edita integrantes, roles, fotos y descripciones del equipo.
-            </p>
-          </div>
-        </Link>
-
-      </div>
-
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
-        <h3 className="font-bold text-blue-900 mb-2">💡 Tip:</h3>
-        <p className="text-blue-800 text-sm">
-          Todos los cambios se guardarán en la base de datos y se reflejarán inmediatamente en el sitio público.
-        </p>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

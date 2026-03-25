@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function AdminLoginPage() {
@@ -9,6 +9,39 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    let isMounted = true
+
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'same-origin',
+          cache: 'no-store',
+        })
+
+        const raw = await response.text()
+        const data = raw ? JSON.parse(raw) : null
+
+        if (!isMounted) {
+          return
+        }
+
+        if (response.ok && data?.isAuthenticated) {
+          router.replace('/admin')
+          router.refresh()
+        }
+      } catch {
+        // Ignore check failures and keep login form available.
+      }
+    }
+
+    checkSession()
+
+    return () => {
+      isMounted = false
+    }
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,23 +56,19 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ username, password }),
       })
 
-      const data = await response.json()
+      const raw = await response.text()
+      const data = raw ? JSON.parse(raw) : null
 
-      if (!response.ok || !data.success) {
-        setError(data.message || 'Credenciales inválidas')
+      if (!response.ok || !data?.success) {
+        setError(data?.message || 'Credenciales invalidas')
         setLoading(false)
         return
       }
 
-      // Guardar flag de sesión en sessionStorage
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('admin_logged_in', 'true')
-      }
-
-      // Redirect to admin dashboard
-      router.push('/admin')
+      router.replace('/admin')
+      router.refresh()
     } catch (err) {
-      setError('Error al iniciar sesión')
+      setError('No fue posible iniciar sesion')
       console.error(err)
     } finally {
       setLoading(false)
@@ -47,7 +76,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pastel-lavender via-pastel-pink to-pastel-peach">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pastel-lavender via-pastel-pink to-pastel-peach">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-900 font-display">
@@ -95,15 +124,11 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg active:scale-95 transition-all disabled:opacity-50"
+              className="w-full bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg active:scale-95 transition-all disabled:opacity-50"
             >
-              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {loading ? 'Iniciando sesion...' : 'Iniciar sesion'}
             </button>
           </form>
-
-          <p className="text-xs text-gray-500 text-center mt-6">
-            Credenciales: Usa tus variables de entorno ADMIN_USERNAME y ADMIN_PASSWORD
-          </p>
         </div>
       </div>
     </div>

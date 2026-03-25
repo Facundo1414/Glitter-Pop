@@ -1,7 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
+
+import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { ServicePreviewPanel } from '@/components/admin/PreviewPanels'
+import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
+import { useAdminCrud } from '@/hooks/useAdminCrud'
 
 type Service = {
   id: string
@@ -13,86 +18,55 @@ type Service = {
   displayOrder: number
 }
 
+const defaultForm = {
+  title: '',
+  description: '',
+  image: '',
+  duration: '',
+  icon: '✨',
+}
+
 export default function AdminServiciosPage() {
-  const [services, setServices] = useState<Service[]>([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    image: '',
-    duration: '',
-    icon: '✨',
+  const [pendingDelete, setPendingDelete] = useState<Service | null>(null)
+  const {
+    items: services,
+    loading,
+    saving,
+    setSaving,
+    error,
+    setError,
+    isEditing,
+    isDirty,
+    form,
+    setForm,
+    resetForm,
+    startEdit,
+    submitForm,
+    deleteItem,
+  } = useAdminCrud<Service, typeof defaultForm>({
+    endpoint: '/api/services',
+    defaultForm,
+    getItems: (data) => ((data as { services?: Service[] })?.services ?? []),
+    getItemId: (item) => item.id,
+    mapItemToForm: (item) => ({
+      title: item.title,
+      description: item.description,
+      image: item.image,
+      duration: item.duration,
+      icon: item.icon,
+    }),
+    buildPayload: ({ form: currentForm, items, editingId }) => ({
+      ...currentForm,
+      displayOrder: editingId
+        ? items.find((item) => item.id === editingId)?.displayOrder ?? 0
+        : items.length,
+    }),
+    messages: {
+      load: 'No se pudieron cargar servicios',
+      save: 'Error guardando servicio',
+      delete: 'Error eliminando servicio',
+    },
   })
-
-  const isEditing = useMemo(() => Boolean(editingId), [editingId])
-
-  const loadServices = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const response = await fetch('/api/services', { cache: 'no-store' })
-      if (!response.ok) throw new Error('No se pudieron cargar servicios')
-      const data = await response.json()
-      setServices(data.services || [])
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Error cargando servicios')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    void loadServices()
-  }, [])
-
-  const resetForm = () => {
-    setEditingId(null)
-    setForm({
-      title: '',
-      description: '',
-      image: '',
-      duration: '',
-      icon: '✨',
-    })
-  }
-
-  const onSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    try {
-      setSaving(true)
-      setError('')
-      const payload = {
-        ...form,
-        displayOrder: editingId
-          ? services.find((item) => item.id === editingId)?.displayOrder ?? 0
-          : services.length,
-      }
-
-      const endpoint = editingId ? `/api/services/${editingId}` : '/api/services'
-      const method = editingId ? 'PUT' : 'POST'
-
-      const response = await fetch(endpoint, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo guardar')
-      }
-
-      await loadServices()
-      resetForm()
-    } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : 'Error guardando servicio')
-    } finally {
-      setSaving(false)
-    }
-  }
 
   const onUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -123,29 +97,11 @@ export default function AdminServiciosPage() {
     }
   }
 
-  const onEdit = (service: Service) => {
-    setEditingId(service.id)
-    setForm({
-      title: service.title,
-      description: service.description,
-      image: service.image,
-      duration: service.duration,
-      icon: service.icon,
-    })
-  }
-
   const onDelete = async (id: string) => {
     try {
-      setError('')
-      const response = await fetch(`/api/services/${id}`, { method: 'DELETE' })
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo eliminar')
-      }
-      await loadServices()
-      if (editingId === id) resetForm()
-    } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : 'Error eliminando servicio')
+      await deleteItem(id)
+    } finally {
+      setPendingDelete(null)
     }
   }
 
@@ -160,83 +116,92 @@ export default function AdminServiciosPage() {
         </p>
       </div>
 
+      <UnsavedChangesBanner
+        visible={isDirty}
+        onReset={resetForm}
+        message={isEditing ? 'Tienes cambios sin guardar en este servicio.' : 'Estas creando un servicio nuevo y aun no fue guardado.'}
+      />
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
       )}
 
-      <form onSubmit={onSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-        <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar servicio' : 'Nuevo servicio'}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            value={form.title}
-            onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
-            placeholder="Título"
-            className="px-4 py-3 border border-gray-300 rounded-lg"
-            required
-          />
-          <input
-            value={form.duration}
-            onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
-            placeholder="Duración"
-            className="px-4 py-3 border border-gray-300 rounded-lg"
-            required
-          />
-          <div className="space-y-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
+        <form onSubmit={submitForm} className="bg-white rounded-lg shadow-md p-6 space-y-4">
+          <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar servicio' : 'Nuevo servicio'}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
-              value={form.image}
-              onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
-              placeholder="URL de imagen"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+              value={form.title}
+              onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+              placeholder="Título"
+              className="px-4 py-3 border border-gray-300 rounded-lg"
               required
             />
             <input
-              type="file"
-              accept="image/*"
-              onChange={onUpload}
-              className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
-              disabled={saving}
+              value={form.duration}
+              onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
+              placeholder="Duración"
+              className="px-4 py-3 border border-gray-300 rounded-lg"
+              required
+            />
+            <div className="space-y-2">
+              <input
+                value={form.image}
+                onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+                placeholder="URL de imagen"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                required
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onUpload}
+                className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
+                disabled={saving}
+              />
+            </div>
+            <input
+              value={form.icon}
+              onChange={(e) => setForm((prev) => ({ ...prev, icon: e.target.value }))}
+              placeholder="Icono (emoji)"
+              className="px-4 py-3 border border-gray-300 rounded-lg"
             />
           </div>
-          <input
-            value={form.icon}
-            onChange={(e) => setForm((prev) => ({ ...prev, icon: e.target.value }))}
-            placeholder="Icono (emoji)"
-            className="px-4 py-3 border border-gray-300 rounded-lg"
-          />
-        </div>
 
-        {form.image && (
-          <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
-            <Image src={form.image} alt="Preview servicio" fill className="object-cover" />
-          </div>
-        )}
-        <textarea
-          value={form.description}
-          onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
-          placeholder="Descripción"
-          rows={4}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-          required
-        />
-        <div className="flex gap-3">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
-          >
-            {saving ? 'Guardando...' : isEditing ? 'Actualizar servicio' : 'Crear servicio'}
-          </button>
-          {isEditing && (
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold"
-            >
-              Cancelar
-            </button>
+          {form.image && (
+            <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
+              <Image src={form.image} alt="Preview servicio" fill className="object-cover" />
+            </div>
           )}
-        </div>
-      </form>
+          <textarea
+            value={form.description}
+            onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+            placeholder="Descripción"
+            rows={4}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            required
+          />
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+            >
+              {saving ? 'Guardando...' : isEditing ? 'Actualizar servicio' : 'Crear servicio'}
+            </button>
+            {isEditing && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+        <ServicePreviewPanel data={form} />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && (
@@ -265,13 +230,13 @@ export default function AdminServiciosPage() {
               <p className="text-xs text-purple-600 font-semibold mb-4">⏱️ {service.duration}</p>
               <div className="flex gap-2">
                 <button
-                  onClick={() => onEdit(service)}
+                  onClick={() => startEdit(service)}
                   className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm font-semibold"
                 >
                   Editar
                 </button>
                 <button
-                  onClick={() => onDelete(service.id)}
+                  onClick={() => setPendingDelete(service)}
                   className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-semibold"
                 >
                   Eliminar
@@ -281,6 +246,16 @@ export default function AdminServiciosPage() {
           </div>
         ))}
       </div>
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        title="Eliminar servicio"
+        description={pendingDelete ? `Se eliminara "${pendingDelete.title}" y no se podra recuperar desde el panel.` : ''}
+        confirmLabel="Eliminar servicio"
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => pendingDelete && void onDelete(pendingDelete.id)}
+        busy={saving}
+      />
     </div>
   )
 }
