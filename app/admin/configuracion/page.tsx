@@ -268,7 +268,7 @@ export default function AdminConfigPage() {
   )
 
   const renderHeroTab = () => (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+    <div className="grid grid-cols-1 gap-6">
       <section className="space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Hero principal</h2>
@@ -332,14 +332,14 @@ export default function AdminConfigPage() {
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="space-y-4 border-t border-slate-200 pt-5">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Imagenes del hero</h2>
           <p className="mt-1 text-sm text-slate-500">Puedes cargar cada variante o pegar la URL manualmente.</p>
         </div>
-        <div className="grid gap-4">{heroImageFields.map(renderImageField)}</div>
+          <div className="grid gap-4 md:grid-cols-2">{heroImageFields.map(renderImageField)}</div>
+        </div>
       </section>
     </div>
   )
