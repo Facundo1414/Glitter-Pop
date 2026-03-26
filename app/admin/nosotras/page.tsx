@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { SkeletonTeamCard } from '@/components/admin/Skeleton'
 import { TeamPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
@@ -187,7 +188,7 @@ export default function AdminNosotrasPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {loading && <div className="text-gray-600">Cargando integrantes...</div>}
+        {loading && <>{[1,2].map(i => <SkeletonTeamCard key={i} />)}</>}
         {!loading && members.map((member) => (
           <div key={member.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="bg-linear-to-br from-pastel-pink via-pastel-lavender to-pastel-blue p-8">

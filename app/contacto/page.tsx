@@ -1,7 +1,13 @@
+import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
+
+export const metadata: Metadata = {
+  title: 'Contacto | Glitter Pop - Reservá tu Evento',
+  description: 'Contactá a Glitter Pop para reservar maquillaje artístico para tu evento. Escribinos por WhatsApp o completá el formulario.',
+}
 
 export default function ContactoPage() {
   return (

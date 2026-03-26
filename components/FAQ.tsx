@@ -47,9 +47,11 @@ export default function FAQ() {
             >
               <button
                 onClick={() => toggleFAQ(index)}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${faq.id}`}
                 className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between hover:bg-gray-50 active:bg-gray-100 transition-all touch-manipulation"
               >
-                <span className="font-semibold text-gray-800 pr-4 text-sm sm:text-base">{faq.question}</span>
+                <span id={`faq-question-${faq.id}`} className="font-semibold text-gray-800 pr-4 text-sm sm:text-base">{faq.question}</span>
                 <svg
                   className={`w-5 h-5 md:w-6 md:h-6 text-primary-500 flex-shrink-0 transition-transform duration-300 ${
                     openIndex === index ? 'transform rotate-180' : ''
@@ -60,12 +62,16 @@ export default function FAQ() {
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
               
               <div
+                id={`faq-answer-${faq.id}`}
+                role="region"
+                aria-labelledby={`faq-question-${faq.id}`}
                 className={`px-4 sm:px-6 overflow-hidden transition-all duration-300 ${
                   openIndex === index ? 'max-h-96 pb-5' : 'max-h-0'
                 }`}

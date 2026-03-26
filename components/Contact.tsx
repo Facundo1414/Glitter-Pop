@@ -25,6 +25,42 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+
+  const today = new Date().toISOString().split('T')[0]
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'name':
+        return value.trim() ? '' : 'El nombre es obligatorio'
+      case 'email':
+        if (!value.trim()) return 'El email es obligatorio'
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Ingresá un email válido'
+        return ''
+      case 'phone':
+        if (!value.trim()) return 'El teléfono es obligatorio'
+        if (!/\d{6,}/.test(value.replace(/\D/g, ''))) return 'Ingresá un teléfono válido (mín. 6 dígitos)'
+        return ''
+      case 'eventType':
+        return value ? '' : 'Seleccioná un tipo de evento'
+      case 'eventDate':
+        if (!value) return 'La fecha es obligatoria'
+        if (value < today) return 'La fecha debe ser hoy o posterior'
+        return ''
+      case 'guests':
+        if (value && Number(value) < 1) return 'Debe ser al menos 1 invitado'
+        return ''
+      default:
+        return ''
+    }
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setTouched(prev => ({ ...prev, [name]: true }))
+    setFieldErrors(prev => ({ ...prev, [name]: validateField(name, value) }))
+  }
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -65,14 +101,34 @@ export default function Contact() {
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+    if (touched[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: validateField(name, value) }))
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const requiredFields = ['name', 'email', 'phone', 'eventType', 'eventDate'] as const
+    const newErrors: Record<string, string> = {}
+    const newTouched: Record<string, boolean> = {}
+
+    for (const field of requiredFields) {
+      newTouched[field] = true
+      const error = validateField(field, formData[field])
+      if (error) newErrors[field] = error
+    }
+    if (formData.guests) {
+      const guestsError = validateField('guests', formData.guests)
+      if (guestsError) newErrors.guests = guestsError
+    }
+
+    setTouched(prev => ({ ...prev, ...newTouched }))
+    setFieldErrors(prev => ({ ...prev, ...newErrors }))
+    if (Object.keys(newErrors).length > 0) return
+
     setIsSubmitting(true)
     
     // Construir mensaje de WhatsApp con los datos del formulario
@@ -108,8 +164,10 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
         message: '',
       })
       
-      // Limpiar mensaje después de 3 segundos
-      setTimeout(() => setSubmitMessage(''), 3000)
+      setFieldErrors({})
+      setTouched({})
+      // Limpiar mensaje después de 6 segundos
+      setTimeout(() => setSubmitMessage(''), 6000)
     }, 500)
   }
 
@@ -138,9 +196,11 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.name && fieldErrors.name ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                   placeholder="Tu nombre"
                 />
+                {touched.name && fieldErrors.name && <p className="mt-1 text-sm text-red-500">{fieldErrors.name}</p>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -155,9 +215,11 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.email && fieldErrors.email ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                     placeholder="tu@email.com"
                   />
+                  {touched.email && fieldErrors.email && <p className="mt-1 text-sm text-red-500">{fieldErrors.email}</p>}
                 </div>
 
                 <div>
@@ -171,9 +233,11 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.phone && fieldErrors.phone ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                     placeholder="+54 11 1234-5678"
                   />
+                  {touched.phone && fieldErrors.phone && <p className="mt-1 text-sm text-red-500">{fieldErrors.phone}</p>}
                 </div>
               </div>
 
@@ -187,7 +251,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   required
                   value={formData.eventType}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                  onBlur={handleBlur}
+                  className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.eventType && fieldErrors.eventType ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                 >
                   <option value="">Seleccioná un tipo</option>
                   <option value="cumpleaños">Cumpleaños</option>
@@ -197,6 +262,7 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   <option value="infantil">Fiesta Infantil</option>
                   <option value="otro">Otro</option>
                 </select>
+                {touched.eventType && fieldErrors.eventType && <p className="mt-1 text-sm text-red-500">{fieldErrors.eventType}</p>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -209,10 +275,13 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     id="eventDate"
                     name="eventDate"
                     required
+                    min={today}
                     value={formData.eventDate}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.eventDate && fieldErrors.eventDate ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                   />
+                  {touched.eventDate && fieldErrors.eventDate && <p className="mt-1 text-sm text-red-500">{fieldErrors.eventDate}</p>}
                 </div>
 
                 <div>
@@ -223,11 +292,14 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     type="number"
                     id="guests"
                     name="guests"
+                    min="1"
                     value={formData.guests}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition touch-manipulation"
+                    onBlur={handleBlur}
+                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.guests && fieldErrors.guests ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
                     placeholder="Ej: 50"
                   />
+                  {touched.guests && fieldErrors.guests && <p className="mt-1 text-sm text-red-500">{fieldErrors.guests}</p>}
                 </div>
               </div>
 

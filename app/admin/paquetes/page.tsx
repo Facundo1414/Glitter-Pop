@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { SkeletonPackageCard } from '@/components/admin/Skeleton'
 import { PackagePreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
@@ -188,7 +189,7 @@ export default function AdminPaquetesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {loading && <div className="text-gray-600">Cargando paquetes...</div>}
+        {loading && <>{[1,2,3].map(i => <SkeletonPackageCard key={i} />)}</>}
         {!loading && packages.map((pkg) => (
           <div
             key={pkg.id}

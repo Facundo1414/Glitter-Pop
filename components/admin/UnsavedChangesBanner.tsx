@@ -18,7 +18,7 @@ export default function UnsavedChangesBanner({
   }
 
   return (
-    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
+    <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-sm font-semibold">Cambios pendientes</p>

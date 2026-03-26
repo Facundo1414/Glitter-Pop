@@ -21,6 +21,7 @@ type UseAdminCrudOptions<Item, Form, Payload> = {
     editingItem: Item | null;
   }) => Payload;
   messages: CrudMessages;
+  validate?: (form: Form) => Record<string, string>;
 };
 
 export function useAdminCrud<
@@ -35,6 +36,7 @@ export function useAdminCrud<
   mapItemToForm,
   buildPayload,
   messages,
+  validate,
 }: UseAdminCrudOptions<Item, Form, Payload>) {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +44,7 @@ export function useAdminCrud<
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Form>(defaultForm);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const editingItem = useMemo(
     () => items.find((item) => getItemId(item) === editingId) ?? null,
@@ -54,6 +57,16 @@ export function useAdminCrud<
     const baseForm = editingItem ? mapItemToForm(editingItem) : defaultForm;
     return JSON.stringify(form) !== JSON.stringify(baseForm);
   }, [defaultForm, editingItem, form, mapItemToForm]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
 
   const loadItems = async () => {
     try {
@@ -90,6 +103,12 @@ export function useAdminCrud<
 
   const submitForm = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (validate) {
+      const errors = validate(form);
+      setFieldErrors(errors);
+      if (Object.keys(errors).length > 0) return;
+    }
 
     try {
       setSaving(true);
@@ -168,6 +187,8 @@ export function useAdminCrud<
     isDirty,
     form,
     setForm,
+    fieldErrors,
+    setFieldErrors,
     loadItems,
     resetForm,
     startEdit,

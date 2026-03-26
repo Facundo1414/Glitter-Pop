@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { SkeletonPortfolioCard } from '@/components/admin/Skeleton'
 import { PortfolioPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
@@ -187,7 +188,7 @@ export default function AdminPortfolioPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading && <div className="text-gray-600">Cargando portfolio...</div>}
+        {loading && <>{[1,2,3].map(i => <SkeletonPortfolioCard key={i} />)}</>}
         {!loading && items.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
             <div className="relative aspect-square bg-gray-100">
@@ -197,7 +198,7 @@ export default function AdminPortfolioPage() {
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => startEdit(item)}
                   className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-semibold"

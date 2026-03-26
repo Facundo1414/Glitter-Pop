@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { SkeletonFaqItem } from '@/components/admin/Skeleton'
 import { FaqPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
@@ -112,7 +113,7 @@ export default function AdminFaqsPage() {
       </div>
 
       <div className="space-y-3">
-        {loading && <div className="text-gray-600">Cargando preguntas...</div>}
+        {loading && <>{[1,2,3].map(i => <SkeletonFaqItem key={i} />)}</>}
         {!loading && faqs.map((faq) => (
           <div key={faq.id} className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
             <h3 className="font-semibold text-gray-900 mb-2">{faq.question}</h3>

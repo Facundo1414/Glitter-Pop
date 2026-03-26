@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
+import { SkeletonCard } from '@/components/admin/Skeleton'
 import { ServicePreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
@@ -205,7 +206,7 @@ export default function AdminServiciosPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && (
-          <div className="text-gray-600">Cargando servicios...</div>
+          <>{[1,2,3].map(i => <SkeletonCard key={i} />)}</>
         )}
         {!loading && services.map((service) => (
           <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
