@@ -17,6 +17,7 @@ type SettingsState = {
   hero_title: string
   hero_subtitle: string
   hero_image: string
+  hero_image_mobile: string
   whatsapp_martina: string
   whatsapp_luz: string
   portfolio_mode: 'visible' | 'hidden' | 'comingsoon'
@@ -39,6 +40,7 @@ const defaultSettings: SettingsState = {
   hero_title: '',
   hero_subtitle: '',
   hero_image: '',
+  hero_image_mobile: '',
   whatsapp_martina: '',
   whatsapp_luz: '',
   portfolio_mode: 'visible',
@@ -98,6 +100,7 @@ export default function AdminConfigPage() {
           hero_title: current.hero_title || '',
           hero_subtitle: current.hero_subtitle || '',
           hero_image: current.hero_image || current.hero_image_desktop_v2 || '',
+          hero_image_mobile: current.hero_image_mobile || '',
           whatsapp_martina: current.whatsapp_martina || '',
           whatsapp_luz: current.whatsapp_luz || '',
           portfolio_mode: (current.portfolio_mode || 'visible') as SettingsState['portfolio_mode'],
@@ -211,6 +214,51 @@ export default function AdminConfigPage() {
     }
   }
 
+  const handleHeroImageMobileUpload = async (file: File | null, inputRef?: HTMLInputElement | null) => {
+    if (!file) return
+
+    try {
+      setSaving(true)
+      setError('')
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo subir imagen')
+      }
+
+      const uploadData = await response.json()
+
+      if (inputRef) inputRef.value = ''
+
+      const saveResponse = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'hero_image_mobile', value: uploadData.url }),
+      })
+
+      if (!saveResponse.ok) {
+        const data = await saveResponse.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo guardar imagen')
+      }
+
+      handleChange('hero_image_mobile', uploadData.url)
+      setInitialSettings((prev) => ({ ...prev, hero_image_mobile: uploadData.url }))
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo imagen')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -254,28 +302,58 @@ export default function AdminConfigPage() {
 
         <div className="space-y-4 border-t border-slate-200 pt-5">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Imagen de portada</h2>
-            <p className="mt-1 text-sm text-slate-500">Aparece en el lado derecho del hero en desktop y como imagen principal en mobile.</p>
+            <h2 className="text-2xl font-bold text-slate-900">Imagenes de portada</h2>
+            <p className="mt-1 text-sm text-slate-500">Podés usar una imagen diferente para desktop y mobile, o la misma para ambos.</p>
           </div>
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <Input
-              type="text"
-              value={settings.hero_image}
-              onChange={(event) => handleChange('hero_image', event.target.value)}
-              className="h-12"
-              placeholder="URL de imagen"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
-              onChange={(event) => void handleHeroImageUpload(event.target.files?.[0] || null, event.target)}
-            />
-            {settings.hero_image && (
-              <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <Image src={settings.hero_image} alt="Hero preview" fill className="object-cover" />
-              </div>
-            )}
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {/* Desktop image */}
+            <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm font-semibold text-slate-700">Desktop <span className="font-normal text-slate-400">(lado derecho)</span></p>
+              <Input
+                type="text"
+                value={settings.hero_image}
+                onChange={(event) => handleChange('hero_image', event.target.value)}
+                className="h-12"
+                placeholder="URL de imagen desktop"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
+                onChange={(event) => void handleHeroImageUpload(event.target.files?.[0] || null, event.target)}
+              />
+              {settings.hero_image && (
+                <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                  <Image src={settings.hero_image} alt="Hero desktop preview" fill className="object-cover" />
+                </div>
+              )}
+            </div>
+
+            {/* Mobile image */}
+            <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm font-semibold text-slate-700">Mobile <span className="font-normal text-slate-400">(portada superior)</span></p>
+              <Input
+                type="text"
+                value={settings.hero_image_mobile}
+                onChange={(event) => handleChange('hero_image_mobile', event.target.value)}
+                className="h-12"
+                placeholder="URL de imagen mobile (si está vacío usa la de desktop)"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
+                onChange={(event) => void handleHeroImageMobileUpload(event.target.files?.[0] || null, event.target)}
+              />
+              {settings.hero_image_mobile ? (
+                <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                  <Image src={settings.hero_image_mobile} alt="Hero mobile preview" fill className="object-cover object-top" />
+                </div>
+              ) : (
+                <p className="text-xs text-slate-400 pt-1">Sin imagen mobile — se usará la de desktop como respaldo.</p>
+              )}
+            </div>
           </div>
         </div>
       </section>

@@ -12,6 +12,7 @@ export default function Hero() {
   const [heroTitle, setHeroTitle] = useState('')
   const [heroSubtitle, setHeroSubtitle] = useState('')
   const [heroImage, setHeroImage] = useState('')
+  const [heroImageMobile, setHeroImageMobile] = useState('')
   const [sparkles, setSparkles] = useState<
     Array<{ left: number; top: number; delay: number; size: number }>
   >([])
@@ -36,6 +37,7 @@ export default function Hero() {
       let nextTitle = business.tagline
       let nextSubtitle = business.description
       let nextHeroImage = ''
+      let nextHeroImageMobile = ''
 
       try {
         const response = await fetch('/api/settings', { cache: 'no-store' })
@@ -56,6 +58,10 @@ export default function Hero() {
           } else if (typeof settings.hero_image_desktop_v2 === 'string' && settings.hero_image_desktop_v2.trim()) {
             nextHeroImage = settings.hero_image_desktop_v2
           }
+
+          if (typeof settings.hero_image_mobile === 'string' && settings.hero_image_mobile.trim()) {
+            nextHeroImageMobile = settings.hero_image_mobile
+          }
         }
       } catch {
         // Keep fallback values
@@ -63,6 +69,7 @@ export default function Hero() {
         setHeroTitle(nextTitle)
         setHeroSubtitle(nextSubtitle)
         setHeroImage(nextHeroImage)
+        setHeroImageMobile(nextHeroImageMobile)
         setIsSettingsReady(true)
       }
     }
@@ -133,7 +140,7 @@ export default function Hero() {
         {/* Image zone */}
         <div className="relative w-full min-h-60 h-[55svh] overflow-hidden shrink-0">
           <Image
-            src={heroImage || '/images/logoGlitterPop.webp'}
+            src={heroImageMobile || heroImage || '/images/logoGlitterPop.webp'}
             alt="Glitter Pop Hero"
             fill
             className="object-cover object-top"
@@ -149,26 +156,10 @@ export default function Hero() {
         </div>
 
         {/* Content zone */}
-        <div className="flex-1 bg-[#FFF0F5] px-6 pb-10 pt-1 flex flex-col">
-          {/* Eyebrow badge */}
-          <div
-            className="flex justify-center mb-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
-            style={{ animationDelay: '100ms' }}
-          >
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full uppercase tracking-wide">
-              ✨ Stand de Glitter
-            </span>
-          </div>
-
-          <h1
-            className="text-[2.6rem] font-display font-bold text-gray-900 text-center leading-tight mb-3 animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
-            style={{ animationDelay: '200ms' }}
-          >
-            {heroTitle}
-          </h1>
+        <div className=" bg-[#FFF0F5] px-6 pb-10 pt-1 flex flex-col">
 
           <p
-            className="text-gray-600 text-center text-sm leading-relaxed mb-6 animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
+            className="text-black-600 text-center leading-relaxed mb-6 mt-6 animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
             style={{ animationDelay: '300ms' }}
           >
             {heroSubtitle}
@@ -178,10 +169,10 @@ export default function Hero() {
             className="flex flex-col gap-3 mt-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
             style={{ animationDelay: '400ms' }}
           >
-            <Button asChild className="px-6 py-3.5 h-auto rounded-full bg-linear-to-r from-pastel-lavender to-pastel-pink text-purple-900 font-bold text-base shadow-lg active:scale-95 transition-all hover:opacity-90">
+            <Button asChild className="px-6 py-3.5 h-auto rounded-full bg-white font-bold text-base shadow-lg active:scale-95 transition-all hover:opacity-90">
               <Link href="/contacto">✨ Reservá tu Evento</Link>
             </Button>
-            <Button asChild variant="outline" className="px-6 py-2.5 h-auto rounded-full bg-white border-2 border-purple-400 text-purple-700 font-semibold text-sm hover:bg-purple-50">
+            <Button asChild className="px-6 py-3.5 h-auto rounded-full bg-white font-bold text-base shadow-lg active:scale-95 transition-all hover:opacity-90">
               <Link href="/servicios">Ver Servicios →</Link>
             </Button>
           </div>
