@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Header from '@/components/Header'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
 export default function ContactoPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Header />
       <div className="pt-24">
         <Contact />
       </div>

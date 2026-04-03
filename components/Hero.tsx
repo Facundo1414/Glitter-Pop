@@ -138,7 +138,7 @@ export default function Hero() {
       {/* Mobile layout — image on top, content below */}
       <div className="sm:hidden relative min-h-svh flex flex-col">
         {/* Image zone */}
-        <div className="relative w-full min-h-60 h-[55svh] overflow-hidden shrink-0">
+        <div className="relative w-full min-h-60 h-[55svh] overflow-hidden shrink-0 animate-in fade-in-0 duration-700">
           <Image
             src={heroImageMobile || heroImage || '/images/logoGlitterPop.webp'}
             alt="Glitter Pop Hero"
@@ -212,8 +212,7 @@ export default function Hero() {
 
         {/* Right: full-bleed image */}
         <div
-          className="relative h-full overflow-hidden animate-in fade-in-0 zoom-in-95 duration-1000"
-          style={{ animationDelay: '300ms' }}
+          className="relative h-full overflow-hidden animate-in fade-in-0 zoom-in-95 duration-700"
         >
           <Image
             src={heroImage || '/images/1.jpg'}

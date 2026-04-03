@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Header from '@/components/Header'
 import About from '@/components/About'
 import Process from '@/components/Process'
 import Footer from '@/components/Footer'
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
 export default function NosotrasPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Header />
       <div className="pt-24">
         <About />
         <Process />

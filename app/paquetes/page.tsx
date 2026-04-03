@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Header from '@/components/Header'
 import Packages from '@/components/Packages'
 import Testimonials from '@/components/Testimonials'
 import FAQ from '@/components/FAQ'
@@ -14,7 +13,6 @@ export const metadata: Metadata = {
 export default function PaquetesPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Header />
       <div className="pt-24">
         <Packages />
         {/* <Testimonials /> */}

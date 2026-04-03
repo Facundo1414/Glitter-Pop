@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Lora } from 'next/font/google'
 import PageWrapper from '@/components/PageWrapper'
+import PublicHeader from '@/components/PublicHeader'
 
 const lora = Lora({
   subsets: ['latin'],
@@ -28,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={lora.variable}>
-      <body className="font-sans"><PageWrapper>{children}</PageWrapper></body>
+      <body className="font-sans"><PublicHeader /><PageWrapper>{children}</PageWrapper></body>
     </html>
   )
 }

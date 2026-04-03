@@ -93,35 +93,35 @@ export default function Header() {
               <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/') 
                     ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/">Inicio</Link>
               </Button>
               <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/servicios') 
                     ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/servicios">Servicios</Link>
               </Button>
               <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/nosotras') 
                     ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/nosotras">Nosotras</Link>
               </Button>
               <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/portfolio') 
                     ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/portfolio">Portfolio</Link>
               </Button>
               <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/paquetes') 
                     ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/paquetes">Paquetes</Link>
               </Button>

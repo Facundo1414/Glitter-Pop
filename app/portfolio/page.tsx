@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import Header from '@/components/Header'
 import Portfolio from '@/components/Portfolio'
 import Gallery from '@/components/Gallery'
 import Footer from '@/components/Footer'
@@ -35,7 +34,6 @@ export default function PortfolioPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <Header />
       <div className="pt-24">
         {portfolioMode === null && (
           <section className="py-16 md:py-20 bg-white">
