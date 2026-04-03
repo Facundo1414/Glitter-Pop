@@ -7,6 +7,11 @@ import { SkeletonFaqItem } from '@/components/admin/Skeleton'
 import { FaqPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Card, CardContent } from '@/components/ui/card'
 
 type Faq = {
   id: string
@@ -73,41 +78,47 @@ export default function AdminFaqsPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-        <form onSubmit={submitForm} className="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <form onSubmit={submitForm}>
+        <Card className="border-none shadow-md">
+          <CardContent className="p-6 space-y-4">
           <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar pregunta' : 'Nueva pregunta'}</h2>
-          <input
+          <Input
             value={form.question}
             onChange={(e) => setForm((prev) => ({ ...prev, question: e.target.value }))}
             placeholder="Pregunta"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            className="h-12 px-4"
             required
           />
-          <textarea
+          <Textarea
             value={form.answer}
             onChange={(e) => setForm((prev) => ({ ...prev, answer: e.target.value }))}
             placeholder="Respuesta"
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+            className="px-4 py-3"
             required
           />
           <div className="flex gap-3">
-            <button
+            <Button
               type="submit"
               disabled={saving}
-              className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
+              className="bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold px-5 py-3 h-auto"
             >
               {saving ? 'Guardando...' : isEditing ? 'Actualizar FAQ' : 'Crear FAQ'}
-            </button>
+            </Button>
             {isEditing && (
-              <button type="button" onClick={resetForm} className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold">
+              <Button type="button" variant="secondary" onClick={resetForm} className="px-5 py-3 h-auto font-semibold">
                 Cancelar
-              </button>
+              </Button>
             )}
           </div>
+          </CardContent>
+        </Card>
         </form>
         <FaqPreviewPanel data={form} />
       </div>
@@ -119,8 +130,8 @@ export default function AdminFaqsPage() {
             <h3 className="font-semibold text-gray-900 mb-2">{faq.question}</h3>
             <p className="text-gray-600 text-sm mb-4">{faq.answer}</p>
             <div className="flex gap-2">
-              <button onClick={() => startEdit(faq)} className="px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm font-semibold">Editar</button>
-              <button onClick={() => setPendingDelete(faq)} className="px-3 py-2 bg-red-100 text-red-700 rounded text-sm font-semibold">Eliminar</button>
+              <Button variant="secondary" size="sm" onClick={() => startEdit(faq)} className="bg-blue-100 text-blue-700 hover:bg-blue-200">Editar</Button>
+              <Button variant="secondary" size="sm" onClick={() => setPendingDelete(faq)} className="bg-red-100 text-red-700 hover:bg-red-200">Eliminar</Button>
             </div>
           </div>
         ))}

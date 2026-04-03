@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', shortLabel: 'Inicio' },
@@ -139,9 +140,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40">
         <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMobileSidebarOpen((previous) => !previous)}
-              className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
+              className="md:hidden"
               aria-label="Abrir menu"
             >
               <svg
@@ -157,7 +160,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-            </button>
+            </Button>
 
             <Link href="/admin" className="flex items-center gap-2">
               <div className="text-xl font-bold text-transparent bg-clip-text bg-linear-to-r from-pink-600 to-orange-500 font-display">
@@ -176,12 +179,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               Ver sitio
             </Link>
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleLogout}
-              className="text-sm px-3 py-1.5 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200"
+              className="text-rose-700 hover:bg-rose-100 hover:text-rose-700"
             >
               Salir
-            </button>
+            </Button>
           </div>
         </div>
       </header>

@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const isHome = pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,9 +45,11 @@ export default function Header() {
       {/* Header superior - Desktop y Mobile */}
       <header
       className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-xl py-3 md:py-3' 
-          : 'bg-white/80 backdrop-blur-sm shadow-md py-4 md:py-6'
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-xl py-3 md:py-3'
+          : isHome
+            ? 'bg-transparent py-4 md:py-6'
+            : 'bg-white/80 backdrop-blur-sm shadow-md py-4 md:py-6'
       }`}
     >
       <div className="container mx-auto px-4 lg:px-8">
@@ -86,62 +90,44 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-2 lg:space-x-6">
-              <Link
-                href="/"
-                className={`relative font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/') 
                     ? 'bg-primary-100 text-primary-700' 
                     : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Inicio
-              </Link>
-              <Link
-                href="/servicios"
-                className={`relative font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+                }`}>
+                <Link href="/">Inicio</Link>
+              </Button>
+              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/servicios') 
                     ? 'bg-primary-100 text-primary-700' 
                     : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Servicios
-              </Link>
-              <Link
-                href="/nosotras"
-                className={`relative font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+                }`}>
+                <Link href="/servicios">Servicios</Link>
+              </Button>
+              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/nosotras') 
                     ? 'bg-primary-100 text-primary-700' 
                     : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Nosotras
-              </Link>
-              <Link
-                href="/portfolio"
-                className={`relative font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+                }`}>
+                <Link href="/nosotras">Nosotras</Link>
+              </Button>
+              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/portfolio') 
                     ? 'bg-primary-100 text-primary-700' 
                     : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Portfolio
-              </Link>
-              <Link
-                href="/paquetes"
-                className={`relative font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+                }`}>
+                <Link href="/portfolio">Portfolio</Link>
+              </Button>
+              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
                   isActive('/paquetes') 
                     ? 'bg-primary-100 text-primary-700' 
                     : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Paquetes
-              </Link>
-              <Link
-                href="/contacto"
-                className="btn-primary ml-2 transform hover:scale-105 hover:shadow-xl transition-all duration-300"
-              >
-                Contacto
-              </Link>
+                }`}>
+                <Link href="/paquetes">Paquetes</Link>
+              </Button>
+              <Button asChild className="btn-primary ml-2 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
+                <Link href="/contacto">Contacto</Link>
+              </Button>
             </nav>
           </div>
         </div>

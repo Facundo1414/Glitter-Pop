@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import contentData from '@/data/content.json'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { useInView } from '@/hooks/useInView'
 
 export default function Services() {
   const [services, setServices] = useState(contentData.services)
-  const [isVisible, setIsVisible] = useState(false)
+  const [sectionRef, isInView] = useInView<HTMLElement>()
 
   useEffect(() => {
     const loadServices = async () => {
@@ -26,39 +29,16 @@ export default function Services() {
     void loadServices()
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    const section = document.getElementById('servicios')
-    if (section) {
-      observer.observe(section)
-    }
-
-    return () => {
-      if (section) {
-        observer.unobserve(section)
-      }
-    }
-  }, [])
-
   return (
-    <section id="servicios" className="py-16 md:py-20 bg-gray-50">
+    <section ref={sectionRef} id="servicios" className="py-16 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className={`section-title transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
+        <h2 className={`section-title ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}>
           Nuestros Servicios
         </h2>
-        <p className={`section-subtitle transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
+        <p
+          className={`section-subtitle ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
+          style={{ animationDelay: isInView ? '100ms' : undefined }}
+        >
           Dale brillo a tu evento con nuestros servicios profesionales de maquillaje artístico
         </p>
 
@@ -66,11 +46,12 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={service.id}
-              className={`card group hover:shadow-xl transition-all duration-700 cursor-pointer active:scale-98 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              className={`group cursor-pointer active:scale-98 ${
+                isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'
               }`}
-              style={{ transitionDelay: `${index * 120}ms` }}
+              style={{ animationDelay: isInView ? `${index * 120}ms` : undefined }}
             >
+              <Card className="h-full overflow-hidden border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="h-28 sm:h-32 bg-linear-to-br from-pastel-lavender/30 to-pastel-pink/30 relative overflow-hidden">
                 {typeof service.image === 'string' && service.image.trim() ? (
                   <Image
@@ -88,7 +69,7 @@ export default function Services() {
                   </div>
                 )}
               </div>
-              <div className="p-5 sm:p-6">
+              <CardContent className="p-5 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-display font-bold mb-2 sm:mb-3 text-gray-800">
                   {service.title}
                 </h3>
@@ -109,20 +90,21 @@ export default function Services() {
                   </svg>
                   {service.duration}
                 </div>
-              </div>
+              </CardContent>
+              </Card>
             </div>
           ))}
         </div>
 
-        <div className={`text-center mt-10 md:mt-12 px-4 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
-          <Link
-            href="/contacto"
-            className="btn-primary inline-block"
-          >
-            Consultá por tu Evento
-          </Link>
+        <div
+          className={`text-center mt-10 md:mt-12 px-4 ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
+          style={{ animationDelay: isInView ? `${services.length * 120}ms` : undefined }}
+        >
+          <Button asChild className="btn-primary">
+            <Link href="/contacto">
+              Consultá por tu Evento
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

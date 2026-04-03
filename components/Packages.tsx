@@ -3,6 +3,10 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import contentData from '@/data/content.json'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 
 export default function Packages() {
   const [packages, setPackages] = useState(contentData.packages)
@@ -82,7 +86,7 @@ export default function Packages() {
             >
               <div className={`relative h-full bg-white rounded-2xl overflow-hidden transition-all duration-500 ${
                 pkg.popular 
-                  ? 'shadow-2xl border-2 border-primary-200 scale-105 md:scale-[1.07] z-10' 
+                  ? 'shadow-2xl border-2 border-primary-200 md:scale-[1.07] z-10' 
                   : 'shadow-lg hover:shadow-xl border border-gray-100 active:scale-98'
               }`}>
                 {pkg.popular && (
@@ -93,10 +97,10 @@ export default function Packages() {
                   {/* Badge */}
                   {pkg.popular && (
                     <div className="flex justify-center mb-3">
-                      <span className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                      <Badge className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 text-xs font-bold shadow-md border-none">
                         <span>⭐</span>
                         <span>Más Popular</span>
-                      </span>
+                      </Badge>
                     </div>
                   )}
 
@@ -115,8 +119,7 @@ export default function Packages() {
                     </p>
                   </div>
 
-                  {/* Divider */}
-                  <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-4"></div>
+                  <Separator className="bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-4" />
 
                   {/* Features */}
                   <div className="space-y-3 mb-5">
@@ -159,17 +162,15 @@ export default function Packages() {
                     </div>
                   </div>
 
-                  {/* CTA Button */}
-                  <Link
-                    href="/contacto"
-                    className={`block w-full text-center py-3 px-5 rounded-lg md:rounded-xl font-bold text-sm md:text-base transition-all duration-300 transform active:scale-95 hover:scale-105 hover:shadow-lg touch-manipulation ${
+                  <Button asChild className={`w-full h-auto py-3 px-5 rounded-lg md:rounded-xl font-bold text-sm md:text-base transition-all duration-300 transform active:scale-95 hover:scale-105 hover:shadow-lg touch-manipulation ${
                       pkg.popular
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md hover:opacity-90'
                         : 'bg-white border-2 border-primary-300 text-primary-600 hover:bg-primary-50'
-                    }`}
-                  >
-                    Reservar Ahora
-                  </Link>
+                    }`}>
+                    <Link href="/contacto">
+                      Reservar Ahora
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </div>

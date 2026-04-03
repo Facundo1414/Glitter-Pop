@@ -6,17 +6,17 @@ import { useEffect, useMemo, useState } from 'react'
 import AdminTabs from '@/components/admin/AdminTabs'
 import { SettingsPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 type SettingsState = {
   hero_title: string
   hero_subtitle: string
-  hero_desktop_variant: 'desktop_v1' | 'desktop_v2' | 'desktop_v3'
-  hero_mobile_variant: 'mobile_v1' | 'mobile_v2'
-  hero_image_desktop_v1: string
-  hero_image_desktop_v2: string
-  hero_image_desktop_v3: string
-  hero_image_mobile_v1: string
-  hero_image_mobile_v2: string
+  hero_image: string
   whatsapp_martina: string
   whatsapp_luz: string
   portfolio_mode: 'visible' | 'hidden' | 'comingsoon'
@@ -38,13 +38,7 @@ type SettingsState = {
 const defaultSettings: SettingsState = {
   hero_title: '',
   hero_subtitle: '',
-  hero_desktop_variant: 'desktop_v1',
-  hero_mobile_variant: 'mobile_v1',
-  hero_image_desktop_v1: '',
-  hero_image_desktop_v2: '',
-  hero_image_desktop_v3: '',
-  hero_image_mobile_v1: '',
-  hero_image_mobile_v2: '',
+  hero_image: '',
   whatsapp_martina: '',
   whatsapp_luz: '',
   portfolio_mode: 'visible',
@@ -64,7 +58,7 @@ const defaultSettings: SettingsState = {
 }
 
 const tabs = [
-  { id: 'hero', label: 'Hero', description: 'Titulos, imagenes y variantes' },
+  { id: 'hero', label: 'Hero', description: 'Titulos e imagen de portada' },
   { id: 'contacto', label: 'Contacto', description: 'WhatsApp y datos de contacto' },
   { id: 'portfolio', label: 'Portfolio', description: 'Estado de la seccion visual' },
   { id: 'nosotras', label: 'Nosotras', description: 'Texto institucional' },
@@ -72,24 +66,6 @@ const tabs = [
 ] as const
 
 type TabId = (typeof tabs)[number]['id']
-
-const heroImageFields: Array<{
-  field: keyof Pick<
-    SettingsState,
-    | 'hero_image_desktop_v1'
-    | 'hero_image_desktop_v2'
-    | 'hero_image_desktop_v3'
-    | 'hero_image_mobile_v1'
-    | 'hero_image_mobile_v2'
-  >
-  label: string
-}> = [
-  { field: 'hero_image_desktop_v1', label: 'Desktop V1' },
-  { field: 'hero_image_desktop_v2', label: 'Desktop V2' },
-  { field: 'hero_image_desktop_v3', label: 'Desktop V3' },
-  { field: 'hero_image_mobile_v1', label: 'Mobile V1' },
-  { field: 'hero_image_mobile_v2', label: 'Mobile V2' },
-]
 
 export default function AdminConfigPage() {
   const [settings, setSettings] = useState<SettingsState>(defaultSettings)
@@ -121,13 +97,7 @@ export default function AdminConfigPage() {
         const nextSettings: SettingsState = {
           hero_title: current.hero_title || '',
           hero_subtitle: current.hero_subtitle || '',
-          hero_desktop_variant: (current.hero_desktop_variant || 'desktop_v1') as SettingsState['hero_desktop_variant'],
-          hero_mobile_variant: (current.hero_mobile_variant || 'mobile_v1') as SettingsState['hero_mobile_variant'],
-          hero_image_desktop_v1: current.hero_image_desktop_v1 || '',
-          hero_image_desktop_v2: current.hero_image_desktop_v2 || '',
-          hero_image_desktop_v3: current.hero_image_desktop_v3 || '',
-          hero_image_mobile_v1: current.hero_image_mobile_v1 || '',
-          hero_image_mobile_v2: current.hero_image_mobile_v2 || '',
+          hero_image: current.hero_image || current.hero_image_desktop_v2 || '',
           whatsapp_martina: current.whatsapp_martina || '',
           whatsapp_luz: current.whatsapp_luz || '',
           portfolio_mode: (current.portfolio_mode || 'visible') as SettingsState['portfolio_mode'],
@@ -194,17 +164,7 @@ export default function AdminConfigPage() {
     }
   }
 
-  const handleHeroImageUpload = async (
-    field: keyof Pick<
-      SettingsState,
-      | 'hero_image_desktop_v1'
-      | 'hero_image_desktop_v2'
-      | 'hero_image_desktop_v3'
-      | 'hero_image_mobile_v1'
-      | 'hero_image_mobile_v2'
-    >,
-    file: File | null,
-  ) => {
+  const handleHeroImageUpload = async (file: File | null, inputRef?: HTMLInputElement | null) => {
     if (!file) return
 
     try {
@@ -223,8 +183,27 @@ export default function AdminConfigPage() {
         throw new Error(data.message || 'No se pudo subir imagen')
       }
 
-      const data = await response.json()
-      handleChange(field, data.url)
+      const uploadData = await response.json()
+
+      // Reset file input so the same file can be re-selected later
+      if (inputRef) inputRef.value = ''
+
+      // Auto-save hero_image immediately after upload
+      const saveResponse = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'hero_image', value: uploadData.url }),
+      })
+
+      if (!saveResponse.ok) {
+        const data = await saveResponse.json().catch(() => ({}))
+        throw new Error(data.message || 'No se pudo guardar imagen')
+      }
+
+      handleChange('hero_image', uploadData.url)
+      setInitialSettings((prev) => ({ ...prev, hero_image: uploadData.url }))
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo imagen')
     } finally {
@@ -243,30 +222,6 @@ export default function AdminConfigPage() {
     )
   }
 
-  const renderImageField = (field: (typeof heroImageFields)[number]) => (
-    <div key={field.field} className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <label className="block text-sm font-semibold text-slate-700">{field.label}</label>
-      <input
-        type="text"
-        value={settings[field.field]}
-        onChange={(event) => handleChange(field.field, event.target.value)}
-        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
-        placeholder="URL de imagen"
-      />
-      <input
-        type="file"
-        accept="image/*"
-        className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
-        onChange={(event) => void handleHeroImageUpload(field.field, event.target.files?.[0] || null)}
-      />
-      {settings[field.field] && (
-        <div className="relative h-28 overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <Image src={settings[field.field]} alt={field.label} fill className="object-cover" />
-        </div>
-      )}
-    </div>
-  )
-
   const renderHeroTab = () => (
     <div className="grid grid-cols-1 gap-6">
       <section className="space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -276,69 +231,52 @@ export default function AdminConfigPage() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">Titulo principal</label>
-          <input
+          <Label htmlFor="hero_title" className="mb-2 block font-semibold">Titulo principal</Label>
+          <Input
+            id="hero_title"
             type="text"
             value={settings.hero_title}
             onChange={(event) => handleChange('hero_title', event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">Subtitulo</label>
-          <textarea
+          <Label htmlFor="hero_subtitle" className="mb-2 block font-semibold">Subtitulo</Label>
+          <Textarea
+            id="hero_subtitle"
             value={settings.hero_subtitle}
             onChange={(event) => handleChange('hero_subtitle', event.target.value)}
             rows={4}
-            className="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="resize-none"
           />
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="mb-3 text-sm font-semibold text-slate-700">Version desktop</p>
-            <div className="space-y-3">
-              {['desktop_v1', 'desktop_v2', 'desktop_v3'].map((value) => (
-                <label key={value} className="flex items-center gap-3 text-sm text-slate-700">
-                  <input
-                    type="radio"
-                    name="hero_desktop_variant"
-                    value={value}
-                    checked={settings.hero_desktop_variant === value}
-                    onChange={(event) => handleChange('hero_desktop_variant', event.target.value)}
-                  />
-                  <span>{value === 'desktop_v1' ? 'Desktop V1 - Carrusel' : value === 'desktop_v2' ? 'Desktop V2 - Simple' : 'Desktop V3 - Profesional'}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="mb-3 text-sm font-semibold text-slate-700">Version mobile</p>
-            <div className="space-y-3">
-              {['mobile_v1', 'mobile_v2'].map((value) => (
-                <label key={value} className="flex items-center gap-3 text-sm text-slate-700">
-                  <input
-                    type="radio"
-                    name="hero_mobile_variant"
-                    value={value}
-                    checked={settings.hero_mobile_variant === value}
-                    onChange={(event) => handleChange('hero_mobile_variant', event.target.value)}
-                  />
-                  <span>{value === 'mobile_v1' ? 'Mobile V1 - Simple' : 'Mobile V2 - Destacada'}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className="space-y-4 border-t border-slate-200 pt-5">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-900">Imagenes del hero</h2>
-          <p className="mt-1 text-sm text-slate-500">Puedes cargar cada variante o pegar la URL manualmente.</p>
-        </div>
-          <div className="grid gap-4 md:grid-cols-2">{heroImageFields.map(renderImageField)}</div>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Imagen de portada</h2>
+            <p className="mt-1 text-sm text-slate-500">Aparece en el lado derecho del hero en desktop y como imagen principal en mobile.</p>
+          </div>
+          <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <Input
+              type="text"
+              value={settings.hero_image}
+              onChange={(event) => handleChange('hero_image', event.target.value)}
+              className="h-12"
+              placeholder="URL de imagen"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
+              onChange={(event) => void handleHeroImageUpload(event.target.files?.[0] || null, event.target)}
+            />
+            {settings.hero_image && (
+              <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <Image src={settings.hero_image} alt="Hero preview" fill className="object-cover" />
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </div>
@@ -352,23 +290,25 @@ export default function AdminConfigPage() {
           <p className="mt-1 text-sm text-slate-500">Numeros directos para los botones de contacto rapido.</p>
         </div>
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">WhatsApp Martina</label>
-          <input
+          <Label htmlFor="whatsapp_martina" className="mb-2 block font-semibold">WhatsApp Martina</Label>
+          <Input
+            id="whatsapp_martina"
             type="text"
             placeholder="5491234567890"
             value={settings.whatsapp_martina}
             onChange={(event) => handleChange('whatsapp_martina', event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 font-mono outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12 font-mono"
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm font-semibold text-slate-700">WhatsApp Luz</label>
-          <input
+          <Label htmlFor="whatsapp_luz" className="mb-2 block font-semibold">WhatsApp Luz</Label>
+          <Input
+            id="whatsapp_luz"
             type="text"
             placeholder="5491234567890"
             value={settings.whatsapp_luz}
             onChange={(event) => handleChange('whatsapp_luz', event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 font-mono outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12 font-mono"
           />
         </div>
       </section>
@@ -380,46 +320,46 @@ export default function AdminConfigPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <input
+          <Input
             type="text"
             value={settings.contact_phone}
             onChange={(event) => handleChange('contact_phone', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Telefono de contacto"
           />
-          <input
+          <Input
             type="text"
             value={settings.contact_instagram}
             onChange={(event) => handleChange('contact_instagram', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Instagram de contacto"
           />
-          <input
+          <Input
             type="text"
             value={settings.contact_location}
             onChange={(event) => handleChange('contact_location', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Ubicacion"
           />
-          <input
+          <Input
             type="text"
             value={settings.contact_delivery}
             onChange={(event) => handleChange('contact_delivery', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Texto de traslado"
           />
-          <input
+          <Input
             type="text"
             value={settings.contact_working_hours}
             onChange={(event) => handleChange('contact_working_hours', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Horario de atencion"
           />
-          <input
+          <Input
             type="text"
             value={settings.contact_advance_booking}
             onChange={(event) => handleChange('contact_advance_booking', event.target.value)}
-            className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Anticipacion de reserva"
           />
         </div>
@@ -434,22 +374,22 @@ export default function AdminConfigPage() {
         <p className="mt-1 text-sm text-slate-500">Controla si la seccion se muestra, se oculta o queda en modo proximamente.</p>
       </div>
       <div className="space-y-3">
-        {[
-          { value: 'visible', label: 'Visible - Mostrar fotos y categorias' },
-          { value: 'comingsoon', label: 'Proximamente - Mostrar mensaje temporal' },
-          { value: 'hidden', label: 'Oculto - No mostrar la seccion' },
-        ].map((option) => (
-          <label key={option.value} className="flex items-center gap-3 rounded-2xl border border-slate-200 px-4 py-4 text-sm text-slate-700">
-            <input
-              type="radio"
-              name="portfolio_mode"
-              value={option.value}
-              checked={settings.portfolio_mode === option.value}
-              onChange={(event) => handleChange('portfolio_mode', event.target.value)}
-            />
-            <span>{option.label}</span>
-          </label>
-        ))}
+        <RadioGroup
+          value={settings.portfolio_mode}
+          onValueChange={(value) => handleChange('portfolio_mode', value)}
+          className="space-y-3"
+        >
+          {[
+            { value: 'visible', label: 'Visible - Mostrar fotos y categorias' },
+            { value: 'comingsoon', label: 'Proximamente - Mostrar mensaje temporal' },
+            { value: 'hidden', label: 'Oculto - No mostrar la seccion' },
+          ].map((option) => (
+            <Label key={option.value} className="flex items-center gap-3 rounded-2xl border border-slate-200 px-4 py-4 text-sm text-slate-700 cursor-pointer">
+              <RadioGroupItem value={option.value} />
+              <span>{option.label}</span>
+            </Label>
+          ))}
+        </RadioGroup>
       </div>
     </section>
   )
@@ -460,11 +400,11 @@ export default function AdminConfigPage() {
         <h2 className="text-2xl font-bold text-slate-900">Texto institucional</h2>
         <p className="mt-1 text-sm text-slate-500">Describe a Glitter Pop y el enfoque del equipo en la seccion Nosotras.</p>
       </div>
-      <textarea
+      <Textarea
         value={settings.about_text}
         onChange={(event) => handleChange('about_text', event.target.value)}
         rows={7}
-        className="w-full resize-none rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+        className="resize-none"
       />
     </section>
   )
@@ -477,50 +417,51 @@ export default function AdminConfigPage() {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">Descripcion</label>
-        <textarea
+        <Label htmlFor="footer_description" className="mb-2 block font-semibold">Descripcion</Label>
+        <Textarea
+          id="footer_description"
           value={settings.footer_description}
           onChange={(event) => handleChange('footer_description', event.target.value)}
           rows={3}
-          className="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+          className="resize-none"
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <input
+        <Input
           type="email"
           value={settings.footer_email}
           onChange={(event) => handleChange('footer_email', event.target.value)}
-          className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+          className="h-12"
           placeholder="Email"
         />
-        <input
+        <Input
           type="text"
           value={settings.footer_phone}
           onChange={(event) => handleChange('footer_phone', event.target.value)}
-          className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+          className="h-12"
           placeholder="Telefono"
         />
-        <input
+        <Input
           type="text"
           value={settings.footer_location}
           onChange={(event) => handleChange('footer_location', event.target.value)}
-          className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+          className="h-12"
           placeholder="Ubicacion"
         />
-        <input
+        <Input
           type="text"
           value={settings.footer_instagram}
           onChange={(event) => handleChange('footer_instagram', event.target.value)}
-          className="rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+          className="h-12"
           placeholder="Instagram"
         />
         <div className="md:col-span-2">
-          <input
+          <Input
             type="text"
             value={settings.footer_facebook}
             onChange={(event) => handleChange('footer_facebook', event.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-500"
+            className="h-12"
             placeholder="Facebook"
           />
         </div>
@@ -553,15 +494,15 @@ export default function AdminConfigPage() {
       />
 
       {saved && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
-          Cambios guardados exitosamente.
-        </div>
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-700">
+          <AlertDescription>Cambios guardados exitosamente.</AlertDescription>
+        </Alert>
       )}
 
       {error && (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
@@ -577,22 +518,22 @@ export default function AdminConfigPage() {
 
       <div className="sticky bottom-4 z-10">
         <div className="ml-auto flex w-full max-w-xl flex-col gap-3 rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur md:flex-row md:items-center md:justify-end">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={handleReset}
             disabled={!isDirty || saving}
-            className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Descartar cambios
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={handleSave}
             disabled={saving || !isDirty}
-            className="rounded-xl bg-linear-to-r from-purple-600 to-pink-600 px-5 py-3 text-sm font-semibold text-white hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-linear-to-r from-purple-600 to-pink-600 text-white"
           >
             {saving ? 'Guardando...' : 'Guardar cambios'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

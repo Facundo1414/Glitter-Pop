@@ -1,5 +1,9 @@
 'use client'
 
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { AlertTriangle } from 'lucide-react'
+
 type UnsavedChangesBannerProps = {
   visible: boolean
   message?: string
@@ -18,22 +22,24 @@ export default function UnsavedChangesBanner({
   }
 
   return (
-    <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <Alert className="rounded-2xl border-amber-200 bg-amber-50 text-amber-900">
+      <AlertTriangle className="size-4 text-amber-600" />
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between w-full">
         <div>
-          <p className="text-sm font-semibold">Cambios pendientes</p>
-          <p className="text-sm text-amber-800">{message}</p>
+          <AlertTitle className="font-semibold">Cambios pendientes</AlertTitle>
+          <AlertDescription className="text-amber-800">{message}</AlertDescription>
         </div>
         {onReset && (
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={onReset}
-            className="rounded-xl border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+            className="border-amber-300 text-amber-900 hover:bg-amber-100"
           >
             {resetLabel}
-          </button>
+          </Button>
         )}
       </div>
-    </div>
+    </Alert>
   )
 }

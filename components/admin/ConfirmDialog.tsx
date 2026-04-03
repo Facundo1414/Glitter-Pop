@@ -1,6 +1,14 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 type ConfirmDialogProps = {
   open: boolean
@@ -25,84 +33,26 @@ export default function ConfirmDialog({
   onCancel,
   busy = false,
 }: ConfirmDialogProps) {
-  const dialogRef = useRef<HTMLDivElement>(null)
-  const previousFocusRef = useRef<HTMLElement | null>(null)
-
-  useEffect(() => {
-    if (!open) return
-
-    previousFocusRef.current = document.activeElement as HTMLElement
-    dialogRef.current?.focus()
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onCancel()
-        return
-      }
-      if (e.key === 'Tab' && dialogRef.current) {
-        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled])'
-        )
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault()
-          last?.focus()
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          first?.focus()
-        }
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      previousFocusRef.current?.focus()
-    }
-  }, [open, onCancel])
-
-  if (!open) {
-    return null
-  }
-
-  const confirmClassName =
-    tone === 'danger'
-      ? 'bg-rose-600 text-white hover:bg-rose-700'
-      : 'bg-slate-900 text-white hover:bg-slate-800'
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
-      <button
-        type="button"
-        aria-label="Cerrar dialogo"
-        className="absolute inset-0 bg-slate-950/45"
-        onClick={onCancel}
-      />
-      <div ref={dialogRef} tabIndex={-1} className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl outline-none">
-        <div className="space-y-2">
-          <h3 id="confirm-dialog-title" className="text-xl font-bold text-slate-900">{title}</h3>
-          <p className="text-sm leading-6 text-slate-600">{description}</p>
-        </div>
-
-        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-          >
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onCancel() }}>
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onCancel}>
             {cancelLabel}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant={tone === 'danger' ? 'destructive' : 'default'}
             onClick={onConfirm}
             disabled={busy}
-            className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${confirmClassName}`}
           >
             {busy ? 'Procesando...' : confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

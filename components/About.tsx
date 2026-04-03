@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import content from '@/data/content.json'
+import { Card, CardContent } from '@/components/ui/card'
 
 type TeamMember = {
   id: string
@@ -80,7 +81,7 @@ export default function About() {
 
   return (
     <section id="nosotras" className="py-16 md:py-20 bg-gradient-to-b from-white to-pastel-pink/10">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
@@ -108,9 +109,9 @@ export default function About() {
 
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto">
           {teamMembers.map((member, index) => (
-            <div
+            <Card
               key={member.id}
-              className={`bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden transform transition-all duration-1000 hover:scale-105 active:scale-100 touch-manipulation ${
+              className={`overflow-hidden transform transition-all duration-1000 hover:scale-105 active:scale-100 touch-manipulation border-none shadow-lg ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
               }`}
               style={{ transitionDelay: `${index * 200}ms` }}
@@ -130,7 +131,7 @@ export default function About() {
                   )}
                 </div>
               </div>
-              <div className="p-5 sm:p-6 text-center">
+              <CardContent className="p-5 sm:p-6 text-center">
                 <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 mb-2">
                   {member.name}
                 </h3>
@@ -140,8 +141,8 @@ export default function About() {
                 <p className="text-gray-600">
                   {member.description}
                 </p>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

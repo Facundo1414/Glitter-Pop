@@ -40,13 +40,7 @@ type PortfolioPreviewData = {
 type SettingsPreviewData = {
   hero_title: string
   hero_subtitle: string
-  hero_desktop_variant: 'desktop_v1' | 'desktop_v2' | 'desktop_v3'
-  hero_mobile_variant: 'mobile_v1' | 'mobile_v2'
-  hero_image_desktop_v1: string
-  hero_image_desktop_v2: string
-  hero_image_desktop_v3: string
-  hero_image_mobile_v1: string
-  hero_image_mobile_v2: string
+  hero_image: string
   whatsapp_martina: string
   whatsapp_luz: string
   portfolio_mode: 'visible' | 'hidden' | 'comingsoon'
@@ -236,17 +230,7 @@ export function SettingsPreviewPanel({
   settings: SettingsPreviewData
   activeTab: 'hero' | 'contacto' | 'portfolio' | 'nosotras' | 'footer'
 }) {
-  const desktopPreviewImage =
-    settings.hero_desktop_variant === 'desktop_v1'
-      ? settings.hero_image_desktop_v1
-      : settings.hero_desktop_variant === 'desktop_v2'
-        ? settings.hero_image_desktop_v2
-        : settings.hero_image_desktop_v3
-
-  const mobilePreviewImage =
-    settings.hero_mobile_variant === 'mobile_v1'
-      ? settings.hero_image_mobile_v1
-      : settings.hero_image_mobile_v2
+  const heroImage = settings.hero_image
 
   return (
     <PreviewShell
@@ -257,27 +241,15 @@ export function SettingsPreviewPanel({
         <div className="space-y-4">
           <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
             <div className="relative h-52 bg-linear-to-br from-pink-100 via-purple-50 to-orange-100">
-              {desktopPreviewImage ? (
-                <Image src={desktopPreviewImage} alt="Hero desktop" fill className="object-cover" />
+              {heroImage ? (
+                <Image src={heroImage} alt="Hero preview" fill className="object-cover" />
               ) : (
-                <div className="flex h-full items-center justify-center text-slate-500">Hero desktop</div>
+                <div className="flex h-full items-center justify-center text-slate-500">Imagen del hero</div>
               )}
             </div>
             <div className="space-y-3 p-5">
-              <span className="inline-flex rounded-full bg-pink-100 px-3 py-1 text-xs font-semibold text-pink-700">
-                Desktop: {settings.hero_desktop_variant}
-              </span>
               <h4 className="text-2xl font-bold text-slate-900">{settings.hero_title || 'Titulo principal del hero'}</h4>
               <p className="text-sm leading-6 text-slate-600">{settings.hero_subtitle || 'Subtitulo del hero para la portada.'}</p>
-            </div>
-          </div>
-          <div className="overflow-hidden rounded-3xl bg-white shadow-md">
-            <div className="relative mx-auto h-64 w-40 bg-slate-100">
-              {mobilePreviewImage ? (
-                <Image src={mobilePreviewImage} alt="Hero mobile" fill className="object-cover" />
-              ) : (
-                <div className="flex h-full items-center justify-center text-sm text-slate-500">Hero mobile</div>
-              )}
             </div>
           </div>
         </div>

@@ -7,6 +7,13 @@ import { SkeletonPackageCard } from '@/components/admin/Skeleton'
 import { PackagePreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 type SitePackage = {
   id: string
@@ -117,73 +124,76 @@ export default function AdminPaquetesPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+        <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>
       )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-        <form onSubmit={submitForm} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-          <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar paquete' : 'Nuevo paquete'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              value={form.name}
-              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="Nombre"
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-              required
-            />
-            <input
-              value={form.price}
-              onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value }))}
-              placeholder="Precio"
-              type="number"
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-              required
-            />
-            <input
-              value={form.duration}
-              onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
-              placeholder="Duración"
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-              required
-            />
-            <input
-              value={form.ideal}
-              onChange={(e) => setForm((prev) => ({ ...prev, ideal: e.target.value }))}
-              placeholder="Ideal para"
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-          <textarea
-            value={form.featuresText}
-            onChange={(e) => setForm((prev) => ({ ...prev, featuresText: e.target.value }))}
-            placeholder="Features, una por línea"
-            rows={5}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-            required
-          />
-          <label className="inline-flex items-center gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              checked={form.popular}
-              onChange={(e) => setForm((prev) => ({ ...prev, popular: e.target.checked }))}
-            />
-            Marcar como más popular
-          </label>
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-5 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold"
-            >
-              {saving ? 'Guardando...' : isEditing ? 'Actualizar paquete' : 'Crear paquete'}
-            </button>
-            {isEditing && (
-              <button type="button" onClick={resetForm} className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold">
-                Cancelar
-              </button>
-            )}
-          </div>
+        <form onSubmit={submitForm}>
+          <Card>
+            <CardContent className="space-y-4 pt-6">
+              <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar paquete' : 'Nuevo paquete'}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                  placeholder="Nombre"
+                  className="h-12"
+                  required
+                />
+                <Input
+                  value={form.price}
+                  onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value }))}
+                  placeholder="Precio"
+                  type="number"
+                  className="h-12"
+                  required
+                />
+                <Input
+                  value={form.duration}
+                  onChange={(e) => setForm((prev) => ({ ...prev, duration: e.target.value }))}
+                  placeholder="Duración"
+                  className="h-12"
+                  required
+                />
+                <Input
+                  value={form.ideal}
+                  onChange={(e) => setForm((prev) => ({ ...prev, ideal: e.target.value }))}
+                  placeholder="Ideal para"
+                  className="h-12"
+                  required
+                />
+              </div>
+              <Textarea
+                value={form.featuresText}
+                onChange={(e) => setForm((prev) => ({ ...prev, featuresText: e.target.value }))}
+                placeholder="Features, una por línea"
+                rows={5}
+                required
+              />
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="popular"
+                  checked={form.popular}
+                  onCheckedChange={(checked) => setForm((prev) => ({ ...prev, popular: checked === true }))}
+                />
+                <Label htmlFor="popular">Marcar como más popular</Label>
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="bg-linear-to-r from-purple-600 to-pink-600 text-white"
+                >
+                  {saving ? 'Guardando...' : isEditing ? 'Actualizar paquete' : 'Crear paquete'}
+                </Button>
+                {isEditing && (
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    Cancelar
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </form>
         <PackagePreviewPanel data={form} />
       </div>
@@ -238,18 +248,12 @@ export default function AdminPaquetesPage() {
               </div>
 
               <div className="flex gap-2">
-                <button
-                  onClick={() => startEdit(pkg)}
-                  className="flex-1 px-3 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm font-semibold"
-                >
+                <Button variant="secondary" size="sm" className="flex-1" onClick={() => startEdit(pkg)}>
                   Editar
-                </button>
-                <button
-                  onClick={() => setPendingDelete(pkg)}
-                  className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-semibold"
-                >
+                </Button>
+                <Button variant="secondary" size="sm" className="flex-1 bg-red-100 text-red-700 hover:bg-red-200" onClick={() => setPendingDelete(pkg)}>
                   Eliminar
-                </button>
+                </Button>
               </div>
             </div>
           </div>

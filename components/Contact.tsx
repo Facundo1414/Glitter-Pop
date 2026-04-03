@@ -2,10 +2,19 @@
 
 import { useState, useEffect } from 'react'
 import contentData from '@/data/content.json'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { useInView } from '@/hooks/useInView'
 
 export default function Contact() {
   const { business } = contentData
   const [whatsappMartina, setWhatsappMartina] = useState(business.whatsapp || '')
+  const [sectionRef, isInView] = useInView<HTMLElement>()
   const [whatsappLuz, setWhatsappLuz] = useState(business.whatsapp_luz || business.whatsapp || '')
   const [contactPhone, setContactPhone] = useState(business.phone || '')
   const [contactInstagram, setContactInstagram] = useState(business.instagram || '')
@@ -56,7 +65,7 @@ export default function Contact() {
     }
   }
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setTouched(prev => ({ ...prev, [name]: true }))
     setFieldErrors(prev => ({ ...prev, [name]: validateField(name, value) }))
@@ -172,24 +181,39 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
   }
 
   return (
-    <section id="contacto" className="py-12 md:py-16 bg-white">
+    <section ref={sectionRef} id="contacto" className="py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl md:text-4xl font-display font-bold text-center mb-2 md:mb-3 text-gray-800 drop-shadow-sm px-4">
+        <h2
+          className={`text-3xl sm:text-4xl md:text-4xl font-display font-bold text-center mb-2 md:mb-3 text-gray-800 drop-shadow-sm px-4 ${
+            isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'
+          }`}
+        >
           Hablemos de tu Evento
         </h2>
-        <p className="text-base sm:text-lg md:text-lg text-gray-700 text-center mb-8 md:mb-10 max-w-2xl mx-auto px-4">
+        <p
+          className={`text-base sm:text-lg md:text-lg text-gray-700 text-center mb-8 md:mb-10 max-w-2xl mx-auto px-4 ${
+            isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'
+          }`}
+          style={{ animationDelay: isInView ? '100ms' : undefined }}
+        >
           Completá los datos y te contactaremos por WhatsApp
         </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
+        <div
+          className={`grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto ${
+            isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'
+          }`}
+          style={{ animationDelay: isInView ? '200ms' : undefined }}
+        >
           {/* Contact Form */}
-          <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 sm:p-8">
+          <Card className="rounded-2xl md:rounded-3xl shadow-2xl border-none">
+            <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Label htmlFor="name" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   Nombre Completo *
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   id="name"
                   name="name"
@@ -197,7 +221,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                   value={formData.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.name && fieldErrors.name ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                  aria-invalid={touched.name && !!fieldErrors.name}
+                  className="h-12 sm:h-13 px-4 text-base rounded-lg touch-manipulation"
                   placeholder="Tu nombre"
                 />
                 {touched.name && fieldErrors.name && <p className="mt-1 text-sm text-red-500">{fieldErrors.name}</p>}
@@ -205,10 +230,10 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                  <Label htmlFor="email" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                     Email *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="email"
                     id="email"
                     name="email"
@@ -216,17 +241,18 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.email && fieldErrors.email ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                    aria-invalid={touched.email && !!fieldErrors.email}
+                    className="h-12 sm:h-13 px-4 text-base rounded-lg touch-manipulation"
                     placeholder="tu@email.com"
                   />
                   {touched.email && fieldErrors.email && <p className="mt-1 text-sm text-red-500">{fieldErrors.email}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                  <Label htmlFor="phone" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                     Teléfono *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="tel"
                     id="phone"
                     name="phone"
@@ -234,7 +260,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     value={formData.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.phone && fieldErrors.phone ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                    aria-invalid={touched.phone && !!fieldErrors.phone}
+                    className="h-12 sm:h-13 px-4 text-base rounded-lg touch-manipulation"
                     placeholder="+54 11 1234-5678"
                   />
                   {touched.phone && fieldErrors.phone && <p className="mt-1 text-sm text-red-500">{fieldErrors.phone}</p>}
@@ -242,35 +269,46 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
               </div>
 
               <div>
-                <label htmlFor="eventType" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Label htmlFor="eventType" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   Tipo de Evento *
-                </label>
-                <select
-                  id="eventType"
-                  name="eventType"
-                  required
+                </Label>
+                <Select
                   value={formData.eventType}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.eventType && fieldErrors.eventType ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                  onValueChange={(value) => {
+                    setFormData({ ...formData, eventType: value })
+                    if (touched.eventType) {
+                      setFieldErrors(prev => ({ ...prev, eventType: validateField('eventType', value) }))
+                    }
+                  }}
                 >
-                  <option value="">Seleccioná un tipo</option>
-                  <option value="cumpleaños">Cumpleaños</option>
-                  <option value="boda">Boda</option>
-                  <option value="corporativo">Evento Corporativo</option>
-                  <option value="festival">Festival</option>
-                  <option value="infantil">Fiesta Infantil</option>
-                  <option value="otro">Otro</option>
-                </select>
+                  <SelectTrigger
+                    id="eventType"
+                    className={`h-12 sm:h-13 touch-manipulation ${touched.eventType && fieldErrors.eventType ? 'border-destructive ring-destructive/20 focus-visible:ring-destructive/30' : ''}`}
+                    onBlur={() => {
+                      setTouched(prev => ({ ...prev, eventType: true }))
+                      setFieldErrors(prev => ({ ...prev, eventType: validateField('eventType', formData.eventType) }))
+                    }}
+                  >
+                    <SelectValue placeholder="Seleccioná un tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cumpleaños">Cumpleaños</SelectItem>
+                    <SelectItem value="boda">Boda</SelectItem>
+                    <SelectItem value="corporativo">Evento Corporativo</SelectItem>
+                    <SelectItem value="festival">Festival</SelectItem>
+                    <SelectItem value="infantil">Fiesta Infantil</SelectItem>
+                    <SelectItem value="otro">Otro</SelectItem>
+                  </SelectContent>
+                </Select>
                 {touched.eventType && fieldErrors.eventType && <p className="mt-1 text-sm text-red-500">{fieldErrors.eventType}</p>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="eventDate" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                  <Label htmlFor="eventDate" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                     Fecha del Evento *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="date"
                     id="eventDate"
                     name="eventDate"
@@ -279,24 +317,26 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                     value={formData.eventDate}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.eventDate && fieldErrors.eventDate ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                    aria-invalid={touched.eventDate && !!fieldErrors.eventDate}
+                    className="h-12 sm:h-13 px-4 text-base rounded-lg touch-manipulation"
                   />
                   {touched.eventDate && fieldErrors.eventDate && <p className="mt-1 text-sm text-red-500">{fieldErrors.eventDate}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="guests" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                  <Label htmlFor="guests" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                     Cantidad de Invitados
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="number"
                     id="guests"
                     name="guests"
-                    min="1"
+                    min={1}
                     value={formData.guests}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-3 sm:py-4 text-base border rounded-lg focus:ring-2 focus:border-transparent outline-none transition touch-manipulation ${touched.guests && fieldErrors.guests ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-primary-500'}`}
+                    aria-invalid={touched.guests && !!fieldErrors.guests}
+                    className="h-12 sm:h-13 px-4 text-base rounded-lg touch-manipulation"
                     placeholder="Ej: 50"
                   />
                   {touched.guests && fieldErrors.guests && <p className="mt-1 text-sm text-red-500">{fieldErrors.guests}</p>}
@@ -304,27 +344,27 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
+                <Label htmlFor="message" className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   Contanos más sobre tu evento
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   id="message"
                   name="message"
                   rows={4}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 sm:py-4 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition resize-none touch-manipulation"
+                  className="px-4 py-3 sm:py-4 text-base rounded-lg resize-none touch-manipulation"
                   placeholder="Detalles adicionales, temática, horarios, ubicación..."
-                ></textarea>
+                />
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-lg py-4 active:scale-98"
+                className="w-full h-auto btn-primary text-base md:text-lg py-4 active:scale-98"
               >
                 {isSubmitting ? 'Abriendo WhatsApp...' : 'Continuar por WhatsApp 💬'}
-              </button>
+              </Button>
 
               {submitMessage && (
                 <div className="text-center text-green-600 font-semibold bg-green-50 p-4 rounded-lg">
@@ -332,9 +372,8 @@ ${formData.message ? `💬 *Detalles adicionales:*\n${formData.message}` : ''}`
                 </div>
               )}
             </form>
-          </div>
-
-          {/* Contact Info */}
+            </CardContent>
+          </Card>
           <div className="text-gray-800 space-y-6 md:space-y-8">
                 <div>
                   <h3 className="text-2xl sm:text-3xl font-display font-bold mb-5 md:mb-6 text-gray-800 px-4 lg:px-0">Información de Contacto</h3>

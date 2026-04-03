@@ -8,6 +8,10 @@ import { SkeletonPortfolioCard } from '@/components/admin/Skeleton'
 import { PortfolioPreviewPanel } from '@/components/admin/PreviewPanels'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 type PortfolioItem = {
   id: string
@@ -118,71 +122,75 @@ export default function AdminPortfolioPage() {
       />
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+        <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>
       )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-        <form onSubmit={submitForm} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-          <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar item' : 'Nuevo item de portfolio'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              value={form.title}
-              onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
-              placeholder="Título"
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-              required
-            />
-            <select
-              value={form.category}
-              onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
-              className="px-4 py-3 border border-gray-300 rounded-lg"
-            >
-              <option value="festival">Festival</option>
-              <option value="kids">Infantil</option>
-              <option value="corporate">Corporativo</option>
-              <option value="wedding">Boda</option>
-              <option value="party">Fiesta</option>
-              <option value="special">Especial</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-            <div className="space-y-2">
-              <input
-                value={form.image}
-                onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
-                placeholder="URL de imagen"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                required
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={onUpload}
-                className="w-full border border-gray-300 rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
-              />
-            </div>
-            {form.image && (
-              <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
-                <Image src={form.image} alt="Preview" fill className="object-cover" />
+        <form onSubmit={submitForm}>
+          <Card>
+            <CardContent className="space-y-4 pt-6">
+              <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar item' : 'Nuevo item de portfolio'}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  value={form.title}
+                  onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+                  placeholder="Título"
+                  className="h-12"
+                  required
+                />
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
+                  className="h-12 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <option value="festival">Festival</option>
+                  <option value="kids">Infantil</option>
+                  <option value="corporate">Corporativo</option>
+                  <option value="wedding">Boda</option>
+                  <option value="party">Fiesta</option>
+                  <option value="special">Especial</option>
+                </select>
               </div>
-            )}
-          </div>
 
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-5 py-3 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold"
-            >
-              {saving ? 'Guardando...' : isEditing ? 'Actualizar item' : 'Crear item'}
-            </button>
-            {isEditing && (
-              <button type="button" onClick={resetForm} className="px-5 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold">
-                Cancelar
-              </button>
-            )}
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                <div className="space-y-2">
+                  <Input
+                    value={form.image}
+                    onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+                    placeholder="URL de imagen"
+                    className="h-12"
+                    required
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={onUpload}
+                    className="w-full border border-input rounded-lg bg-gray-50 p-2 text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-purple-100 file:px-3 file:py-1.5 file:font-semibold file:text-purple-700 hover:file:bg-purple-200"
+                  />
+                </div>
+                {form.image && (
+                  <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
+                    <Image src={form.image} alt="Preview" fill className="object-cover" />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="bg-linear-to-r from-green-600 to-emerald-600 text-white"
+                >
+                  {saving ? 'Guardando...' : isEditing ? 'Actualizar item' : 'Crear item'}
+                </Button>
+                {isEditing && (
+                  <Button type="button" variant="outline" onClick={resetForm}>
+                    Cancelar
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </form>
         <PortfolioPreviewPanel data={form} />
       </div>
@@ -199,18 +207,12 @@ export default function AdminPortfolioPage() {
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
               />
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => startEdit(item)}
-                  className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-semibold"
-                >
+                <Button size="sm" onClick={() => startEdit(item)} className="bg-blue-600 hover:bg-blue-700 text-white">
                   Editar
-                </button>
-                <button
-                  onClick={() => setPendingDelete(item)}
-                  className="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm font-semibold"
-                >
+                </Button>
+                <Button size="sm" onClick={() => setPendingDelete(item)} className="bg-red-600 hover:bg-red-700 text-white">
                   Eliminar
-                </button>
+                </Button>
               </div>
             </div>
             <div className="p-4">

@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState('')
@@ -78,7 +83,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-pastel-lavender via-pastel-pink to-pastel-peach">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <Card className="rounded-2xl shadow-2xl border-none">
+          <CardContent className="p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-900 font-display">
             Glitter Pop
           </h1>
@@ -86,50 +92,51 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
+              <Label htmlFor="username" className="text-sm font-semibold text-gray-700 mb-2">
                 Usuario
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="h-12 px-4 text-base"
                 placeholder="admin"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <Label htmlFor="password" className="text-sm font-semibold text-gray-700 mb-2">
                 Contraseña
-              </label>
-              <input
+              </Label>
+              <Input
                 type="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                className="h-12 px-4 text-base"
                 placeholder="••••••••"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg active:scale-95 transition-all disabled:opacity-50"
+              className="w-full h-12 bg-linear-to-r from-purple-600 to-pink-600 text-white font-bold hover:shadow-lg active:scale-95 transition-all"
             >
               {loading ? 'Iniciando sesion...' : 'Iniciar sesion'}
-            </button>
+            </Button>
           </form>
-        </div>
+        </CardContent>
+      </Card>
       </div>
     </div>
   )

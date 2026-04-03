@@ -1,5 +1,7 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
+
 type Tab = {
   id: string
   label: string
@@ -42,25 +44,28 @@ export default function AdminTabs({ tabs, activeTab, onChange }: AdminTabsProps)
           const isActive = tab.id === activeTab
 
           return (
-            <button
+            <Button
               key={tab.id}
               type="button"
               role="tab"
+              variant="ghost"
               aria-selected={isActive}
               tabIndex={isActive ? 0 : -1}
               onClick={() => onChange(tab.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+              className={`h-auto rounded-xl border px-4 py-3 text-left justify-start transition-colors ${
                 isActive
-                  ? 'border-pink-200 bg-pink-50 text-pink-700'
+                  ? 'border-pink-200 bg-pink-50 text-pink-700 hover:bg-pink-50'
                   : 'border-transparent bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100'
               }`}
             >
-              <p className="text-sm font-semibold">{tab.label}</p>
-              {tab.description && (
-                <p className="mt-1 text-xs text-slate-500">{tab.description}</p>
-              )}
-            </button>
+              <div>
+                <p className="text-sm font-semibold">{tab.label}</p>
+                {tab.description && (
+                  <p className="mt-1 text-xs text-slate-500 font-normal">{tab.description}</p>
+                )}
+              </div>
+            </Button>
           )
         })}
       </div>

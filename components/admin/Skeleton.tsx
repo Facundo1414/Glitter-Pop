@@ -1,12 +1,6 @@
 'use client'
 
-type SkeletonProps = {
-  className?: string
-}
-
-function Skeleton({ className = '' }: SkeletonProps) {
-  return <div className={`animate-pulse rounded-lg bg-slate-200 ${className}`} />
-}
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function SkeletonCard() {
   return (
@@ -77,4 +71,5 @@ export function SkeletonPortfolioCard() {
   )
 }
 
+export { Skeleton }
 export default Skeleton

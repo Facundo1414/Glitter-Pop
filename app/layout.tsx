@@ -1,11 +1,11 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Lora } from 'next/font/google'
+import PageWrapper from '@/components/PageWrapper'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const playfair = Playfair_Display({ 
-  subsets: ['latin'], 
-  variable: '--font-playfair',
+const lora = Lora({
+  subsets: ['latin'],
+  variable: '--font-lora',
   display: 'swap',
 })
 
@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans">{children}</body>
+    <html lang="es" className={lora.variable}>
+      <body className="font-sans"><PageWrapper>{children}</PageWrapper></body>
     </html>
   )
 }

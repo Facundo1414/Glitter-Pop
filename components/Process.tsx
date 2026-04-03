@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 const steps = [
   {
@@ -59,7 +61,7 @@ export default function Process() {
 
   return (
     <section id="proceso" className="py-16 md:py-20 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
@@ -86,8 +88,10 @@ export default function Process() {
                     <div className="w-20 h-20 bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue rounded-full flex items-center justify-center shadow-lg">
                       <span className="text-4xl">{step.icon}</span>
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-pastel-purple">
-                      <span className="text-sm font-bold text-pastel-purple">{step.number}</span>
+                    <div className="absolute -top-2 -right-2 w-8 h-8">
+                      <Badge className="w-8 h-8 rounded-full flex items-center justify-center shadow-md border-2 border-pastel-purple bg-white text-pastel-purple text-sm font-bold p-0">
+                        {step.number}
+                      </Badge>
                     </div>
                   </div>
                   <h3 className="text-lg sm:text-xl font-display font-bold text-gray-900 mb-3">
@@ -118,12 +122,11 @@ export default function Process() {
             <p className="text-gray-600 mb-6">
               Estamos para ayudarte en cada paso del proceso.
             </p>
-            <Link
-              href="/contacto"
-              className="btn-primary inline-block"
-            >
-              Consultanos sin compromiso
-            </Link>
+            <Button asChild className="btn-primary">
+              <Link href="/contacto">
+                Consultanos sin compromiso
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
