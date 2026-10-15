@@ -56,7 +56,7 @@ export default function Portfolio({ portfolio }: { portfolio: PortfolioItem[] })
         </p>
 
         {/* Filter buttons */}
-        <div className="mb-10 flex flex-wrap justify-center gap-2 px-2 sm:gap-3 md:mb-12">
+        <div className="mb-10 mt-8 flex flex-wrap justify-center gap-2 px-2 sm:mt-10 sm:gap-3 md:mb-12">
           {categories.map((category) => (
             <Button
               key={category}
