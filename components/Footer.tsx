@@ -33,8 +33,7 @@ export default function Footer({ settings }: { settings: PublicSettings }) {
         <div className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-1 border-t border-[var(--brand-ink)]/15 pt-3 text-xs text-[var(--brand-ink)]/70">
           <p>© {new Date().getFullYear()} {business.name}</p>
           <p>
-            Hecho por{' '}
-            <a href="https://pantheon-dev.vercel.app" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:text-[var(--brand-pink-dark)] hover:underline">Pantheon Dev</a>
+            Hecho por Borvex
           </p>
         </div>
       </div>
