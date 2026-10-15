@@ -72,7 +72,7 @@ export function loadPublicFaqs() {
   return withFallback('faqs', async () => {
     const rows = await getFaqs()
     return rows.map((item) => ({ id: String(item.id), question: item.question, answer: item.answer }))
-  }, content.faqs)
+  }, [] as { id: string; question: string; answer: string }[])
 }
 
 export function loadPublicPortfolio() {

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Services from '@/components/Services'
+import FAQ from '@/components/FAQ'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
-import { loadPublicServices, loadPublicSettings } from '@/lib/public-content'
+import { loadPublicFaqs, loadPublicServices, loadPublicSettings } from '@/lib/public-content'
 import { getEventCards } from '@/lib/event-cards'
 
 export const dynamic = 'force-dynamic'
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ServiciosPage() {
-  const [settings, services] = await Promise.all([loadPublicSettings(), loadPublicServices()])
+  const [settings, services, faqs] = await Promise.all([loadPublicSettings(), loadPublicServices(), loadPublicFaqs()])
   const eventTypes = getEventCards(settings)
   return (
     <main className="min-h-screen bg-white">
@@ -49,6 +50,7 @@ export default async function ServiciosPage() {
           </div>
         </div>
       </section>
+      <FAQ faqs={faqs} />
       <Footer settings={settings} />
       <WhatsAppButton settings={settings} />
     </main>

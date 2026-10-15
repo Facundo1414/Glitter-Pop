@@ -2,48 +2,45 @@
 
 import Link from 'next/link'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
-import { Button } from '@/components/ui/button'
 import type { loadPublicFaqs } from '@/lib/public-content'
 
 type Faq = Awaited<ReturnType<typeof loadPublicFaqs>>[number]
 
 export default function FAQ({ faqs }: { faqs: Faq[] }) {
-  return (
-    <section className="py-16 md:py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="section-title">
-          Preguntas Frecuentes
-        </h2>
-        <p className="section-subtitle">
-          Todo lo que necesitás saber sobre nuestros servicios
-        </p>
+  if (faqs.length === 0) return null
 
+  return (
+    <section aria-labelledby="preguntas-frecuentes" className="bg-[var(--brand-cream)] px-5 py-16 sm:px-8 md:py-20">
+      <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="space-y-4">
+          <h2 id="preguntas-frecuentes" className="font-display text-4xl font-bold leading-none text-[var(--brand-ink)] sm:text-5xl">
+            Preguntas frecuentes
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-[var(--brand-ink)]/80 md:text-lg">
+            Respuestas a las consultas más habituales sobre nuestro glitter bar.
+          </p>
+
+          <Accordion type="single" collapsible className="mt-9 space-y-3">
             {faqs.map((faq) => (
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="bg-white rounded-xl shadow-md overflow-hidden transition-colors duration-300 hover:shadow-lg border-none"
+                className="overflow-hidden rounded-2xl bg-white px-5 sm:px-6"
               >
-                <AccordionTrigger className="px-4 sm:px-6 py-4 sm:py-5 font-semibold text-gray-800 text-sm sm:text-base hover:no-underline hover:bg-gray-50 active:bg-gray-100 touch-manipulation">
+                <AccordionTrigger className="min-h-16 py-4 text-base font-semibold leading-snug text-[var(--brand-ink)] hover:no-underline focus-visible:ring-[var(--brand-pink-dark)] sm:text-lg">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="px-4 sm:px-6 text-gray-600 leading-relaxed text-sm sm:text-base">
+                <AccordionContent className="max-w-prose pb-5 text-base leading-relaxed text-[var(--brand-ink)]/80">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4 text-sm sm:text-base">¿No encontraste lo que buscabas?</p>
-          <Button variant="link" asChild className="text-primary-600 font-semibold text-base sm:text-lg touch-manipulation">
-            <Link href="/contacto">
-              Contactanos directamente →
-            </Link>
-          </Button>
+          <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+            <p className="text-[var(--brand-ink)]/80">¿Tenés otra consulta?</p>
+            <Link href="/contacto" className="brand-button">Escribinos</Link>
+          </div>
         </div>
       </div>
     </section>
