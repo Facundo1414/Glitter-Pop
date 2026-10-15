@@ -77,6 +77,7 @@ Desde admin puedes actualizar:
 - WhatsApps de contacto
 - Servicios ofrecidos
 - Portfolio de trabajos
+- Enlaces públicos de Instagram para fotos y reels (Configuración > Portfolio)
 - Preguntas frecuentes
 - Paquetes y precios
 - Información de "Nosotras"
@@ -92,21 +93,11 @@ Formatos recomendados:
 - Portfolio: 1000x1000px (cuadradas)
 - Optimiza las imágenes antes de subirlas
 
+Para mostrar publicaciones de Instagram sin subir archivos, pegá los enlaces públicos de `/p/` o `/reel/` en **Admin > Configuración > Portfolio**, uno por línea. La selección inicial está en `data/instagram-posts.json`. Cada publicación se carga cuando la visitante elige verla y siempre ofrece el enlace para abrirla en Instagram.
+
 ### Colores y Estilos
 
-Los colores principales están definidos en `tailwind.config.js`:
-
-```javascript
-colors: {
-  primary: { ... },  // Morado/fucsia principal
-  glitter: {
-    gold: '#FFD700',
-    pink: '#FF69B4',
-    purple: '#9D4EDD',
-    blue: '#4CC9F0',
-  },
-}
-```
+La paleta de marca (menta, fucsia, amarillo y verde oscuro) está en `app/globals.css`. El texto usa DM Sans y los títulos Barlow Condensed, cargadas con `next/font/google` en `app/layout.tsx`.
 
 ## 🚀 Deploy en Vercel
 

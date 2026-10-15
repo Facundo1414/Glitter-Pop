@@ -6,6 +6,8 @@ import Image from 'next/image'
 import ConfirmDialog from '@/components/admin/ConfirmDialog'
 import { SkeletonCard } from '@/components/admin/Skeleton'
 import { ServicePreviewPanel } from '@/components/admin/PreviewPanels'
+import EventCardsEditor from '@/components/admin/EventCardsEditor'
+import { selectPublicServiceRows } from '@/lib/service-selection'
 import UnsavedChangesBanner from '@/components/admin/UnsavedChangesBanner'
 import { useAdminCrud } from '@/hooks/useAdminCrud'
 import { Input } from '@/components/ui/input'
@@ -73,6 +75,8 @@ export default function AdminServiciosPage() {
       delete: 'Error eliminando servicio',
     },
   })
+  const publishedServices = selectPublicServiceRows(services)
+  const publishedIds = new Set(publishedServices.map((service) => service.id))
 
   const onUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -118,9 +122,15 @@ export default function AdminServiciosPage() {
           Gestión de Servicios
         </h1>
         <p className="text-gray-600">
-          Crea, edita y elimina los servicios que ofrece Glitter Pop.
+          Editá los dos Glitter Bar y las tarjetas de tipos de eventos que se muestran en la web.
         </p>
       </div>
+
+      {!loading && publishedServices.length === 0 && (
+        <Alert className="border-amber-200 bg-amber-50 text-amber-900">
+          <AlertDescription>La web está mostrando las dos descripciones predeterminadas. Para publicar cambios desde este panel, necesitás dos servicios actuales; los servicios del catálogo anterior no se muestran.</AlertDescription>
+        </Alert>
+      )}
 
       <UnsavedChangesBanner
         visible={isDirty}
@@ -136,7 +146,7 @@ export default function AdminServiciosPage() {
         <form onSubmit={submitForm}>
           <Card>
             <CardContent className="space-y-4 pt-6">
-              <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar servicio' : 'Nuevo servicio'}</h2>
+              <h2 className="text-xl font-bold text-gray-900">{isEditing ? 'Editar Glitter Bar' : 'Nuevo Glitter Bar'}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   value={form.title}
@@ -158,7 +168,6 @@ export default function AdminServiciosPage() {
                     onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
                     placeholder="URL de imagen"
                     className="h-12"
-                    required
                   />
                   <input
                     type="file"
@@ -168,13 +177,8 @@ export default function AdminServiciosPage() {
                     disabled={saving}
                   />
                 </div>
-                <Input
-                  value={form.icon}
-                  onChange={(e) => setForm((prev) => ({ ...prev, icon: e.target.value }))}
-                  placeholder="Icono (emoji)"
-                  className="h-12"
-                />
               </div>
+              <p className="text-sm text-slate-500">La imagen es opcional. Si no cargás una, la tarjeta pública muestra sólo el contenido del servicio.</p>
 
               {form.image && (
                 <div className="relative h-40 rounded-lg overflow-hidden border border-gray-200">
@@ -191,8 +195,8 @@ export default function AdminServiciosPage() {
               <div className="flex gap-3">
                 <Button
                   type="submit"
-                  disabled={saving}
-                  className="bg-linear-to-r from-purple-600 to-pink-600 text-white"
+                  disabled={saving || (!isEditing && publishedServices.length === 2)}
+                  className="bg-[var(--brand-pink-dark)] text-white hover:bg-[var(--brand-ink)]"
                 >
                   {saving ? 'Guardando...' : isEditing ? 'Actualizar servicio' : 'Crear servicio'}
                 </Button>
@@ -213,26 +217,19 @@ export default function AdminServiciosPage() {
           <>{[1,2,3].map(i => <SkeletonCard key={i} />)}</>
         )}
         {!loading && services.map((service) => (
-          <div key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="h-32 bg-linear-to-br from-pastel-lavender to-pastel-pink relative overflow-hidden">
-              {service.image ? (
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-5xl">{service.icon}</span>
-                </div>
-              )}
-            </div>
+          <div key={service.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            {service.image && (
+              <div className="relative h-32 overflow-hidden">
+                <Image src={service.image} alt={service.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+              </div>
+            )}
             <div className="p-4">
+              <p className={`mb-2 text-xs font-bold ${publishedIds.has(service.id) ? 'text-emerald-700' : 'text-slate-500'}`}>
+                {publishedIds.has(service.id) ? 'Visible en la web' : 'No visible en la web'}
+              </p>
               <h3 className="font-bold text-lg text-gray-900 mb-2">{service.title}</h3>
               <p className="text-sm text-gray-600 mb-3">{service.description}</p>
-              <p className="text-xs text-purple-600 font-semibold mb-4">⏱️ {service.duration}</p>
+              <p className="text-xs text-[var(--brand-pink-dark)] font-semibold mb-4">{service.duration}</p>
               <div className="flex gap-2">
                 <Button variant="secondary" size="sm" className="flex-1" onClick={() => startEdit(service)}>
                   Editar
@@ -245,6 +242,8 @@ export default function AdminServiciosPage() {
           </div>
         ))}
       </div>
+
+      <EventCardsEditor />
 
       <ConfirmDialog
         open={Boolean(pendingDelete)}

@@ -62,8 +62,8 @@ export default function Process() {
   return (
     <section id="proceso" className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-6">
-        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        <div className={`text-center mb-12 md:mb-16 transition-colors duration-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'
         }`}>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
             Cómo <span className="text-pastel-purple">Trabajamos</span>
@@ -78,8 +78,8 @@ export default function Process() {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className={`relative transition-all duration-1000 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                className={`relative transition-colors duration-200 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
@@ -111,8 +111,8 @@ export default function Process() {
           </div>
         </div>
 
-        <div className={`mt-12 md:mt-16 text-center transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        <div className={`mt-12 md:mt-16 text-center transition-colors duration-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-100 translate-y-0'
         }`}
         style={{ transitionDelay: '600ms' }}>
           <div className="inline-block bg-gradient-to-r from-pastel-pink/20 via-pastel-lavender/20 to-pastel-blue/20 rounded-xl md:rounded-2xl p-6 sm:p-8">

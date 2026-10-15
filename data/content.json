@@ -7,20 +7,15 @@
     "phone": "+54 351 787 8045",
     "whatsapp": "5493517878045",
     "whatsapp_luz": "5493517878045",
-    "instagram": "@GlitterPop_eventos",
+    "instagram": "@glitterr_pop",
     "facebook": "glitterpopoficial",
     "location": "Córdoba, Argentina",
     "about": "Somos Martina y Luz, dos maquilladoras profesionales que decidimos crear Glitter Pop para llevar alegría, color y brillo a cada evento. Con 2 años de experiencia, nos especializamos en crear experiencias mágicas para nuestros clientes.",
     "team": [
       {
-        "name": "Martina",
-        "role": "Maquilladora & Co-fundadora",
-        "description": "Especialista en diseños creativos y maquillaje artístico"
-      },
-      {
-        "name": "Luz",
-        "role": "Maquilladora & Co-fundadora",
-        "description": "Experta en glitter y diseños festivaleros"
+        "name": "Luz y Martina",
+        "role": "Maquilladoras y creadoras de Glitter Pop",
+        "description": "Nos encanta todo lo relacionado con el glitter, el arte y los eventos llenos de energía y diversión. Disfrutamos de los detalles creativos que hacen especial cada celebración."
       }
     ],
     "workingHours": "Todos los días",
@@ -30,90 +25,39 @@
   "services": [
     {
       "id": "1",
-      "title": "Maquillaje con Glitter",
-      "description": "Diseños personalizados con glitter de alta calidad y glitters biodegradables. Perfecto para fiestas y eventos nocturnos.",
-      "image": "/images/service-glitter.jpg",
-      "duration": "30-45 min por persona",
-      "icon": "✨"
+      "title": "Glitter Bar Esencial",
+      "description": "Incluye dos maquilladoras, armado completo del stand, maquillaje artístico con glitter, gemas, strass adhesivo y stickers personalizados.",
+      "image": "",
+      "duration": "2 horas de servicio",
+      "icon": ""
     },
     {
       "id": "2",
-      "title": "Face & Body Painting",
-      "description": "Arte corporal y facial profesional. Desde diseños simples hasta obras de arte completas.",
-      "image": "/images/service-facepainting.jpg",
-      "duration": "20-60 min según diseño",
-      "icon": "🎨"
-    },
-    {
-      "id": "3",
-      "title": "Eventos Corporativos",
-      "description": "Estación de maquillaje para eventos empresariales, lanzamientos de productos y activaciones de marca.",
-      "image": "/images/service-corporate.jpg",
-      "duration": "Paquetes desde 2 horas",
-      "icon": "💼"
-    },
-    {
-      "id": "4",
-      "title": "Fiestas Infantiles",
-      "description": "Pintacaritas y glitter para cumpleaños infantiles. Diseños divertidos y seguros para niños.",
-      "image": "/images/service-kids.jpg",
-      "duration": "10-15 min por niño",
-      "icon": "🎈"
-    },
-    {
-      "id": "5",
-      "title": "Bodas y Eventos Especiales",
-      "description": "Maquillaje artístico para novias, quinceañeras y eventos especiales. Dale un toque mágico a tu día.",
-      "image": "/images/service-wedding.jpg",
-      "duration": "Personalizado",
-      "icon": "💍"
-    },
-    {
-      "id": "6",
-      "title": "Festivales y Recitales",
-      "description": "Looks festivaleros únicos con mucho brillo y color. Resistente y de larga duración.",
-      "image": "/images/service-festival.jpg",
-      "duration": "20-40 min",
-      "icon": "🎶"
+      "title": "Glitter Bar Premium",
+      "description": "Incluye dos maquilladoras, armado completo del stand, maquillaje artístico con glitter, gemas, strass adhesivo y stickers personalizados. También incluye tatuajes temporales, stencils y pinta pelo.",
+      "image": "",
+      "duration": "2 horas y 30 minutos de servicio",
+      "icon": ""
     }
   ],
   "portfolio": [
-    {
-      "id": "1",
-      "title": "Festival de Verano",
-      "image": "/images/image-1.webp",
-      "category": "festival"
-    },
-    {
-      "id": "2",
-      "title": "Cumpleaños Ana",
-      "image": "/images/image-2.webp",
-      "category": "kids"
-    },
-    {
-      "id": "3",
-      "title": "Evento Corporativo Tech",
-      "image": "/images/image-3.webp",
-      "category": "corporate"
-    },
-    {
-      "id": "4",
-      "title": "Boda Mágica",
-      "image": "/images/image-4.webp",
-      "category": "wedding"
-    },
-    {
-      "id": "5",
-      "title": "Fiesta Neon",
-      "image": "/images/image-5.webp",
-      "category": "party"
-    },
-    {
-      "id": "6",
-      "title": "Quinceañera Sofi",
-      "image": "/images/image-6.webp",
-      "category": "special"
-    }
+    { "id": "1", "title": "Glitter Bar preparado", "image": "/images/portfolio/glitter-bar-preparado.jpeg", "category": "glitter-bar" },
+    { "id": "2", "title": "Aplicación de glitter rosa y turquesa", "image": "/images/portfolio/maquillaje-en-accion-rosa.jpeg", "category": "en-accion" },
+    { "id": "3", "title": "Aplicación de glitter verde", "image": "/images/portfolio/maquillaje-en-accion-verde.jpeg", "category": "en-accion" },
+    { "id": "4", "title": "Maquillaje con glitter multicolor", "image": "/images/portfolio/maquillaje-multicolor.jpeg", "category": "maquillaje" },
+    { "id": "5", "title": "Stickers personalizados", "image": "/images/portfolio/stickers-personalizados.jpeg", "category": "detalles" },
+    { "id": "6", "title": "Materiales del Glitter Bar", "image": "/images/portfolio/materiales-glitter-bar.jpeg", "category": "glitter-bar" },
+    { "id": "7", "title": "Maquillaje con glitter arcoíris", "image": "/images/portfolio/maquillaje-arcoiris.jpeg", "category": "maquillaje" },
+    { "id": "8", "title": "Maquillaje con glitter violeta", "image": "/images/portfolio/maquillaje-violeta.jpeg", "category": "maquillaje" },
+    { "id": "9", "title": "Maquillaje con glitter dorado", "image": "/images/portfolio/maquillaje-dorado.jpeg", "category": "maquillaje" },
+    { "id": "10", "title": "Maquillaje con glitter plateado", "image": "/images/portfolio/maquillaje-plateado.jpeg", "category": "maquillaje" },
+    { "id": "11", "title": "Maquillaje con glitter fucsia", "image": "/images/portfolio/maquillaje-fucsia.jpeg", "category": "maquillaje" },
+    { "id": "12", "title": "Maquillaje con gemas", "image": "/images/portfolio/maquillaje-fiesta-de-15.jpeg", "category": "maquillaje" },
+    { "id": "13", "title": "Maquillaje con glitter turquesa", "image": "/images/portfolio/maquillaje-turquesa.jpeg", "category": "maquillaje" },
+    { "id": "14", "title": "Maquillaje con brillo iridiscente", "image": "/images/portfolio/maquillaje-iridiscente.jpeg", "category": "maquillaje" },
+    { "id": "15", "title": "Tatuajes temporales", "image": "/images/portfolio/tatuajes-temporales.jpeg", "category": "detalles" },
+    { "id": "16", "title": "Glitter Bar al aire libre", "image": "/images/portfolio/glitter-bar-al-aire-libre.jpeg", "category": "glitter-bar" },
+    { "id": "17", "title": "Maquillaje con gemas en fiesta", "image": "/images/portfolio/maquillaje-de-fiesta.jpeg", "category": "maquillaje" }
   ],
   "testimonials": [
     {

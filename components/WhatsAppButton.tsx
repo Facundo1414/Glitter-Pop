@@ -1,28 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import contentData from '@/data/content.json'
+import type { PublicSettings } from '@/lib/public-content'
 
-export default function WhatsAppButton() {
+export default function WhatsAppButton({ settings }: { settings: PublicSettings }) {
   const [isHovered, setIsHovered] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState(contentData.business.whatsapp || '5493517878045')
-  
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const response = await fetch('/api/settings', { cache: 'no-store' })
-        if (!response.ok) return
-        const data = await response.json()
-        if (typeof data?.settings?.whatsapp_martina === 'string' && data.settings.whatsapp_martina.trim()) {
-          setPhoneNumber(data.settings.whatsapp_martina)
-        }
-      } catch {
-        // Keep JSON fallback
-      }
-    }
-
-    void loadSettings()
-  }, [])
+  const phoneNumber = settings.whatsapp_martina || contentData.business.whatsapp || '5493517878045'
 
   const message = encodeURIComponent('Hola, quiero solicitar el servicio de Glitter Pop. ¿Podrían darme más información?')
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
@@ -41,7 +25,7 @@ export default function WhatsAppButton() {
       >
         <div className="relative">
           {/* Botón principal */}
-          <div className="relative bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-full p-3 md:p-4 shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 touch-manipulation">
+          <div className="relative bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded-full p-3 md:p-4 shadow-2xl transition-colors duration-300 transform   touch-manipulation">
             <svg
               className="w-6 h-6 md:w-8 md:h-8"
               fill="currentColor"
@@ -55,7 +39,7 @@ export default function WhatsAppButton() {
 
         {/* Tooltip - Solo desktop */}
         <div
-          className={`hidden md:block absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900 text-white px-4 py-2 rounded-lg shadow-xl transition-all duration-300 ${
+          className={`hidden md:block absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap bg-gray-900 text-white px-4 py-2 rounded-lg shadow-xl transition-colors duration-300 ${
             isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none'
           }`}
         >

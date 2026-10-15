@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { editablePortfolioCategories, portfolioCategoryNames } from '@/lib/portfolio-categories'
 
 type PortfolioItem = {
   id: string
@@ -24,7 +25,7 @@ type PortfolioItem = {
 const defaultForm = {
   title: '',
   image: '',
-  category: 'special',
+  category: 'maquillaje',
 }
 
 export default function AdminPortfolioPage() {
@@ -143,12 +144,12 @@ export default function AdminPortfolioPage() {
                   onChange={(e) => setForm((prev) => ({ ...prev, category: e.target.value }))}
                   className="h-12 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <option value="festival">Festival</option>
-                  <option value="kids">Infantil</option>
-                  <option value="corporate">Corporativo</option>
-                  <option value="wedding">Boda</option>
-                  <option value="party">Fiesta</option>
-                  <option value="special">Especial</option>
+                  {!editablePortfolioCategories.some((category) => category === form.category) && (
+                    <option value={form.category}>{portfolioCategoryNames[form.category] || form.category}</option>
+                  )}
+                  {editablePortfolioCategories.map((category) => (
+                    <option key={category} value={category}>{portfolioCategoryNames[category]}</option>
+                  ))}
                 </select>
               </div>
 
@@ -217,8 +218,8 @@ export default function AdminPortfolioPage() {
             </div>
             <div className="p-4">
               <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
-              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                {item.category}
+              <span className="rounded bg-[var(--brand-cream)] px-2 py-1 text-xs text-[var(--brand-ink)]">
+                {portfolioCategoryNames[item.category] || item.category}
               </span>
             </div>
           </div>

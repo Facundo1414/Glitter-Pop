@@ -19,7 +19,7 @@ export default function Testimonials() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="card p-5 sm:p-6 hover:scale-105 active:scale-100 transition-transform duration-300"
+              className="card p-5 sm:p-6  active:scale-100 transition-transform duration-300"
             >
               <div className="flex items-center mb-3 md:mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (

@@ -2,55 +2,27 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import contentData from '@/data/content.json'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
-import { useInView } from '@/hooks/useInView'
+import type { loadPublicPortfolio } from '@/lib/public-content'
+import { portfolioCategoryNames } from '@/lib/portfolio-categories'
 
-export default function Portfolio() {
-  const [portfolio, setPortfolio] = useState(contentData.portfolio)
+type PortfolioItem = Awaited<ReturnType<typeof loadPublicPortfolio>>[number]
+
+export default function Portfolio({ portfolio }: { portfolio: PortfolioItem[] }) {
   const [filter, setFilter] = useState('all')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
-  const [sectionRef, isInView] = useInView<HTMLElement>()
 
-  const categories = ['all', 'festival', 'kids', 'corporate', 'wedding', 'party', 'special']
-  const categoryNames: { [key: string]: string } = {
-    all: 'Todo',
-    festival: 'Festivales',
-    kids: 'Infantiles',
-    corporate: 'Corporativos',
-    wedding: 'Bodas',
-    party: 'Fiestas',
-    special: 'Especiales',
-  }
+  const categories = ['all', ...new Set(portfolio.map((item) => item.category))]
 
   const filteredPortfolio = filter === 'all' 
     ? portfolio 
     : portfolio.filter(item => item.category === filter)
 
   const lightboxItem = filteredPortfolio[lightboxIndex] ?? null
-
-  useEffect(() => {
-    const loadPortfolio = async () => {
-      try {
-        const portfolioResponse = await fetch('/api/portfolio', { cache: 'no-store' })
-
-        if (portfolioResponse.ok) {
-          const portfolioData = await portfolioResponse.json()
-          if (Array.isArray(portfolioData.portfolio)) {
-            setPortfolio(portfolioData.portfolio)
-          }
-        }
-      } catch {
-        // Keep JSON fallback
-      }
-    }
-
-    void loadPortfolio()
-  }, [])
 
   // Close lightbox when filter changes
   useEffect(() => {
@@ -74,35 +46,29 @@ export default function Portfolio() {
   }, [lightboxOpen, filteredPortfolio.length])
 
   return (
-    <section ref={sectionRef} id="portfolio" className="py-16 md:py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6">
-        <h2 className={`section-title ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}>
+    <section id="portfolio" className="bg-white py-16 md:py-20">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <h2 className="font-display text-5xl font-bold leading-none text-[var(--brand-ink)] md:text-6xl">
           Nuestro Portfolio
         </h2>
-        <p
-          className={`section-subtitle ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
-          style={{ animationDelay: isInView ? '100ms' : undefined }}
-        >
-          Algunos de nuestros trabajos más brillantes
+        <p className="mt-4 text-[var(--brand-ink)]/75">
+          Mirá el Glitter Bar, los maquillajes y los detalles de nuestros eventos.
         </p>
 
         {/* Filter buttons */}
-        <div
-          className={`flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 md:mb-12 px-2 ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
-          style={{ animationDelay: isInView ? '200ms' : undefined }}
-        >
+        <div className="mb-10 flex flex-wrap justify-center gap-2 px-2 sm:gap-3 md:mb-12">
           {categories.map((category) => (
             <Button
               key={category}
               variant={filter === category ? 'default' : 'outline'}
               onClick={() => setFilter(category)}
-              className={`rounded-full font-semibold text-sm sm:text-base transition-all duration-300 transform hover:scale-105 active:scale-95 touch-manipulation px-4 sm:px-6 py-2 sm:py-3 h-auto ${
+              className={`min-h-11 rounded-full px-4 py-2 text-sm font-semibold transition-colors touch-manipulation sm:px-6 ${
                 filter === category
-                  ? 'bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-xl scale-105 ring-2 ring-purple-600/50 border-none hover:opacity-90'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 shadow-md border-gray-200'
+                  ? 'bg-[var(--brand-pink-dark)] text-white border-none'
+                  : 'border-[var(--brand-ink)]/20 bg-white text-[var(--brand-ink)] hover:bg-[var(--brand-cream)]'
               }`}
             >
-              {categoryNames[category]}
+              {portfolioCategoryNames[category] || category}
             </Button>
           ))}
         </div>
@@ -117,23 +83,20 @@ export default function Portfolio() {
                 setLightboxIndex(index)
                 setLightboxOpen(true)
               }}
-              className={`group relative aspect-square overflow-hidden rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl active:shadow-lg transition-shadow duration-300 cursor-pointer touch-manipulation w-full ${
-                isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'
-              }`}
-              style={{ animationDelay: isInView ? `${index * 100}ms` : undefined }}
+              className="group relative aspect-[3/4] w-full cursor-pointer touch-manipulation overflow-hidden rounded-2xl bg-[var(--brand-cream)] text-left shadow-sm transition-shadow hover:shadow-lg focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[var(--brand-pink-dark)]"
             >
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 group-active:bg-black/70 transition-all duration-300 flex items-end">
-                <div className="p-4 sm:p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+              <div className="absolute inset-x-0 bottom-0 flex items-end bg-linear-to-t from-black/75 via-black/30 to-transparent pt-20">
+                <div className="p-4 text-white sm:p-6">
                   <h3 className="text-lg sm:text-xl font-bold mb-2">{item.title}</h3>
                   <Badge variant="secondary" className="text-xs sm:text-sm bg-white/20 px-3 py-1 backdrop-blur-sm text-white border-none">
-                    {categoryNames[item.category]}
+                    {portfolioCategoryNames[item.category] || item.category}
                   </Badge>
                 </div>
               </div>
@@ -179,7 +142,7 @@ export default function Portfolio() {
                     {lightboxItem.title}
                   </h3>
                   <Badge variant="secondary" className="mt-1 bg-white/20 text-white border-none text-xs">
-                    {categoryNames[lightboxItem.category]}
+                    {portfolioCategoryNames[lightboxItem.category] || lightboxItem.category}
                   </Badge>
                 </div>
 

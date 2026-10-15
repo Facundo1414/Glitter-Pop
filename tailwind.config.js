@@ -9,35 +9,35 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#fef5ff',
-          100: '#fce7ff',
-          200: '#f9d5ff',
-          300: '#f5b8ff',
-          400: '#ee8fff',
-          500: '#e25afc',
-          600: '#ca37e8',
-          700: '#ac24c5',
-          800: '#8d20a0',
-          900: '#741f82',
+          50: '#fff0f8',
+          100: '#ffd9ec',
+          200: '#ffb9dc',
+          300: '#ff91c6',
+          400: '#fb69b3',
+          500: '#f83fa5',
+          600: '#d92988',
+          700: '#ae1663',
+          800: '#87114e',
+          900: '#610b37',
         },
         pastel: {
-          pink: '#FFB3D9',      // Rosa pastel suave
-          lavender: '#E0BBE4',  // Lavanda pastel
-          mint: '#B4E7CE',      // Menta pastel
+          pink: '#ffd9ec',
+          lavender: '#e9def8',
+          mint: '#d3fbec',
           peach: '#FFDAB9',     // Durazno pastel
-          blue: '#B4D7E7',      // Azul pastel
-          yellow: '#FFF5BA',    // Amarillo pastel
+          blue: '#d3fbec',
+          yellow: '#ffe468',
         },
         glitter: {
-          gold: '#FFD700',
-          pink: '#FFB3D9',      // Rosa pastel más suave
-          purple: '#D4A5D8',    // Púrpura pastel
-          blue: '#B4D7E7',      // Azul pastel
+          gold: '#ffe468',
+          pink: '#f83fa5',
+          purple: '#ae1663',
+          blue: '#d3fbec',
         },
       },
       fontFamily: {
-        sans: ['Lora', 'serif'],
-        display: ['Lora', 'serif'],
+        sans: ['var(--font-dm-sans)', 'sans-serif'],
+        display: ['var(--font-barlow-condensed)', 'sans-serif'],
       },
     },
   },

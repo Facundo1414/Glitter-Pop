@@ -9,7 +9,6 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', shortLabel: 'Inicio' },
   { href: '/admin/configuracion', label: 'Configuracion', shortLabel: 'Config' },
   { href: '/admin/servicios', label: 'Servicios', shortLabel: 'Servicios' },
-  { href: '/admin/paquetes', label: 'Paquetes', shortLabel: 'Paquetes' },
   { href: '/admin/faqs', label: 'FAQs', shortLabel: 'FAQs' },
   { href: '/admin/nosotras', label: 'Nosotras', shortLabel: 'Nosotras' },
   { href: '/admin/portfolio', label: 'Portfolio', shortLabel: 'Portfolio' },

@@ -1,56 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import contentData from '@/data/content.json'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { useInView } from '@/hooks/useInView'
+import type { loadPublicFaqs } from '@/lib/public-content'
 
-export default function FAQ() {
-  const [faqs, setFaqs] = useState(contentData.faqs)
-  const [sectionRef, isInView] = useInView<HTMLElement>()
+type Faq = Awaited<ReturnType<typeof loadPublicFaqs>>[number]
 
-  useEffect(() => {
-    const loadFaqs = async () => {
-      try {
-        const response = await fetch('/api/faqs', { cache: 'no-store' })
-        if (!response.ok) return
-        const data = await response.json()
-        if (Array.isArray(data.faqs) && data.faqs.length > 0) {
-          setFaqs(data.faqs)
-        }
-      } catch {
-        // Keep JSON fallback
-      }
-    }
-
-    void loadFaqs()
-  }, [])
-
+export default function FAQ({ faqs }: { faqs: Faq[] }) {
   return (
-    <section ref={sectionRef} className="py-16 md:py-20 bg-gray-50">
+    <section className="py-16 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className={`section-title ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}>
+        <h2 className="section-title">
           Preguntas Frecuentes
         </h2>
-        <p
-          className={`section-subtitle ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
-          style={{ animationDelay: isInView ? '100ms' : undefined }}
-        >
+        <p className="section-subtitle">
           Todo lo que necesitás saber sobre nuestros servicios
         </p>
 
-        <div
-          className={`max-w-3xl mx-auto ${isInView ? 'animate-in fade-in-0 slide-in-from-bottom-4 duration-700' : 'opacity-0'}`}
-          style={{ animationDelay: isInView ? '200ms' : undefined }}
-        >
+        <div className="mx-auto max-w-3xl">
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq) => (
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border-none"
+                className="bg-white rounded-xl shadow-md overflow-hidden transition-colors duration-300 hover:shadow-lg border-none"
               >
                 <AccordionTrigger className="px-4 sm:px-6 py-4 sm:py-5 font-semibold text-gray-800 text-sm sm:text-base hover:no-underline hover:bg-gray-50 active:bg-gray-100 touch-manipulation">
                   {faq.question}

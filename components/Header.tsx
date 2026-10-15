@@ -31,8 +31,6 @@ export default function Header() {
         return 'Nosotras'
       case '/portfolio':
         return 'Portfolio'
-      case '/paquetes':
-        return 'Paquetes'
       case '/contacto':
         return 'Contacto'
       default:
@@ -44,88 +42,61 @@ export default function Header() {
     <>
       {/* Header superior - Desktop y Mobile */}
       <header
-      className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[1000] pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 transition-colors duration-200 md:py-3 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-xl py-3 md:py-3'
+          ? 'bg-white/95 backdrop-blur-md shadow-sm'
           : isHome
-            ? 'bg-transparent py-4 md:py-6'
-            : 'bg-white/80 backdrop-blur-sm shadow-md py-4 md:py-6'
+            ? 'bg-[var(--brand-mint)]/95'
+            : 'bg-white/95 backdrop-blur-sm shadow-sm'
       }`}
     >
       <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex items-center justify-center md:justify-between">
-            {/* Título de página - Solo Mobile */}
-            <h1 className="md:hidden text-lg font-display font-bold text-gray-900">
-              {getPageTitle()}
-            </h1>
-
-            {/* Logo - Solo Desktop */}
-          <Link 
-            href="/"
-            className="hidden md:flex group relative items-center transition-transform duration-300 hover:scale-105"
-          >
-            <div className={`relative overflow-hidden rounded-xl transition-all duration-300 ${
-              isScrolled 
-                ? 'ring-2 ring-pastel-lavender/30 shadow-lg shadow-pastel-lavender/20' 
-                : 'ring-2 ring-pastel-lavender/40 shadow-lg shadow-pastel-lavender/30'
-            } group-hover:ring-4 ${
-              isScrolled 
-                ? 'group-hover:ring-pastel-lavender/50 group-hover:shadow-xl group-hover:shadow-pastel-lavender/30' 
-                : 'group-hover:ring-pastel-lavender/60 group-hover:shadow-xl group-hover:shadow-pastel-lavender/40'
-            }`}>
+          <div className="flex items-center justify-between gap-3">
+          <Link href="/" aria-label="Glitter Pop, ir al inicio" className="shrink-0">
+            <div className="relative h-11 w-[78px] overflow-hidden rounded-lg bg-[#2abbb8] md:h-14 md:w-[98px]">
               <Image
-                src="/images/logoGlitterPop.webp"
-                alt="Glitter Pop Logo"
-                width={200}
-                height={70}
-                className={`h-14 w-auto object-cover transition-all duration-300 ${
-                  isScrolled ? 'brightness-100' : 'brightness-110'
-                } group-hover:brightness-110 group-hover:scale-105`}
+                src="/images/logo-glitter-pop.jpg"
+                alt=""
+                fill
+                sizes="(max-width: 767px) 78px, 98px"
+                className="scale-[1.2] object-cover"
                 priority
               />
-              {/* Brillo efecto */}
-              <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/0 to-transparent group-hover:via-white/20 transition-all duration-500 opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-full"></div>
             </div>
           </Link>
+            <p className="ml-auto text-right font-display text-lg font-bold text-[var(--brand-ink)] md:hidden">{getPageTitle()}</p>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-2 lg:space-x-6">
-              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+              <Button asChild variant="ghost" className={`font-semibold transition-colors duration-300 px-4 py-2 rounded-lg ${
                   isActive('/') 
-                    ? 'bg-primary-100 text-primary-700' 
+                    ? 'bg-primary-100 text-primary-700'
                     : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/">Inicio</Link>
               </Button>
-              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+              <Button asChild variant="ghost" className={`font-semibold transition-colors duration-300 px-4 py-2 rounded-lg ${
                   isActive('/servicios') 
-                    ? 'bg-primary-100 text-primary-700' 
+                    ? 'bg-primary-100 text-primary-700'
                     : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/servicios">Servicios</Link>
               </Button>
-              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+              <Button asChild variant="ghost" className={`font-semibold transition-colors duration-300 px-4 py-2 rounded-lg ${
                   isActive('/nosotras') 
-                    ? 'bg-primary-100 text-primary-700' 
+                    ? 'bg-primary-100 text-primary-700'
                     : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/nosotras">Nosotras</Link>
               </Button>
-              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
+              <Button asChild variant="ghost" className={`font-semibold transition-colors duration-300 px-4 py-2 rounded-lg ${
                   isActive('/portfolio') 
-                    ? 'bg-primary-100 text-primary-700' 
+                    ? 'bg-primary-100 text-primary-700'
                     : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
                 }`}>
                 <Link href="/portfolio">Portfolio</Link>
               </Button>
-              <Button asChild variant="ghost" className={`font-semibold transition-all duration-300 px-4 py-2 rounded-lg ${
-                  isActive('/paquetes') 
-                    ? 'bg-primary-100 text-primary-700' 
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-gray-900'
-                }`}>
-                <Link href="/paquetes">Paquetes</Link>
-              </Button>
-              <Button asChild className="btn-primary ml-2 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
+              <Button asChild className="btn-primary ml-2 transform  hover:shadow-xl transition-colors duration-300">
                 <Link href="/contacto">Contacto</Link>
               </Button>
             </nav>
@@ -139,9 +110,9 @@ export default function Header() {
           {/* Inicio */}
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 touch-manipulation ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-colors duration-200 touch-manipulation ${
               isActive('/') 
-                ? 'text-purple-600' 
+                ? 'text-primary-700'
                 : 'text-gray-600 active:bg-gray-100'
             }`}
           >
@@ -154,9 +125,9 @@ export default function Header() {
           {/* Servicios */}
           <Link
             href="/servicios"
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 touch-manipulation ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-colors duration-200 touch-manipulation ${
               isActive('/servicios') 
-                ? 'text-purple-600' 
+                ? 'text-primary-700'
                 : 'text-gray-600 active:bg-gray-100'
             }`}
           >
@@ -166,12 +137,22 @@ export default function Header() {
             <span className={`text-xs font-medium ${isActive('/servicios') ? 'font-bold' : ''}`}>Servicios</span>
           </Link>
 
-          {/* Portfolio - Centro */}
+          <Link
+            href="/nosotras"
+            className={`flex flex-col items-center justify-center rounded-xl px-1 py-2 text-center transition-colors duration-200 ${isActive('/nosotras') ? 'text-primary-700': 'text-gray-600 active:bg-gray-100'}`}
+          >
+            <svg className="mb-1 h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m16-10a4 4 0 1 0-2-7.5M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8 4a4 4 0 0 1 5 4v2" />
+            </svg>
+            <span className="text-[10px] font-semibold sm:text-xs">Nosotras</span>
+          </Link>
+
+          {/* Portfolio */}
           <Link
             href="/portfolio"
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 touch-manipulation ${
-              isActive('/portfolio') 
-                ? 'text-purple-600' 
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-colors duration-200 touch-manipulation ${
+              isActive('/portfolio')
+                ? 'text-primary-700'
                 : 'text-gray-600 active:bg-gray-100'
             }`}
           >
@@ -181,27 +162,12 @@ export default function Header() {
             <span className={`text-xs font-medium ${isActive('/portfolio') ? 'font-bold' : ''}`}>Portfolio</span>
           </Link>
 
-          {/* Paquetes */}
-          <Link
-            href="/paquetes"
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 touch-manipulation ${
-              isActive('/paquetes') 
-                ? 'text-purple-600' 
-                : 'text-gray-600 active:bg-gray-100'
-            }`}
-          >
-            <svg className={`w-6 h-6 mb-1 transition-transform ${isActive('/paquetes') ? 'scale-110' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={isActive('/paquetes') ? 2.5 : 2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            <span className={`text-xs font-medium ${isActive('/paquetes') ? 'font-bold' : ''}`}>Paquetes</span>
-          </Link>
-
           {/* Contacto */}
           <Link
             href="/contacto"
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-all duration-200 touch-manipulation ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition-colors duration-200 touch-manipulation ${
               isActive('/contacto') 
-                ? 'text-purple-600' 
+                ? 'text-primary-700'
                 : 'text-gray-600 active:bg-gray-100'
             }`}
           >

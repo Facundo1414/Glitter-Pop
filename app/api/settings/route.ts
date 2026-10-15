@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
 import { isAdminAuthenticated, sanitizeString } from "@/lib/auth";
 import { getSettingsMap, ensureDatabase } from "@/lib/db";
+import { parseInstagramPostUrl } from "@/lib/instagram";
 
 const HERO_DESKTOP_VARIANTS = new Set([
   "desktop_v1",
@@ -19,6 +20,16 @@ function normalizeSettingValue(key: string, rawValue: unknown): string | null {
 
   if (key === "hero_mobile_variant") {
     return HERO_MOBILE_VARIANTS.has(value) ? value : null;
+  }
+
+  if (key === "instagram_posts") {
+    const links = value.split(/\r?\n/).map((link) => link.trim()).filter(Boolean);
+    if (links.length > 12 || links.some((link) => !/^https:\/\/(?:www\.)?instagram\.com\/(?:p|reel)\/[A-Za-z0-9_-]+\/?(?:\?[^\s]*)?$/.test(link))) return null;
+    return links.join("\n");
+  }
+
+  if (key === "hero_video_url") {
+    return parseInstagramPostUrl(value)?.url ?? null;
   }
 
   return value;
@@ -48,6 +59,7 @@ export async function PUT(request: NextRequest) {
 
     if (body.values && typeof body.values === "object") {
       const entries = Object.entries(body.values) as Array<[string, unknown]>;
+      const normalizedEntries: Array<[string, string]> = [];
       for (const [key, value] of entries) {
         if (!key) continue;
         const normalizedValue = normalizeSettingValue(key, value);
@@ -57,7 +69,10 @@ export async function PUT(request: NextRequest) {
             { status: 400 },
           );
         }
+        normalizedEntries.push([key, normalizedValue]);
+      }
 
+      for (const [key, normalizedValue] of normalizedEntries) {
         await sql`
           INSERT INTO settings (key, value)
           VALUES (${key}, ${normalizedValue})

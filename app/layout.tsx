@@ -1,12 +1,18 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Lora } from 'next/font/google'
+import { DM_Sans, Barlow_Condensed } from 'next/font/google'
 import PageWrapper from '@/components/PageWrapper'
 import PublicHeader from '@/components/PublicHeader'
 
-const lora = Lora({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-lora',
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-barlow-condensed',
   display: 'swap',
 })
 
@@ -28,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={lora.variable}>
+    <html lang="es" className={`${dmSans.variable} ${barlowCondensed.variable}`}>
       <body className="font-sans"><PublicHeader /><PageWrapper>{children}</PageWrapper></body>
     </html>
   )

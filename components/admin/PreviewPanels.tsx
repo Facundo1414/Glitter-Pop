@@ -1,13 +1,15 @@
 'use client'
 
 import Image from 'next/image'
+import { featuredInstagramVideoUrl, parseInstagramPostUrl } from '@/lib/instagram'
+import { InstagramEmbed, InstagramEmbedScript } from '@/components/InstagramEmbed'
+import { portfolioCategoryNames } from '@/lib/portfolio-categories'
 
 type ServicePreviewData = {
   title: string
   description: string
   image: string
   duration: string
-  icon: string
 }
 
 type PackagePreviewData = {
@@ -40,7 +42,7 @@ type PortfolioPreviewData = {
 type SettingsPreviewData = {
   hero_title: string
   hero_subtitle: string
-  hero_image: string
+  hero_video_url: string
   whatsapp_martina: string
   whatsapp_luz: string
   portfolio_mode: 'visible' | 'hidden' | 'comingsoon'
@@ -55,8 +57,6 @@ type SettingsPreviewData = {
   contact_instagram: string
   contact_location: string
   contact_delivery: string
-  contact_working_hours: string
-  contact_advance_booking: string
 }
 
 function PreviewShell({
@@ -84,24 +84,17 @@ export function ServicePreviewPanel({ data }: { data: ServicePreviewData }) {
   return (
     <PreviewShell
       title="Servicio en vivo"
-      subtitle="Asi se vera la tarjeta principal del servicio cuando guardes los cambios."
+      subtitle="Vista aproximada de la tarjeta pública de Glitter Bar."
     >
-      <article className="overflow-hidden rounded-3xl bg-white shadow-lg">
-        <div className="relative h-44 bg-linear-to-br from-pink-100 via-rose-50 to-orange-100">
-          {data.image ? (
-            <Image src={data.image} alt={data.title || 'Servicio'} fill className="object-cover" />
-          ) : (
-            <div className="flex h-full items-center justify-center text-6xl">{data.icon || '✨'}</div>
-          )}
-        </div>
-        <div className="space-y-3 p-5">
-          <h4 className="text-xl font-bold text-slate-900">{data.title || 'Nombre del servicio'}</h4>
-          <p className="text-sm leading-6 text-slate-600">
-            {data.description || 'La descripcion aparecera aqui para anticipar como se vera en el sitio.'}
+      <article className={`overflow-hidden rounded-2xl text-[var(--brand-ink)] ${data.title.toLowerCase().includes('premium') ? 'bg-[var(--brand-cream)]' : 'bg-[var(--brand-mint)]'}`}>
+        {data.image && <div className="relative h-40"><Image src={data.image} alt="" fill className="object-cover" /></div>}
+        <div className="p-6">
+          <p className="text-sm font-bold text-[var(--brand-pink-dark)]">{data.duration || 'Duración del servicio'}</p>
+          <h4 className="mt-4 font-display text-3xl font-bold leading-tight">{data.title || 'Nombre del servicio'}</h4>
+          <p className="mt-4 text-sm leading-6 text-[var(--brand-ink)]/80">
+            {data.description || 'La descripción del servicio aparecerá aquí.'}
           </p>
-          <div className="inline-flex rounded-full bg-pink-50 px-3 py-1 text-sm font-semibold text-pink-700">
-            {data.duration || 'Duracion del servicio'}
-          </div>
+          <span className="mt-6 inline-flex rounded-full bg-[var(--brand-pink-dark)] px-5 py-2.5 text-sm font-bold text-white">Consultar este servicio</span>
         </div>
       </article>
     </PreviewShell>
@@ -128,7 +121,7 @@ export function PackagePreviewPanel({ data }: { data: PackagePreviewData }) {
             </span>
           )}
           <h4 className="mt-4 text-2xl font-bold text-slate-900">{data.name || 'Nombre del paquete'}</h4>
-          <p className="mt-2 text-3xl font-bold text-purple-700">${Number(data.price || '0').toLocaleString('es-AR')}</p>
+          <p className="mt-2 text-3xl font-bold text-[var(--brand-pink-dark)]">${Number(data.price || '0').toLocaleString('es-AR')}</p>
           <p className="mt-1 text-sm text-slate-500">{data.duration || 'Duracion'}</p>
           <div className="my-4 h-px bg-slate-200" />
           <div className="space-y-2">
@@ -200,20 +193,20 @@ export function PortfolioPreviewPanel({ data }: { data: PortfolioPreviewData }) 
   return (
     <PreviewShell
       title="Portfolio en vivo"
-      subtitle="Previsualiza como lucira la pieza destacada dentro de la galeria publica."
+      subtitle="Vista aproximada de la foto en la galería pública."
     >
-      <article className="group overflow-hidden rounded-3xl bg-white shadow-lg">
-        <div className="relative aspect-square bg-slate-200">
+      <article className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <div className="relative aspect-[3/4] bg-[var(--brand-cream)]">
           {data.image ? (
             <Image src={data.image} alt={data.title || 'Portfolio'} fill className="object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-slate-500">Sin imagen</div>
           )}
-          <div className="absolute inset-0 flex items-end bg-black/45">
+          <div className="absolute inset-x-0 bottom-0 flex items-end bg-linear-to-t from-black/75 via-black/30 to-transparent pt-16">
             <div className="p-5 text-white">
               <h4 className="text-lg font-bold">{data.title || 'Titulo del trabajo'}</h4>
               <span className="mt-2 inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
-                {data.category || 'Categoria'}
+                {portfolioCategoryNames[data.category] || data.category || 'Categoría'}
               </span>
             </div>
           </div>
@@ -230,7 +223,7 @@ export function SettingsPreviewPanel({
   settings: SettingsPreviewData
   activeTab: 'hero' | 'contacto' | 'portfolio' | 'nosotras' | 'footer'
 }) {
-  const heroImage = settings.hero_image
+  const heroVideo = parseInstagramPostUrl(settings.hero_video_url || featuredInstagramVideoUrl)
 
   return (
     <PreviewShell
@@ -240,11 +233,11 @@ export function SettingsPreviewPanel({
       {activeTab === 'hero' && (
         <div className="space-y-4">
           <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
-            <div className="relative h-52 bg-linear-to-br from-pink-100 via-purple-50 to-orange-100">
-              {heroImage ? (
-                <Image src={heroImage} alt="Hero preview" fill className="object-cover" />
+            <div className="flex min-h-52 items-center justify-center bg-[var(--brand-yellow)] p-2">
+              {heroVideo ? (
+                <InstagramEmbed url={heroVideo.url} label="Vista previa del video de portada" className="min-h-[470px] w-full" />
               ) : (
-                <div className="flex h-full items-center justify-center text-slate-500">Imagen del hero</div>
+                <p className="text-sm text-slate-700">Ingresá un enlace válido de Instagram.</p>
               )}
             </div>
             <div className="space-y-3 p-5">
@@ -252,6 +245,7 @@ export function SettingsPreviewPanel({
               <p className="text-sm leading-6 text-slate-600">{settings.hero_subtitle || 'Subtitulo del hero para la portada.'}</p>
             </div>
           </div>
+          {heroVideo && <InstagramEmbedScript />}
         </div>
       )}
 
@@ -275,8 +269,6 @@ export function SettingsPreviewPanel({
               <p>Instagram: {settings.contact_instagram || 'Pendiente'}</p>
               <p>Ubicacion: {settings.contact_location || 'Pendiente'}</p>
               <p>Traslado: {settings.contact_delivery || 'Pendiente'}</p>
-              <p>Horario: {settings.contact_working_hours || 'Pendiente'}</p>
-              <p>Reserva: {settings.contact_advance_booking || 'Pendiente'}</p>
             </div>
           </div>
         </div>
@@ -285,7 +277,7 @@ export function SettingsPreviewPanel({
       {activeTab === 'portfolio' && (
         <div className="rounded-3xl bg-white p-5 shadow-md">
           <p className="text-sm font-semibold text-slate-900">Estado publico del portfolio</p>
-          <div className="mt-4 inline-flex rounded-full px-4 py-2 text-sm font-semibold text-white bg-linear-to-r from-purple-600 to-pink-600">
+          <div className="mt-4 inline-flex rounded-full bg-[var(--brand-pink-dark)] px-4 py-2 text-sm font-semibold text-white">
             {settings.portfolio_mode}
           </div>
           <p className="mt-4 text-sm leading-6 text-slate-600">
@@ -309,12 +301,7 @@ export function SettingsPreviewPanel({
 
       {activeTab === 'footer' && (
         <div className="space-y-4 rounded-3xl bg-white p-5 shadow-md text-sm text-slate-600">
-          <div>
-            <p className="font-semibold text-slate-900">Descripcion</p>
-            <p className="mt-2 leading-6">{settings.footer_description || 'Descripcion del footer.'}</p>
-          </div>
           <div className="grid gap-2 rounded-2xl bg-slate-50 p-4">
-            <p>Email: {settings.footer_email || 'Pendiente'}</p>
             <p>Telefono: {settings.footer_phone || 'Pendiente'}</p>
             <p>Ubicacion: {settings.footer_location || 'Pendiente'}</p>
             <p>Instagram: {settings.footer_instagram || 'Pendiente'}</p>

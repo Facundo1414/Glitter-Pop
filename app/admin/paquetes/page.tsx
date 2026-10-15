@@ -113,7 +113,7 @@ export default function AdminPaquetesPage() {
           Gestión de Paquetes
         </h1>
         <p className="text-gray-600">
-          Administra los paquetes de precios y planes.
+          Estos paquetes pertenecen al catálogo anterior. La página pública de Paquetes redirige a Servicios y estos datos no se muestran en la web actual.
         </p>
       </div>
 
@@ -182,7 +182,7 @@ export default function AdminPaquetesPage() {
                 <Button
                   type="submit"
                   disabled={saving}
-                  className="bg-linear-to-r from-purple-600 to-pink-600 text-white"
+                  className="bg-[var(--brand-pink-dark)] text-white hover:bg-[var(--brand-ink)]"
                 >
                   {saving ? 'Guardando...' : isEditing ? 'Actualizar paquete' : 'Crear paquete'}
                 </Button>
@@ -205,18 +205,18 @@ export default function AdminPaquetesPage() {
             key={pkg.id}
             className={`relative h-full bg-white rounded-2xl overflow-hidden transition-all duration-500 ${
               pkg.popular
-                ? 'shadow-2xl border-2 border-primary-200 scale-[1.02] ring-1 ring-purple-400'
+                ? 'shadow-2xl border-2 border-primary-200 scale-[1.02] ring-1 ring-[var(--brand-pink-dark)]'
                 : 'shadow-lg hover:shadow-xl border border-gray-100'
             }`}
           >
             {pkg.popular && (
-              <div className="absolute top-0 inset-x-0 h-2 bg-linear-to-r from-purple-600 via-pink-600 to-purple-700" />
+              <div className="absolute top-0 inset-x-0 h-2 bg-[var(--brand-pink-dark)]" />
             )}
 
             <div className="p-6 pt-7">
               {pkg.popular && (
                 <div className="flex justify-center mb-3">
-                  <span className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                  <span className="inline-flex items-center gap-2 bg-[var(--brand-pink-dark)] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                     <span>⭐</span>
                     <span>Más Popular</span>
                   </span>
@@ -224,7 +224,7 @@ export default function AdminPaquetesPage() {
               )}
 
               <h3 className="font-bold text-2xl text-gray-900 mb-2 text-center">{pkg.name}</h3>
-              <p className="text-3xl font-bold text-purple-600 mb-2 text-center">
+              <p className="text-3xl font-bold text-[var(--brand-pink-dark)] mb-2 text-center">
                 ${parseInt(pkg.price).toLocaleString('es-AR')}
               </p>
               <p className="text-sm text-gray-600 mb-4 text-center">{pkg.duration}</p>

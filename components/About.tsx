@@ -1,9 +1,6 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import content from '@/data/content.json'
-import { Card, CardContent } from '@/components/ui/card'
+import type { PublicSettings } from '@/lib/public-content'
 
 type TeamMember = {
   id: string
@@ -13,136 +10,38 @@ type TeamMember = {
   image: string
 }
 
-export default function About() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [aboutText, setAboutText] = useState(content.business.about || '')
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(
-    (content.business.team || []).map((member, index) => ({
-      id: String(index + 1),
-      name: member.name,
-      role: member.role,
-      description: member.description,
-      image: '',
-    })),
-  )
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true)
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    const element = document.getElementById('nosotras')
-    if (element) {
-      observer.observe(element)
-    }
-
-    return () => {
-      if (element) {
-        observer.unobserve(element)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const loadAboutData = async () => {
-      try {
-        const [teamResponse, settingsResponse] = await Promise.all([
-          fetch('/api/team', { cache: 'no-store' }),
-          fetch('/api/settings', { cache: 'no-store' }),
-        ])
-
-        if (teamResponse.ok) {
-          const data = await teamResponse.json()
-          if (Array.isArray(data.team) && data.team.length > 0) {
-            setTeamMembers(data.team)
-          }
-        }
-
-        if (settingsResponse.ok) {
-          const data = await settingsResponse.json()
-          if (typeof data?.settings?.about_text === 'string' && data.settings.about_text.trim()) {
-            setAboutText(data.settings.about_text)
-          }
-        }
-      } catch {
-        // Keep JSON fallback
-      }
-    }
-
-    void loadAboutData()
-  }, [])
+export default function About({ settings, teamMembers }: { settings: PublicSettings; teamMembers: TeamMember[] }) {
+  const aboutText = settings.about_text?.trim() || content.business.about
 
   return (
-    <section id="nosotras" className="py-16 md:py-20 bg-gradient-to-b from-white to-pastel-pink/10">
-      <div className="container mx-auto px-6">
-        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
-            Conocé a las Creadoras
-          </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            {aboutText}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm md:text-base text-gray-600">
-            <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl">📍</span>
-              <span>{content.business.location}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl">⏰</span>
-              <span>{content.business.workingHours}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl">📅</span>
-              <span>{content.business.advanceBooking}</span>
-            </div>
+    <section id="nosotras" className="bg-[var(--brand-cream)] py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="brand-eyebrow">El equipo detrás del brillo</p>
+          <h1 className="mt-3 font-display text-5xl font-bold leading-none text-[var(--brand-ink)] md:text-7xl">Conocé a las creadoras</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[var(--brand-ink)]/80 md:text-lg">{aboutText}</p>
+          <div className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-[var(--brand-ink)]/75">
+            <span>📍 {content.business.location}</span>
+            <span>⏰ {content.business.workingHours}</span>
+            <span>📅 {content.business.advanceBooking}</span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto">
-          {teamMembers.map((member, index) => (
-            <Card
-              key={member.id}
-              className={`overflow-hidden transform transition-all duration-1000 hover:scale-105 active:scale-100 touch-manipulation border-none shadow-lg ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: `${index * 200}ms` }}
-            >
-              <div className="bg-gradient-to-br from-pastel-pink via-pastel-lavender to-pastel-blue p-8">
-                <div className="w-32 h-32 mx-auto bg-white rounded-full overflow-hidden shadow-lg">
-                  {member.image ? (
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      width={128}
-                      height={128}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl">✨</div>
-                  )}
+        <div className={`mx-auto mt-12 grid gap-6 ${teamMembers.length === 1 ? 'max-w-3xl' : 'max-w-5xl md:grid-cols-2'}`}>
+          {teamMembers.map((member) => (
+            <article key={member.id} className="overflow-hidden rounded-[2rem] border border-[var(--brand-ink)]/10 bg-white shadow-[0_18px_50px_rgba(20,70,62,0.10)]">
+              <div className="grid items-center gap-7 p-7 sm:p-9 md:grid-cols-[220px_1fr] md:p-10">
+                <div className="relative mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-[1.5rem] bg-[var(--brand-yellow)]">
+                  {member.image ? <Image src={member.image} alt={member.name} fill sizes="220px" className="object-cover" /> : <span className="flex h-full items-center justify-center text-6xl" aria-hidden="true">✨</span>}
+                </div>
+                <div className="text-center md:text-left">
+                  <p className="brand-eyebrow">Nosotras</p>
+                  <h2 className="mt-2 font-display text-4xl font-bold leading-tight text-[var(--brand-ink)]">{member.name}</h2>
+                  <p className="mt-2 font-semibold text-[var(--brand-pink-dark)]">{member.role}</p>
+                  <p className="mt-5 leading-relaxed text-[var(--brand-ink)]/80">{member.description}</p>
                 </div>
               </div>
-              <CardContent className="p-5 sm:p-6 text-center">
-                <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-pastel-purple font-semibold mb-3">
-                  {member.role}
-                </p>
-                <p className="text-gray-600">
-                  {member.description}
-                </p>
-              </CardContent>
-            </Card>
+            </article>
           ))}
         </div>
       </div>

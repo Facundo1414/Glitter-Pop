@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
 import AdminTabs from '@/components/admin/AdminTabs'
@@ -12,15 +11,17 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import initialInstagramPosts from '@/data/instagram-posts.json'
+import { featuredInstagramVideoUrl } from '@/lib/instagram'
 
 type SettingsState = {
   hero_title: string
   hero_subtitle: string
-  hero_image: string
-  hero_image_mobile: string
+  hero_video_url: string
   whatsapp_martina: string
   whatsapp_luz: string
   portfolio_mode: 'visible' | 'hidden' | 'comingsoon'
+  instagram_posts: string
   about_text: string
   footer_description: string
   footer_email: string
@@ -32,18 +33,16 @@ type SettingsState = {
   contact_instagram: string
   contact_location: string
   contact_delivery: string
-  contact_working_hours: string
-  contact_advance_booking: string
 }
 
 const defaultSettings: SettingsState = {
   hero_title: '',
   hero_subtitle: '',
-  hero_image: '',
-  hero_image_mobile: '',
+  hero_video_url: featuredInstagramVideoUrl,
   whatsapp_martina: '',
   whatsapp_luz: '',
   portfolio_mode: 'visible',
+  instagram_posts: initialInstagramPosts.join('\n'),
   about_text: '',
   footer_description: '',
   footer_email: '',
@@ -55,12 +54,10 @@ const defaultSettings: SettingsState = {
   contact_instagram: '',
   contact_location: '',
   contact_delivery: '',
-  contact_working_hours: '',
-  contact_advance_booking: '',
 }
 
 const tabs = [
-  { id: 'hero', label: 'Hero', description: 'Titulos e imagen de portada' },
+  { id: 'hero', label: 'Portada', description: 'Texto y video de Instagram' },
   { id: 'contacto', label: 'Contacto', description: 'WhatsApp y datos de contacto' },
   { id: 'portfolio', label: 'Portfolio', description: 'Estado de la seccion visual' },
   { id: 'nosotras', label: 'Nosotras', description: 'Texto institucional' },
@@ -99,24 +96,22 @@ export default function AdminConfigPage() {
         const nextSettings: SettingsState = {
           hero_title: current.hero_title || '',
           hero_subtitle: current.hero_subtitle || '',
-          hero_image: current.hero_image || current.hero_image_desktop_v2 || '',
-          hero_image_mobile: current.hero_image_mobile || '',
+          hero_video_url: current.hero_video_url || featuredInstagramVideoUrl,
           whatsapp_martina: current.whatsapp_martina || '',
           whatsapp_luz: current.whatsapp_luz || '',
           portfolio_mode: (current.portfolio_mode || 'visible') as SettingsState['portfolio_mode'],
+          instagram_posts: current.instagram_posts || initialInstagramPosts.join('\n'),
           about_text: current.about_text || '',
           footer_description: current.footer_description || '',
           footer_email: current.footer_email || '',
           footer_phone: current.footer_phone || '',
           footer_location: current.footer_location || '',
-          footer_instagram: current.footer_instagram || '',
+          footer_instagram: current.footer_instagram === '@GlitterPop_eventos' ? '@glitterr_pop' : current.footer_instagram || '',
           footer_facebook: current.footer_facebook || '',
           contact_phone: current.contact_phone || '',
-          contact_instagram: current.contact_instagram || '',
+          contact_instagram: current.contact_instagram === '@GlitterPop_eventos' ? '@glitterr_pop' : current.contact_instagram || '',
           contact_location: current.contact_location || '',
           contact_delivery: current.contact_delivery || '',
-          contact_working_hours: current.contact_working_hours || '',
-          contact_advance_booking: current.contact_advance_booking || '',
         }
 
         setSettings(nextSettings)
@@ -167,98 +162,6 @@ export default function AdminConfigPage() {
     }
   }
 
-  const handleHeroImageUpload = async (file: File | null, inputRef?: HTMLInputElement | null) => {
-    if (!file) return
-
-    try {
-      setSaving(true)
-      setError('')
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo subir imagen')
-      }
-
-      const uploadData = await response.json()
-
-      // Reset file input so the same file can be re-selected later
-      if (inputRef) inputRef.value = ''
-
-      // Auto-save hero_image immediately after upload
-      const saveResponse = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: 'hero_image', value: uploadData.url }),
-      })
-
-      if (!saveResponse.ok) {
-        const data = await saveResponse.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo guardar imagen')
-      }
-
-      handleChange('hero_image', uploadData.url)
-      setInitialSettings((prev) => ({ ...prev, hero_image: uploadData.url }))
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo imagen')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleHeroImageMobileUpload = async (file: File | null, inputRef?: HTMLInputElement | null) => {
-    if (!file) return
-
-    try {
-      setSaving(true)
-      setError('')
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo subir imagen')
-      }
-
-      const uploadData = await response.json()
-
-      if (inputRef) inputRef.value = ''
-
-      const saveResponse = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: 'hero_image_mobile', value: uploadData.url }),
-      })
-
-      if (!saveResponse.ok) {
-        const data = await saveResponse.json().catch(() => ({}))
-        throw new Error(data.message || 'No se pudo guardar imagen')
-      }
-
-      handleChange('hero_image_mobile', uploadData.url)
-      setInitialSettings((prev) => ({ ...prev, hero_image_mobile: uploadData.url }))
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : 'Error subiendo imagen')
-    } finally {
-      setSaving(false)
-    }
-  }
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -275,7 +178,7 @@ export default function AdminConfigPage() {
       <section className="space-y-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Hero principal</h2>
-          <p className="mt-1 text-sm text-slate-500">Define el mensaje inicial y las imagenes que usa la portada.</p>
+          <p className="mt-1 text-sm text-slate-500">Definí el mensaje inicial y el video de la portada.</p>
         </div>
 
         <div>
@@ -300,61 +203,17 @@ export default function AdminConfigPage() {
           />
         </div>
 
-        <div className="space-y-4 border-t border-slate-200 pt-5">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">Imagenes de portada</h2>
-            <p className="mt-1 text-sm text-slate-500">Podés usar una imagen diferente para desktop y mobile, o la misma para ambos.</p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Desktop image */}
-            <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-semibold text-slate-700">Desktop <span className="font-normal text-slate-400">(lado derecho)</span></p>
-              <Input
-                type="text"
-                value={settings.hero_image}
-                onChange={(event) => handleChange('hero_image', event.target.value)}
-                className="h-12"
-                placeholder="URL de imagen desktop"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
-                onChange={(event) => void handleHeroImageUpload(event.target.files?.[0] || null, event.target)}
-              />
-              {settings.hero_image && (
-                <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                  <Image src={settings.hero_image} alt="Hero desktop preview" fill className="object-cover" />
-                </div>
-              )}
-            </div>
-
-            {/* Mobile image */}
-            <div className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-semibold text-slate-700">Mobile <span className="font-normal text-slate-400">(portada superior)</span></p>
-              <Input
-                type="text"
-                value={settings.hero_image_mobile}
-                onChange={(event) => handleChange('hero_image_mobile', event.target.value)}
-                className="h-12"
-                placeholder="URL de imagen mobile (si está vacío usa la de desktop)"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full rounded-xl border border-slate-300 bg-white p-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-pink-100 file:px-3 file:py-1.5 file:font-semibold file:text-pink-700 hover:file:bg-pink-200"
-                onChange={(event) => void handleHeroImageMobileUpload(event.target.files?.[0] || null, event.target)}
-              />
-              {settings.hero_image_mobile ? (
-                <div className="relative h-40 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                  <Image src={settings.hero_image_mobile} alt="Hero mobile preview" fill className="object-cover object-top" />
-                </div>
-              ) : (
-                <p className="text-xs text-slate-400 pt-1">Sin imagen mobile — se usará la de desktop como respaldo.</p>
-              )}
-            </div>
-          </div>
+        <div className="space-y-2 border-t border-slate-200 pt-5">
+          <Label htmlFor="hero_video_url" className="block font-semibold">Video de portada en Instagram</Label>
+          <Input
+            id="hero_video_url"
+            type="url"
+            value={settings.hero_video_url}
+            onChange={(event) => handleChange('hero_video_url', event.target.value)}
+            className="h-12"
+            placeholder={featuredInstagramVideoUrl}
+          />
+          <p className="text-sm text-slate-500">Pegá el enlace público de una publicación o reel. Se mostrará en la portada de desktop y mobile.</p>
         </div>
       </section>
     </div>
@@ -426,20 +285,6 @@ export default function AdminConfigPage() {
             className="h-12"
             placeholder="Texto de traslado"
           />
-          <Input
-            type="text"
-            value={settings.contact_working_hours}
-            onChange={(event) => handleChange('contact_working_hours', event.target.value)}
-            className="h-12"
-            placeholder="Horario de atencion"
-          />
-          <Input
-            type="text"
-            value={settings.contact_advance_booking}
-            onChange={(event) => handleChange('contact_advance_booking', event.target.value)}
-            className="h-12"
-            placeholder="Anticipacion de reserva"
-          />
         </div>
       </section>
     </div>
@@ -469,6 +314,17 @@ export default function AdminConfigPage() {
           ))}
         </RadioGroup>
       </div>
+      <div className="border-t border-slate-200 pt-5">
+        <Label htmlFor="instagram_posts" className="mb-2 block font-semibold">Publicaciones y reels de Instagram</Label>
+        <p className="mb-3 text-sm text-slate-500">Pegá un enlace público por línea desde @glitterr_pop. Se muestran en la página sin volver a subir archivos.</p>
+        <Textarea
+          id="instagram_posts"
+          value={settings.instagram_posts}
+          onChange={(event) => handleChange('instagram_posts', event.target.value)}
+          rows={6}
+          placeholder={'https://www.instagram.com/p/.../\nhttps://www.instagram.com/reel/.../'}
+        />
+      </div>
     </section>
   )
 
@@ -494,25 +350,7 @@ export default function AdminConfigPage() {
         <p className="mt-1 text-sm text-slate-500">Informacion final visible en todo el sitio.</p>
       </div>
 
-      <div>
-        <Label htmlFor="footer_description" className="mb-2 block font-semibold">Descripcion</Label>
-        <Textarea
-          id="footer_description"
-          value={settings.footer_description}
-          onChange={(event) => handleChange('footer_description', event.target.value)}
-          rows={3}
-          className="resize-none"
-        />
-      </div>
-
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Input
-          type="email"
-          value={settings.footer_email}
-          onChange={(event) => handleChange('footer_email', event.target.value)}
-          className="h-12"
-          placeholder="Email"
-        />
         <Input
           type="text"
           value={settings.footer_phone}
@@ -608,7 +446,7 @@ export default function AdminConfigPage() {
             type="button"
             onClick={handleSave}
             disabled={saving || !isDirty}
-            className="bg-linear-to-r from-purple-600 to-pink-600 text-white"
+            className="bg-[var(--brand-pink-dark)] text-white hover:bg-[var(--brand-ink)]"
           >
             {saving ? 'Guardando...' : 'Guardar cambios'}
           </Button>

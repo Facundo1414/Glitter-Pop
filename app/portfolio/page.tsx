@@ -1,52 +1,22 @@
-"use client"
-
-import { useEffect, useState } from 'react'
 import Portfolio from '@/components/Portfolio'
 import Gallery from '@/components/Gallery'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
+import { loadPublicPortfolio, loadPublicSettings } from '@/lib/public-content'
 
-export default function PortfolioPage() {
-  const [portfolioMode, setPortfolioMode] = useState<'visible' | 'hidden' | 'comingsoon' | null>(null)
+export const dynamic = 'force-dynamic'
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const response = await fetch('/api/settings', { cache: 'no-store' })
-        if (!response.ok) {
-          setPortfolioMode('visible')
-          return
-        }
-        const data = await response.json()
-        const mode = data?.settings?.portfolio_mode
-        if (mode === 'visible' || mode === 'hidden' || mode === 'comingsoon') {
-          setPortfolioMode(mode)
-        } else {
-          setPortfolioMode('visible')
-        }
-      } catch {
-        setPortfolioMode('visible')
-      }
-    }
-
-    void loadSettings()
-  }, [])
-
+export default async function PortfolioPage() {
+  const [settings, portfolio] = await Promise.all([loadPublicSettings(), loadPublicPortfolio()])
+  const mode = settings.portfolio_mode
+  const portfolioMode = mode === 'hidden' || mode === 'comingsoon' ? mode : 'visible'
   return (
     <main className="min-h-screen bg-white">
       <div className="pt-24">
-        {portfolioMode === null && (
-          <section className="py-16 md:py-20 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 text-center">
-              <p className="text-gray-500">Cargando portfolio...</p>
-            </div>
-          </section>
-        )}
-
         {portfolioMode === 'visible' && (
           <>
-            <Portfolio />
-            <Gallery />
+            <Portfolio portfolio={portfolio} />
+            <Gallery settings={settings} />
           </>
         )}
 
@@ -55,7 +25,7 @@ export default function PortfolioPage() {
             <div className="container mx-auto px-4 sm:px-6 text-center">
               <h2 className="section-title">Nuestro Portfolio</h2>
               <p className="section-subtitle">Estamos preparando esta sección.</p>
-              <div className="max-w-3xl mx-auto bg-linear-to-r from-pastel-lavender/20 to-pastel-pink/20 rounded-2xl p-10 border border-primary-100">
+              <div className="mx-auto max-w-3xl rounded-2xl border border-primary-100 bg-[var(--brand-mint)] p-10">
                 <p className="text-2xl font-display font-bold text-gray-900">Próximamente ✨</p>
                 <p className="text-gray-600 mt-3">Muy pronto vas a ver aquí nuestros mejores trabajos.</p>
               </div>
@@ -74,8 +44,8 @@ export default function PortfolioPage() {
           </section>
         )}
       </div>
-      <Footer />
-      <WhatsAppButton />
+      <Footer settings={settings} />
+      <WhatsAppButton settings={settings} />
     </main>
   )
 }

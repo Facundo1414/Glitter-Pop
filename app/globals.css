@@ -1,16 +1,28 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
+.instagram-embed .instagram-media {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
 /* shadcn/ui CSS variables */
 :root {
+  --brand-mint: #d3fbec;
+  --brand-pink: #f83fa5;
+  --brand-pink-dark: #ae1663;
+  --brand-yellow: #ffe468;
+  --brand-cream: #fffce5;
+  --brand-ink: #18332e;
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
   --card: 0 0% 100%;
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 280 40% 70%;
-  --primary-foreground: 280 10% 10%;
+  --primary: 330 76% 38%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
   --muted: 240 4.8% 95.9%;
@@ -21,7 +33,7 @@
   --destructive-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
-  --ring: 280 40% 70%;
+  --ring: 330 76% 38%;
   --radius: 0.75rem;
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
@@ -84,23 +96,30 @@
 }
 
 @theme {
-  --font-display: 'Lora', serif;
+  --font-display: var(--font-barlow-condensed), sans-serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
   
-  --color-primary-50: #fef5ff;
-  --color-primary-100: #fce7ff;
-  --color-primary-200: #f9d5ff;
-  --color-primary-300: #f5b8ff;
-  --color-primary-400: #ee8fff;
-  --color-primary-500: #E0BBE4;
-  --color-primary-600: #D4A5D8;
-  --color-primary-700: #C68FCC;
-  --color-primary-800: #B879C0;
-  --color-primary-900: #A563B4;
+  --color-primary-50: #fff0f8;
+  --color-primary-100: #ffd9ec;
+  --color-primary-200: #ffb9dc;
+  --color-primary-300: #ff91c6;
+  --color-primary-400: #fb69b3;
+  --color-primary-500: #f83fa5;
+  --color-primary-600: #d92988;
+  --color-primary-700: #ae1663;
+  --color-primary-800: #87114e;
+  --color-primary-900: #610b37;
+  --color-pastel-pink: #ffd9ec;
+  --color-pastel-lavender: #e9def8;
+  --color-pastel-mint: #d3fbec;
+  --color-pastel-blue: #d3fbec;
+  --color-pastel-yellow: #ffe468;
+  --color-pastel-purple: #ae1663;
   
-  --color-glitter-gold: #FFD700;
-  --color-glitter-pink: #FFB3D9;
-  --color-glitter-purple: #D4A5D8;
-  --color-glitter-blue: #B4D7E7;
+  --color-glitter-gold: #ffe468;
+  --color-glitter-pink: #f83fa5;
+  --color-glitter-purple: #ae1663;
+  --color-glitter-blue: #d3fbec;
 }
 
 /* Estilos base optimizados para móvil */
@@ -113,8 +132,8 @@ html {
 }
 
 body {
-  background-color: #FFF0F5;
-  color: rgb(17 24 39);
+  background-color: var(--brand-cream);
+  color: var(--brand-ink);
   /* Prevenir bounce scroll en iOS */
   overscroll-behavior-y: none;
   /* Mejorar el rendimiento de scroll */
@@ -140,7 +159,7 @@ button, a, input, textarea, select {
 }
 
 .btn-primary {
-  background-image: linear-gradient(to right, #E0BBE4, #FFB3D9);
+  background-color: var(--brand-pink-dark);
   color: white;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -148,7 +167,7 @@ button, a, input, textarea, select {
   padding-bottom: 0.75rem;
   border-radius: 9999px;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   /* Optimizaciones móviles */
   touch-action: manipulation;
@@ -157,26 +176,25 @@ button, a, input, textarea, select {
 }
 
 .btn-primary:hover {
-  background-image: linear-gradient(to right, #D4A5D8, #FFA0CC);
+  background-color: #87114e;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-  transform: translateY(-0.25rem);
 }
 
 .btn-primary:active {
-  transform: translateY(0) scale(0.98);
+  background-color: #610b37;
 }
 
 .btn-secondary {
   background-color: white;
-  color: #D4A5D8;
-  border: 2px solid #E0BBE4;
+  color: var(--brand-pink-dark);
+  border: 2px solid var(--brand-pink-dark);
   padding-left: 2rem;
   padding-right: 2rem;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   border-radius: 9999px;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: background-color 0.2s ease;
   /* Optimizaciones móviles */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -184,11 +202,7 @@ button, a, input, textarea, select {
 }
 
 .btn-secondary:hover {
-  background-color: #fce7ff;
-}
-
-.btn-secondary:active {
-  transform: scale(0.98);
+  background-color: #fff0f8;
 }
 
 .section-title {
@@ -197,6 +211,39 @@ button, a, input, textarea, select {
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
+}
+
+.brand-eyebrow {
+  color: var(--brand-pink-dark);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brand-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--brand-pink-dark);
+  padding: 0.75rem 1.5rem;
+  color: white;
+  font-weight: 700;
+  transition: background-color 0.2s ease;
+}
+
+.brand-button:hover { background: #87114e; }
+.brand-button:focus-visible { outline: 3px solid var(--brand-pink); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (min-width: 768px) {
@@ -230,52 +277,18 @@ button, a, input, textarea, select {
   background-color: white;
   border-radius: 1rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  transition: all 0.3s;
+  transition: box-shadow 0.2s ease;
   overflow: hidden;
   /* Optimizaciones móviles */
   min-height: 44px;
 }
 
 .card:hover {
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  transform: translateY(-2px);
-}
-
-.card:active {
-  transform: translateY(0);
+  box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.16);
 }
 
 .glitter-text {
   color: inherit;
-}
-
-/* Animaciones personalizadas */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.2);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-sparkle {
-  animation: sparkle 2s ease-in-out infinite;
 }
 
 /* Scrollbar personalizado */
@@ -288,87 +301,16 @@ button, a, input, textarea, select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #E0BBE4, #D4A5D8);
+  background: var(--brand-pink-dark);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #D4A5D8, #C68FCC);
-}
-
-/* Animación para el menú móvil */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out forwards;
-}
-
-/* Animaciones adicionales para Hero */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  80% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 20s linear infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-scroll {
-  animation: scroll 2s ease-in-out infinite;
+  background: #87114e;
 }
 /* Bottom Tab Bar - Safe Area Support */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* Asegurar que el contenido no quede oculto debajo del tab bar en mobile */
-@media (max-width: 768px) {
-  main {
-    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
-  }
 }
 
 /* Accordion animations required by shadcn (uses Radix CSS variable for height) */

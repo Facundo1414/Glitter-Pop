@@ -1,24 +1,21 @@
 import Hero from '@/components/Hero'
-import About from '@/components/About'
 import Services from '@/components/Services'
-import Process from '@/components/Process'
-import Testimonials from '@/components/Testimonials'
+import Gallery from '@/components/Gallery'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
+import { loadPublicServices, loadPublicSettings } from '@/lib/public-content'
 
-export default function Home() {
+export const dynamic = 'force-dynamic'
+
+export default async function Home() {
+  const [settings, services] = await Promise.all([loadPublicSettings(), loadPublicServices()])
   return (
     <main className="min-h-screen">
-      <Hero />
-      <Services />
-      {/* Secciones Nosotras - Solo visible en Mobile */}
-      <div className="md:hidden">
-        <About />
-        <Process />
-      </div>
-      {/* <Testimonials /> */}
-      <Footer />
-      <WhatsAppButton />
+      <Hero settings={settings} />
+      <Services services={services} />
+      <Gallery settings={settings} />
+      <Footer settings={settings} />
+      <WhatsAppButton settings={settings} />
     </main>
   )
 }

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     const icon = sanitizeString(body.icon, "✨");
     const displayOrder = sanitizeOrder(body.displayOrder);
 
-    if (!title || !description || !duration || !image) {
+    if (!title || !description || !duration) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 },
