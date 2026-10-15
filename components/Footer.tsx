@@ -34,7 +34,7 @@ export default function Footer({ settings }: { settings: PublicSettings }) {
           <p>© {new Date().getFullYear()} {business.name}</p>
           <p>
             Hecho por{' '}
-            <a href="https://borvex-755945fya-facundo1414s-projects.vercel.app" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:text-[var(--brand-pink-dark)] hover:underline">Borvex</a>
+            <a href="https://bovex-dev.vercel.app" target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:text-[var(--brand-pink-dark)] hover:underline">Borvex</a>
           </p>
         </div>
       </div>
